@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- PRODUCTION FEATURES-->
+    <script type="text/javascript" src="https://livejs.com/live.js"></script>
+    <!-- END PRODUCTION FEATURES -->
+    <link rel="stylesheet" href="static/css/style.css">
+    <title>IP Tutor: {{ .Title }}</title>
+</head>
+<body>
+    <header>
+        <nav aria-label="Global">
+            <div class="logo">
+                <img src="/favicon.ico">
+                <h1>IP Tutor</h1>
+            </div>
+            <div class="buttons">
+                <button class="nav-button" hx-target=".content" hx-trigger="click" hx-push-url="true" hx-get="/">Home</button>
+                <button class="nav-button" hx-target=".content" hx-trigger="click" hx-push-url="true" hx-get="/games">Games</button>
+                <button class="nav-button" hx-target=".content" hx-trigger="click" hx-push-url="true" hx-get="/settings">Settings</button>
+            </div>
+            <button id="dropdownBtn" class="dropbtn">
+                <img src="static/images/icons/dropdown.png"/>
+            </button>
+            <div id="dropdownMenu" class="dropdown">
+                <div class="dropdown-content">
+                    <button class="nav-button" hx-target=".content" hx-trigger="click" hx-push-url="true" hx-get="/">Home</button>
+                    <button class="nav-button" hx-target=".content" hx-trigger="click" hx-push-url="true" hx-get="/games">Games</button>
+                    <button class="nav-button" hx-target=".content" hx-trigger="click" hx-push-url="true" hx-get="/settings">Settings</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="content">
+        {{ .Content }}
+    </main>
+    <script src="static/js/htmx.min.js"></script>
+    <script src="static/js/scripts.js"></script>
+</body>
+</html>
