@@ -6,7 +6,8 @@
     <!-- PRODUCTION FEATURES-->
     <script type="text/javascript" src="https://livejs.com/live.js"></script>
     <!-- END PRODUCTION FEATURES -->
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/games.css">
     <title>IP Tutor: {{ .Title }}</title>
 </head>
 <body>
@@ -22,7 +23,7 @@
                 <button class="nav-button" hx-target=".content" hx-trigger="click" hx-push-url="true" hx-get="/settings">Settings</button>
             </div>
             <button id="dropdownBtn" class="dropbtn">
-                <img src="static/images/icons/dropdown.png"/>
+                <img src="/static/images/icons/dropdown.png"/>
             </button>
             <div id="dropdownMenu" class="dropdown">
                 <div class="dropdown-content">
@@ -36,7 +37,7 @@
     <main class="content">
         {{ .Content }}
     </main>
-    <script src="static/js/htmx.min.js"></script>
-    <script src="static/js/scripts.js"></script>
+    <script src="/static/js/htmx.min.js"></script>
+    <script src="/static/js/scripts.js"></script>
 </body>
 </html>

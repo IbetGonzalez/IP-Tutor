@@ -3,16 +3,16 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 let toggleDropDown = debounce(() => {
-    let dropDownMenu = document.getElementById("dropdownMenu");  
-    let compStyle = window.getComputedStyle(dropDownMenu)
-    let dropDownMenuActive = compStyle.display != "none";
+    let dropdownMenu = document.getElementById("dropdownMenu");  
+    let dropdownBtn = document.getElementById("dropdownBtn")
 
-    if (dropDownMenuActive) {
-        dropDownMenu.style.display = "none";
-    } else {
-        dropDownMenu.style.display = "flex";
-    }
-}, 50);
+    dropdownMenu.classList.toggle("active");
+    dropdownBtn.classList.add("pressed");
+    window.setTimeout(() => {
+        dropdownBtn.classList.remove("pressed");
+    }, 100)
+
+}, 1);
 
 function debounce(func, wait) {
   let timeout;

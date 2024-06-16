@@ -1,6 +1,7 @@
 *{padding: 0; margin: 0; box-sizing: border-box;}
 body {
     background-color: #AAAAAA;
+    font-family: arial;
 }
 header {
     background-color: white;
@@ -34,7 +35,6 @@ header nav .logo h1{
     margin: 0;
     padding-inline: 8px;
     font-size: 36px;
-    font-family: Arial;
     font-weight: bold;
 }
 header nav .logo img {
@@ -112,8 +112,11 @@ header nav .buttons {
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
 }
 .dropdown {
-    display: none;
+    display: flex;
     width: 100%;
+    overflow: hidden;
+    transition: height 0.2s ease-out;
+    height: 0px;
 }
 .dropdown-content {
     position: relative;
@@ -127,6 +130,7 @@ header nav .buttons {
 }
 
 .dropbtn {
+    display: none;
     width: 3.5rem;
     height: 3.5rem;
     border-radius: 4px;
@@ -137,12 +141,32 @@ header nav .buttons {
 .dropbtn img {
     width: 100%;
 }
-@media screen and (max-width: 600px) {
+.active {
+    height: 182px;
+}
+.pressed {
+    animation: press 0.2s;
+}
+@keyframes press {
+    from {
+        background-color: #E0E0E0;
+        box-shadow: 0px 2px 4px #c0c0c0;
+    }
+
+    to {
+        background-color: #F0F0F1;
+        box-shadow: rgba(0, 0, 0, 0.06) 0 2px 4px;
+        color: rgba(0, 0, 0, 0.65);
+        transform: translateY(0);
+    }
+}
+@media screen and (max-width: 1024px) {
     .buttons {
         display: none;
     }
     .dropbtn {
         margin: 8px;
+        display: block;
     }
     header nav {
         padding: 0;

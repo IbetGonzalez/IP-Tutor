@@ -27,7 +27,7 @@ func main() {
     fs := http.FileServer(http.Dir("./frontend/static/"))
     r.Handle("/static/*", http.StripPrefix("/static/", fs))
 
-    r.Get("/games", gameHandler)
+    r.Route("/games", gamesHandler)
     r.Get("/settings", settingsHandler)
     r.Get("/", indexHandler)
 
@@ -40,86 +40,68 @@ func faviconHandler(w http.ResponseWriter, r *http.Request) {
     fmt.Println("favicon...")
 	http.ServeFile(w, r, "./favicon.ico")
 }
-func renderResponse(src string, data *Page, w http.ResponseWriter) {
-    content, err := template.ParseFiles(src)
-    if err != nil {
-        fmt.Println(err.Error())
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
+func renderResponse(title string, src string, w http.ResponseWriter, r *http.Request) {
+    var data *Page;
+    var base *template.Template;
+    var err error;
 
-    content.Execute(w, data)
+    if r.Header.Get("HX-Request") == "true" {
+        base, err = template.ParseFiles(src);
+        if err!= nil {
+            fmt.Println(err.Error())
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+
+        data = &Page{Title: title, Content:  ""}
+    } else {
+        base, err = template.ParseFiles("./frontend/templates/base.html");
+        if err!= nil {
+            fmt.Println(err.Error())
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+        content, err := os.ReadFile(src)
+
+        if err!= nil {
+            fmt.Println(err.Error())
+            http.Error(w, err.Error(), http.StatusInternalServerError)
+            return
+        }
+        
+        data = &Page{Title: title, Content:  template.HTML(content)}
+
+    }
+    base.Execute(w, data)
 }
 
 func settingsHandler(w http.ResponseWriter, r *http.Request) {
     contentDir := "./frontend/templates/settingContent.html"
     title := "Settings"
 
-    if r.Header.Get("HX-Request") == "true" {
-        data := &Page{Title: title, Content:  ""}
 
-        renderResponse(contentDir, data, w)
-    } else {
-        content, err := os.ReadFile(contentDir)
-
-        if err!= nil {
-            fmt.Println(err.Error())
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-            return
-        }
-        
-        data := &Page{Title: title, Content:  template.HTML(content)}
-
-        renderResponse("./frontend/templates/base.html", data, w)
-    }
-
+    renderResponse(title, contentDir, w, r);
 }
-func gameHandler(w http.ResponseWriter, r *http.Request) {
-    contentDir := "./frontend/templates/gameContent.html"
-    title := "Home"
+func gamesHandler(r chi.Router) {
+    r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+        contentDir := "./frontend/templates/gameContent.html"
+        title := "Home"
 
-    if r.Header.Get("HX-Request") == "true" {
-        data := &Page{Title: title, Content:  ""}
+        renderResponse(title, contentDir, w, r);
+    })
+    r.Get("/{game}", func(w http.ResponseWriter, r *http.Request) {
+        game := chi.URLParam(r, "game")
+        contentDir := fmt.Sprintf("./frontend/templates/games/%s.html", game);
+        title := game;
 
-        renderResponse(contentDir, data, w)
-    } else {
-        content, err := os.ReadFile(contentDir)
+        renderResponse(title, contentDir, w, r);
 
-        if err!= nil {
-            fmt.Println(err.Error())
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-            return
-        }
-        
-        data := &Page{Title: title, Content:  template.HTML(content)}
-
-        renderResponse("./frontend/templates/base.html", data, w)
-    }
-
-
+    })
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
     contentDir := "./frontend/templates/homeContent.html"
     title := "Home"
-
-    if r.Header.Get("HX-Request") == "true" {
-        data := &Page{Title: title, Content:  ""}
-
-        renderResponse(contentDir, data, w)
-    } else {
-        content, err := os.ReadFile(contentDir)
-
-        if err!= nil {
-            fmt.Println(err.Error())
-            http.Error(w, err.Error(), http.StatusInternalServerError)
-            return
-        }
-        
-        data := &Page{Title: title, Content:  template.HTML(content)}
-
-        renderResponse("./frontend/templates/base.html", data, w)
-    }
-
+    renderResponse(title, contentDir, w, r);
 }
 
