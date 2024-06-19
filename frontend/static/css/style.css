@@ -34,18 +34,21 @@ body {
 
 #nav-bar {
     position: fixed;
-    bottom: 0px;
+    opacity: 0.9;
+    bottom: 4px;
     z-index: 1000;
     display: flex;
     text-align: center;
-    box-shadow: 0 0 3px rgba(0,0,0,0.3);
+    box-shadow: 0 0 8px rgba(0,0,0,0.5);
     box-sizing: border-box;
-    background-color: var(--primary);
+    border-radius: 20px;
+    background-color: var(--accent);
     color: var(--text);
     width: 100%;
     padding-inline: 1rem;
 }
 .nav-buttons {
+    z-index: 10;
     padding-inline: 2rem;
     display: flex;
     width: 100%;
@@ -55,42 +58,53 @@ body {
     display: flex;
     justify-content: center;
     position: relative;
-    background: none;
+    background-color: var(--accent);
+    border-radius: 100%;
     border: none;
-    height: 2.6rem;
-    width: 2.6rem;
+    height: 3rem;
+    width: 3rem;
 }
+
 .nav-buttons button .icon {
+    height: 1.8rem;
     margin: auto;
 }
 
 .nav-buttons button .icon path{
-    fill: var(--background);
+    fill: var(--primary);
 }
+
 .nav-selected {
+    transform-style: preserve-3d;
+    background-color: var(--primary) !important;
+    box-shadow: 0 0 4px rgba(0,0,0,0.7);
     animation: bounce 0.4s cubic-bezier(.47,1.64,.41,.8) forwards;
 }
-
 .nav-selected::before {
-    margin: auto;
-    position: absolute;
-    top: -30%;
-    z-index: -10;
     content: "";
-    background-color: var(--primary);
-    padding: 6rem;
+    position: absolute;
+    top: -10%;
+    background: transparent;
     border-radius: 100%;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    border: 5px solid var(--background) !important;
+    transform: translateZ(-5px)
 }
-
+.nav-selected .icon path {
+    fill: url("#sel-grad") !important;
+}
 @keyframes bounce {
     from {
-        scale: 1;
-        top: 0;
+        top: -10%;
     }
 
     to {
         scale: 1.1;
-        top: -20%;
+        top: -30%;
     }
 }
+
+
 
