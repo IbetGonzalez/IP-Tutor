@@ -57,8 +57,8 @@ body {
     position: relative;
     background: none;
     border: none;
-    height: 2.6rem;
-    width: 2.6rem;
+    height: 3rem;
+    width: 3rem;
 }
 .nav-buttons button .icon {
     margin: auto;
@@ -67,30 +67,26 @@ body {
 .nav-buttons button .icon path{
     fill: var(--background);
 }
-.nav-selected {
-    animation: bounce 0.4s cubic-bezier(.47,1.64,.41,.8) forwards;
-}
 
 .nav-selected::before {
     margin: auto;
     position: absolute;
-    top: -30%;
-    z-index: -10;
+    z-index: -1;
     content: "";
     background-color: var(--primary);
     padding: 6rem;
     border-radius: 100%;
+    animation: bounce 0.4s cubic-bezier(.47,1.64,.41,.8) forwards;
 }
-
 @keyframes bounce {
     from {
-        scale: 1;
         top: 0;
     }
 
     to {
-        scale: 1.1;
-        top: -20%;
+        top: -50%;
     }
 }
+
+
 
