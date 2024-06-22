@@ -49,7 +49,6 @@ header {
 
 #nav-bar {
     position: fixed;
-    opacity: 0.9;
     bottom: 6px;
     z-index: 1000;
     display: flex;
@@ -73,7 +72,7 @@ header {
     display: flex;
     justify-content: center;
     position: relative;
-    background-color:transparent;
+    background-color: transparent;
     border-radius: 100%;
     border: none;
     height: 3rem;
@@ -86,12 +85,12 @@ header {
 }
 
 .nav-buttons button .icon path {
-    fill: var(--accent);
+    fill: var(--secondary);
 }
 
 .nav-selected {
     transform-style: preserve-3d;
-    background-color: var(--accent) !important;
+    background-color: var(--secondary) !important;
     box-shadow: 0 0 4px rgba(0,0,0,0.9);
     animation: bounce 0.4s cubic-bezier(.47,1.64,.41,.8) forwards;;
 }
@@ -139,12 +138,12 @@ header {
 }
 .hero img { 
     z-index: -2;
+    margin-top: 8rem;
     position: absolute;
     width: 100%;
-    mask-image: url("/static/images/icons/ink-blot.svg");
+    mask-image: url("/static/images/icons/SVG/Musicbar.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
-    mask-position: 96px 0px;
 }
 .hero::before {
     z-index: -1;
@@ -158,29 +157,99 @@ header {
     background: linear-gradient(black 50%, transparent 100%);
     opacity: 0.5;
 }
+.hero #top-gradient{
+    z-index: -6;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-shadow: 0 0 10px rgba(0,0,0, 0.8);
+    width: 100%;
+    height: 374px;
+    background: linear-gradient(to top right, #5a22c290 30%, #a40e4c80);
+    mask-image: linear-gradient(to top, transparent 0%, black 50%);
+    padding: 1rem;
+}
 
-#color-section{
+.hero #bottom-gradient{
+    position: relative;
     z-index: -5;
+    margin-left:-5%;
     width: 120%;
-    height: 124px;
+    height: 236px;
     transform: rotateZ(6deg);
-    background-color: var(--secondary);
+    background-color: var(--accent);
     mask-image: linear-gradient(transparent 10%, black 100%);
-    border-bottom-right-radius: 100%;
+    border-bottom-right-radius: 70%;
+    border-bottom-left-radius: 30%;
 }
 .games {
+    position: relative;
+    z-index: 20;
+    margin-top: -15%;
     display: flex;
     justify-content: center;
 }
-.card{
+.card {
+    position: relative;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0,0,0, 0.8);
-    width: 252px;
-    height: 374px;
-    background: linear-gradient(to top right, #FF000080 30%, #BFACC850);
+    width: 256px;
+    min-height: 320px;
+    background-color: #FAF9F6;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.8);
+    overflow: hidden;
+}
+.card-content {
+    color: black;
     padding: 1rem;
 }
-.card .cardheader {
+.card .icon {
+    position: absolute;
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.8);
+    background-color: white;
+    z-index: 5;
+}
+.card .icon #icon-svg{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 50px;
+    width: 50px;
+}
+.card .icon #icon-svg {
+    fill: url("#icon-grad") !important;
+}
+.card .top-gradient {
+    position: absolute;
+    left: -10%;
+    top: -6%;
+    width: 150%;
+    height: 128px;
+    transform: rotateZ(-5deg);
+    box-shadow: -4px -4px 20px inset rgba(0,0,0,0.4);
+    background: linear-gradient(to right, var(--gradient1), var(--gradient2));
+}
+.card .header {
+    position: relative;
+    margin-top: 128px;
+    font-size: 28px;
+    font-weight: 600;
+}
+.card .button {
+    background-color: var(--background);
     color: white;
-    font-size: 36px;
+    position: relative;
+    margin: auto;
+    margin-top: 2rem;
+    text-align: center;
+    width: 8rem;
+    font-size: 28px;
+    font-weight: 600;
 }
