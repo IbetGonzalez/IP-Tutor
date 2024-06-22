@@ -249,7 +249,7 @@ footer .link svg path {
 .games {
     position: relative;
     display: flex;
-    max-height: 420px;
+    max-height: 45svh;
     gap: 18px;
     z-index: 20;
     margin-top: -7.5svh;
@@ -273,12 +273,14 @@ footer .link svg path {
     overflow: hidden;
 }
 .card .card-content {
+    display: flex;
+    flex-direction: column;
     color: black;
     padding: 1rem;
 }
 .card .icon {
     position: absolute;
-    top: 15%;
+    top: 19%;
     left: 50%;
     transform: translateX(-50%);
     height: 80px;
@@ -315,12 +317,15 @@ footer .link svg path {
     font-size: 28px;
     font-weight: 600;
 }
-.card .button {
+.card .desc {
+    height: 3rem;
+}
+.card .play-button {
     background-color: var(--background);
     color: white;
+    align-self: last baseline;
     position: relative;
     margin: auto;
-    margin-top: 2rem;
     text-align: center;
     width: 8rem;
     font-size: 28px;
