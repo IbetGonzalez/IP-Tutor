@@ -57,6 +57,26 @@ footer {
     max-width: 100svw;
     min-height: 5rem;
     margin-top: auto;
+    margin-bottom: 2rem
+}
+footer .heading{ 
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+footer .links {
+    padding-top: 5%;
+}
+footer .link {
+    text-decoration: none;
+    color: var(--text);
+}
+footer .link svg{
+    height: 1rem;
+    width: 1rem;
+
+}
+footer .link svg path {
+    fill: var(--text);
 }
 
 #nav-bar {
@@ -205,27 +225,37 @@ footer {
 }
 .games {
     position: relative;
+    display: flex;
+    max-height: 420px;
+    gap: 18px;
     z-index: 20;
     margin-top: -7.5svh;
-    display: flex;
-    justify-content: center;
+    padding-inline: 15%;
+    overflow-x: scroll;
+    scrollbar-width: none;
+}
+.games .card:first-child{
+    margin-left: auto;
+}
+.games .card:last-child{
+    margin-right: auto;
 }
 .card {
     position: relative;
     border-radius: 10px;
-    width: 256px;
-    min-height: 320px;
+    min-width: 272px;
+    width: 272px;
     background-color: #FAF9F6;
     box-shadow: 5px 5px 10px rgba(0,0,0,0.8);
     overflow: hidden;
 }
-.card-content {
+.card .card-content {
     color: black;
     padding: 1rem;
 }
 .card .icon {
     position: absolute;
-    top: 18%;
+    top: 15%;
     left: 50%;
     transform: translateX(-50%);
     height: 80px;
