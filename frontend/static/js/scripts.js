@@ -3,6 +3,29 @@ document.addEventListener("DOMContentLoaded", function() {
     
 });
 document.addEventListener("htmx:afterRequest", updateNav);
+function MinimizeNav() {
+    let nav = document.getElementById("nav-bar");
+
+    let Toggle = debounce(() => {
+        nav.classList.toggle("minimized");
+    }, 50);
+    Toggle();
+}
+
+function debounce(func, wait) {
+    let timeout;
+
+    return function(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func.apply(this, args);
+        };
+
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 
 function updateNav() {
     let path = document.location.pathname.split("/")[1];

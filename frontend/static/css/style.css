@@ -82,6 +82,7 @@ footer .link svg path {
 #nav-bar {
     position: fixed;
     bottom: 6px;
+    right: 0;
     z-index: 1000;
     display: flex;
     text-align: center;
@@ -92,6 +93,7 @@ footer .link svg path {
     color: var(--text);
     width: 100%;
     padding-inline: 1rem;
+    transition: width 100ms ease;
 }
 .nav-buttons {
     z-index: 10;
@@ -116,10 +118,31 @@ footer .link svg path {
     margin: auto;
 }
 
-.nav-buttons button .icon path {
+.nav-buttons button .icon > :is(path, polygon) {
     fill: var(--secondary);
 }
 
+.nav-buttons #hide-button {
+    position: absolute;
+    right: 0;
+    transform: rotateY(180deg);
+    transition: transform 200ms ease;
+}
+.nav-buttons #hide-button svg{
+    height: 1rem;
+
+}
+.minimized {
+    opacity: 0.5;
+    width: 3rem !important;
+    height: 3rem;
+}
+.minimized #hide-button {
+    transform: rotateY(0deg);
+}
+.minimized button:not(#hide-button){
+    display: none;
+}
 .nav-selected {
     transform-style: preserve-3d;
     background-color: var(--secondary) !important;
