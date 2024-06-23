@@ -132,17 +132,6 @@ footer .link svg path {
     height: 1rem;
 
 }
-.minimized {
-    opacity: 0.5;
-    width: 3rem !important;
-    height: 3rem;
-}
-.minimized #hide-button {
-    transform: rotateY(0deg);
-}
-.minimized button:not(#hide-button){
-    display: none;
-}
 .nav-selected {
     transform-style: preserve-3d;
     background-color: var(--secondary) !important;
@@ -174,6 +163,17 @@ footer .link svg path {
         scale: 1.1;
         top: -30%;
     }
+}
+.minimized {
+    opacity: 0.3;
+    width: 3rem !important;
+    height: 3rem;
+}
+.minimized #hide-button {
+    transform: rotateY(0deg);
+}
+.minimized button:not(#hide-button){
+    display: none;
 }
 
 .hero {
@@ -280,7 +280,7 @@ footer .link svg path {
 }
 .card .icon {
     position: absolute;
-    top: 19%;
+    top: 15%;
     left: 50%;
     transform: translateX(-50%);
     height: 80px;
@@ -318,12 +318,11 @@ footer .link svg path {
     font-weight: 600;
 }
 .card .desc {
-    height: 3rem;
+    height: 5rem;
 }
 .card .play-button {
     background-color: var(--background);
     color: white;
-    align-self: last baseline;
     position: relative;
     margin: auto;
     text-align: center;
