@@ -46,3 +46,26 @@
     width: 100%;
 }
 
+.page-title{
+    margin-left: 1rem;
+}
+.game-content {
+    display: flex;
+    flex-direction: column;
+}
+.game-content .row {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.game-content .btn {
+    background-color: white;
+    user-select: none;
+    padding: 5%;
+    text-align: center;
+    color: black;
+}
