@@ -1,10 +1,9 @@
 package com.IpTutor.Backend.controller;
 
-import com.IpTutor.Backend.dto.AccountCreationDTO;
+import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.service.AccountService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +18,8 @@ public class AccountController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public AccountDTO createAccount(@RequestBody AccountCreationDTO accountCreationDTO) {
-        return accountService.createAccount(accountCreationDTO);
+    public AccountDTO createAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
+        return accountService.createAccount(accountRequestDTO);
     }
 
     @GetMapping("/getAll")
@@ -29,8 +28,8 @@ public class AccountController {
 
     @PutMapping("/update/username")
     @ResponseStatus(HttpStatus.OK)
-    public String updateUsername(@RequestBody AccountCreationDTO accountCreationDTO){
-        return accountService.updateUsername(accountCreationDTO);
+    public String updateUsername(@RequestBody AccountRequestDTO accountRequestDTO){
+        return accountService.updateUsername(accountRequestDTO);
     }
 
     @DeleteMapping("/delete/{email}")

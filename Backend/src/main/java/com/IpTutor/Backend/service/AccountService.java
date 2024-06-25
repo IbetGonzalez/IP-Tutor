@@ -1,6 +1,6 @@
 package com.IpTutor.Backend.service;
 
-import com.IpTutor.Backend.dto.AccountCreationDTO;
+import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;
@@ -25,11 +25,11 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final MongoTemplate mongoTemplate;
 
-    public AccountDTO createAccount(AccountCreationDTO accountCreationDTO) {
+    public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
         Account account = Account.builder()
-                .email(accountCreationDTO.email())
-                .username(accountCreationDTO.username())
-                .password(accountCreationDTO.password())
+                .email(accountRequestDTO.email())
+                .username(accountRequestDTO.username())
+                .password(accountRequestDTO.password())
                 .build();
 
         account.setAccountCreation(LocalDate.now());
@@ -48,9 +48,9 @@ public class AccountService {
                 .toList();
     }
 
-    public String updateUsername(AccountCreationDTO accountCreationDTO) {
-        Query findAccount = new Query(Criteria.where("email").is(accountCreationDTO.email()));
-        Update update = new Update().set("username", accountCreationDTO.username());
+    public String updateUsername(AccountRequestDTO accountRequestDTO) {
+        Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
+        Update update = new Update().set("username", accountRequestDTO.username());
         UpdateResult updateResult = mongoTemplate.updateFirst(findAccount, update, Account.class);
 
         return "Username update: " + updateResult;
