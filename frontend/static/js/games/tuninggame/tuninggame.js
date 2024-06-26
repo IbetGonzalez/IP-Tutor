@@ -5,31 +5,22 @@ const tunePitchBtn = document.getElementById("tune-pitch");
 
 const tuneupBtn = document.getElementById("tune-up");
 const tunedownBtn = document.getElementById("tune-down");
+const tuneSlide = document.getElementById("tune-slider");
+const checkPitchBtn = document.getElementById("check");
 
 const refPitch = new Pitch(refPitchBtn, false);
 const tunePitch = new Pitch(tunePitchBtn);
 
+var startingDetune;
 
-tuneupBtn.onclick = () => {
-    tunePitch.Detune(5);
-    CheckPitch();
-}
-tunedownBtn.onclick = () => {
-    tunePitch.Detune(-5);
-    CheckPitch();
-}
-
-function CheckPitch() {
-    if (tunePitch.detune > -3 && tunePitch.detune < 3) {
-        alert("Correct");
-        InitGame();
-    }
-}
 InitGame();
 
 function InitGame() {
+    AddListeners();
+
     refPitch.StopPitch();
     tunePitch.StopPitch();
+    tuneSlide.valueAsNumber = 0;
 
     let randFreq = Math.floor(Math.random() * 1000);
     let note = Tone.Frequency(randFreq).toNote();
@@ -37,6 +28,36 @@ function InitGame() {
 
     refPitch.SetNote(note);
     tunePitch.SetNote(note);
-    tunePitch.Detune(randTune);
+    tunePitch.SetDetune(randTune);
+    startingDetune = randTune;
 }
 
+function AddListeners() {
+    tuneSlide.oninput = () => {
+        let slideValue = tuneSlide.valueAsNumber;
+
+        tunePitch.SetDetune(startingDetune + (slideValue * 5))
+    } 
+
+    tuneupBtn.onclick = () => {
+        ChangePitch(1);
+    }
+    tunedownBtn.onclick = () => {
+        ChangePitch(-1);
+    }
+    checkPitchBtn.onclick = () => {
+        CheckPitch();
+    }
+
+}
+function ChangePitch(num) {
+    tunePitch.Detune(num * 5);
+    tuneSlide.valueAsNumber += num; 
+}
+
+function CheckPitch() {
+    if (tunePitch.InTune()) {
+        alert("Correct");
+        InitGame();
+    }
+}

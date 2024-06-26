@@ -65,7 +65,12 @@
 .game-content .btn {
     background-color: white;
     user-select: none;
-    padding: 5%;
+    padding: 2rem;;
+    min-width: 1rem;
     text-align: center;
     color: black;
+
+    &.btn-sm {
+        padding: 1rem;
+    }
 }

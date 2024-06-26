@@ -4,6 +4,7 @@ export default class Pitch {
     playing = false;
     btn;
     detune = 0;
+    threshold = [-3,3];
 
     constructor (elem, hold=true, hz=440) {
         this.frequency = hz;
@@ -31,8 +32,22 @@ export default class Pitch {
         }
     }
 
+    SetThreshold (range) {
+        this.threshold = [range * -1, range]
+    }
+    InTune() {
+        return this.detune > this.threshold[0] && this.detune < this.threshold[1];
+    }
+
+    SetDetune(cents) {
+        this.detune = cents;
+
+        this.synth.detune.value = this.detune;
+    }
+
     Detune(cents) {
         this.detune += cents;
+
         this.synth.detune.value = this.detune;
     }
 
