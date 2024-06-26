@@ -63,14 +63,39 @@
 }
 
 .game-content .btn {
+    position: relative;
     background-color: white;
     user-select: none;
     padding: 2rem;;
     min-width: 1rem;
     text-align: center;
     color: black;
+    z-index: 1;
 
     &.btn-sm {
         padding: 1rem;
+    }
+    &:active {
+        filter: brightness(85%);
+    }
+}
+.fill::after{
+    content: "";
+    display: block;
+    z-index: 2;
+    position: absolute;
+    backdrop-filter: invert(1);
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0;
+    animation: fill 0.2s ease-in forwards;
+}
+@keyframes fill {
+    from {
+        width: 0%;
+    }
+    to {
+        width: 100%;
     }
 }

@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
 });
 document.addEventListener("htmx:afterRequest", updateNav);
+
 function MinimizeNav() {
     let nav = document.getElementById("nav-bar");
 

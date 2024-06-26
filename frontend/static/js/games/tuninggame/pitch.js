@@ -6,7 +6,7 @@ export default class Pitch {
     detune = 0;
     threshold = [-3,3];
 
-    constructor (elem, hold=true, hz=440) {
+    constructor (elem, hold=true, hz=440, callback=function(){}) {
         this.frequency = hz;
         this.btn = elem;
 
@@ -20,13 +20,16 @@ export default class Pitch {
             };
 
             this.btn.onpointerup = () => {
+                callback(this.btn)
                 this.StopPitch();
             };
             this.btn.ontouchend = () => {
+                callback(this.btn)
                 this.StopPitch();
             };
         } else {
             this.btn.onclick = () => {
+                callback(this.btn)
                 this.TogglePitch();
             };
         }
