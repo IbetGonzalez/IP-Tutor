@@ -19,7 +19,7 @@ public class HomeController {
     @RequestMapping("")
     public String homeHx(Model model) {
         model.addAttribute("Content", "homeContent.html");
-        return "test";
+        return "base";
     }
 
     @RequestMapping("/game")
