@@ -1,23 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org">
+    
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- PRODUCTION FEATURES-->
     <script type="text/javascript" src="https://livejs.com/live.js"></script>
     <!-- END PRODUCTION FEATURES -->
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>IP Tutor: {{ .Title }}</title>
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="/favicon.ico">
+            <img src="images/icons/favicon.ico">
             <h1>IP Tutor</h1>
         </div>
     </header>
     <main class="content">
-        {{ .Content }}
+        [(${Content})]
     </main>
     <nav id="nav-bar">
         <div class="nav-buttons">
@@ -104,7 +107,7 @@
             </a>
         </div>
     </footer>
-    <script src="/static/js/htmx.min.js"></script>
-    <script src="/static/js/scripts.js"></script>
+    <script src="js/htmx.min.js"></script>
+    <script src="js/scripts.js"></script>
 </body>
 </html>
