@@ -1,14 +1,25 @@
 package com.IpTutor.Backend.controller;
 
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
+import io.github.wimdeblauwe.htmx.spring.boot.mvc.HxRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class HomeController {
-    @RequestMapping("/home")
+
+    @HxRequest
+    @RequestMapping("")
     public String home(Model model) {
+        //model.addAttribute("Content", "homeContent.html");
         return "homeContent";
+    }
+
+    @RequestMapping("")
+    public String homeHx(Model model) {
+        model.addAttribute("Content", "homeContent.html");
+        return "test";
     }
 
     @RequestMapping("/game")
