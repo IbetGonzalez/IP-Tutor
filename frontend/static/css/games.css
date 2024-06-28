@@ -75,6 +75,15 @@
     &.btn-sm {
         padding: 1rem;
     }
+    &.success {
+        background-color: var(--success);
+    }
+    &.error {
+        background-color: var(--error);
+    }
+    &.cool{
+        background-color: var(--cool);
+    }
     &:active {
         filter: brightness(85%);
     }

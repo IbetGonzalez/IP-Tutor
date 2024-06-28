@@ -7,6 +7,7 @@ const tuneupBtn = document.getElementById("tune-up");
 const tunedownBtn = document.getElementById("tune-down");
 const tuneSlide = document.getElementById("tune-slider");
 const checkPitchBtn = document.getElementById("check");
+const indicatorP = document.getElementById("cents-changed");
 
 const refPitch = new Pitch(refPitchBtn, false, undefined, fillBtn);
 const tunePitch = new Pitch(tunePitchBtn);
@@ -23,6 +24,7 @@ function InitGame() {
     tunePitch.StopPitch();
     tuneSlide.valueAsNumber = 0;
     refPitchBtn.classList.remove("fill");
+    indicatorP.innerText = tuneSlide.valueAsNumber * 5;
 
     let randFreq = Math.floor(Math.random() * 900) + 100;
     let note = Tone.Frequency(randFreq).toNote();
@@ -38,19 +40,26 @@ function fillBtn(btn) {
 }
 
 function AddListeners() {
+    const MAX = Number(tuneSlide.max);
+    const MIN = Number(tuneSlide.min);
+
     tuneSlide.oninput = () => {
         let slideValue = tuneSlide.valueAsNumber;
-
         tunePitch.SetDetune(startingDetune + (slideValue * 5))
+        indicatorP.innerText = slideValue * 5;
     } 
 
     tuneupBtn.onclick = () => {
-        // TODO:  MAKE MAX
-        ChangePitch(1);
+        let slideValue = tuneSlide.valueAsNumber;
+        if (slideValue < MAX) {
+            ChangePitch(1);
+        }
     }
     tunedownBtn.onclick = () => {
-        // TODO:  MAKE MIN 
-        ChangePitch(-1);
+        let slideValue = tuneSlide.valueAsNumber;
+        if (slideValue > MIN) {
+            ChangePitch(-1);
+        }
     }
     checkPitchBtn.onclick = () => {
         CheckPitch();
@@ -60,6 +69,7 @@ function AddListeners() {
 function ChangePitch(num) {
     tunePitch.Detune(num * 5);
     tuneSlide.valueAsNumber += num; 
+    indicatorP.innerText = tunePitch.detune - startingDetune;
 }
 
 function CheckPitch() {

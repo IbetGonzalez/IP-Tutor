@@ -3,11 +3,14 @@
     src: url("/static/fonts/Roboto-Regular.ttf");
 }
 :root {
-    --background: #080f11;
-    --text: #fbfbfe;
     --primary: #0d3b59;
     --secondary: #82ed9b;
+    --background: #03111a;
+    --text: #fbfbfe;
     --accent: #57cb99;
+    --success: #136F63;
+    --error:#D00000;
+    --cool: #3F88C5;
 }
 
 * {

@@ -5,15 +5,15 @@
         <div id="tune-pitch" class="btn">Play Pitch</div>
     </div>
     <div class="row">
-        Sine Wave
+        <p id="tune-indicator"><span id="cents-changed">0</span> Cents</p>
     </div>
     <div class="row">
-        <div id="tune-down" class="btn btn-sm">-</div>
+        <div id="tune-down" class="btn btn-sm error">-</div>
         <input type="range" id="tune-slider" min="-10" max="10" value="0">
-        <div id="tune-up" class="btn btn-sm">+</div>
+        <div id="tune-up" class="btn btn-sm success">+</div>
     </div>
     <div class="row">
-        <div id="check" class="btn">Check</div>
+        <div id="check" class="btn cool">Check</div>
     </div>
 </div>
 <script defer src="/static/js/games/tuninggame/tone.js"></script>
