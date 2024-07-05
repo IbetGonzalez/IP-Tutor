@@ -22,6 +22,12 @@ public class HomeController {
     }
 
     @HxRequest
+    @RequestMapping("/games/tuninggame")
+    public String tuningGameHx(Model model) {
+        return "games/tuninggame";
+    }
+
+    @HxRequest
     @RequestMapping("/settings")
     public String settingsHx(Model model) {
         return "settingContent";
