@@ -1,0 +1,19 @@
+{
+  "name": "music-site",
+  "version": "0.0.1",
+  "description": "A site of music practice games to improve technical playin abilities",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "music",
+    "games",
+    "practice"
+  ],
+  "author": "Ibet Gonzalez (backend)",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "webpack": "^5.93.0"
+  }
+}
