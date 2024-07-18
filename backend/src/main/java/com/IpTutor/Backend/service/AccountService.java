@@ -37,7 +37,7 @@ public class AccountService {
 
     public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
-        if(!checkExistence("username", accountRequestDTO.username())){
+        if(checkExistence("username", accountRequestDTO.username())){
             return null;
         }
 
@@ -64,8 +64,8 @@ public class AccountService {
                 .toList();
     }
 
-    public AccountDTO getAccount(String email) {
-        Query findAccount = new Query(Criteria.where("email").is(email));
+    public AccountDTO getAccount(AccountRequestDTO accountRequestDTO) {
+        Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
         List<Account> account = mongoTemplate.find(findAccount, Account.class);
 
         if(account.isEmpty()) {
@@ -75,12 +75,12 @@ public class AccountService {
         return new AccountDTO(account.get(0).getUsername(), account.get(0).getEmail(), account.get(0).getAccountCreation());
     }
 
-    public boolean checkEmail(String email) {
-        return checkExistence("email", email);
+    public boolean checkEmail(AccountRequestDTO accountRequestDTO) {
+        return checkExistence("email", accountRequestDTO.email());
     }
 
-    public boolean checkUsername(String username) {
-        return checkExistence("username", username);
+    public boolean checkUsername(AccountRequestDTO accountRequestDTO) {
+        return checkExistence("username", accountRequestDTO.username());
     }
 
     public String updateUsername(AccountRequestDTO accountRequestDTO) {
@@ -90,8 +90,9 @@ public class AccountService {
 
         return "Username update: " + updateResult;
     }
-    public String deleteAccount(String email) {
-        Query findAccount = new Query(Criteria.where("email").is(email));
+
+    public String deleteAccount(AccountRequestDTO accountRequestDTO) {
+        Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
         DeleteResult deleteResult = mongoTemplate.remove(findAccount, Account.class);
 
         return "Account Deletion: " + deleteResult;

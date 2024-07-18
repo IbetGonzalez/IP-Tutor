@@ -26,22 +26,22 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public List<AccountDTO> getAllAccounts() {return accountService.getAllAccounts();}
 
-    @GetMapping("/getAccount/{email}")
+    @GetMapping("/getAccount")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDTO getAccount(@PathVariable String email) {
-        return accountService.getAccount(email);
+    public AccountDTO getAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
+        return accountService.getAccount(accountRequestDTO);
     }
 
-    @GetMapping("/checkEmail/{email}")
+    @GetMapping("/checkEmail")
     @ResponseStatus(HttpStatus.OK)
-    public boolean checkEmail(@PathVariable String email) {
-        return accountService.checkEmail(email);
+    public boolean checkEmail(@RequestBody AccountRequestDTO accountRequestDTO) {
+        return accountService.checkEmail(accountRequestDTO);
     }
 
-    @GetMapping("/checkUsername/{username}")
+    @GetMapping("/checkUsername")
     @ResponseStatus(HttpStatus.OK)
-    public boolean checkUsername(@PathVariable String username) {
-        return accountService.checkUsername(username);
+    public boolean checkUsername(@RequestBody AccountRequestDTO accountRequestDTO) {
+        return accountService.checkUsername(accountRequestDTO);
     }
 
     @PutMapping("/update/username")
@@ -51,9 +51,9 @@ public class AccountController {
 
     }
 
-    @DeleteMapping("/delete/{email}")
+    @DeleteMapping("/deleteAccount")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAccount(@PathVariable String email) {
-        return accountService.deleteAccount(email);
+    public String deleteAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
+        return accountService.deleteAccount(accountRequestDTO);
     }
 }
