@@ -1,4 +1,5 @@
-import Pitch from './pitch.js'
+import Pitch from './pitch.js';
+import * as Tone from 'tone';
 
 const refPitchBtn = document.getElementById("ref-pitch");
 const tunePitchBtn = document.getElementById("tune-pitch");

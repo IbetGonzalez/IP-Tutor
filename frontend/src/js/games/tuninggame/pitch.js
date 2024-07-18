@@ -1,3 +1,5 @@
+import * as Tone from "tone";
+
 export default class Pitch {
     synth;
     note;
@@ -62,6 +64,7 @@ export default class Pitch {
     }
     
     InitPitch() {
+        console.log("initing");
         this.synth = new Tone.Synth().toDestination();
     }
 }
