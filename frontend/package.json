@@ -4,8 +4,8 @@
   "description": "A site of music practice games to improve technical playin abilities",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack -w"
+    "build": "webpack",
+    "build-w": "webpack -w"
   },
   "keywords": [
     "music",

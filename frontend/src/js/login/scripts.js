@@ -1,11 +1,10 @@
-import { getCookie, makeCookie } from './client.js';
-import { debounce } from '../scripts.js';
-import htmx from "htmx.org"
+import { getCookie, makeCookie } from "./client.js";
+import { debounce } from "../scripts.js";
+import htmx from "htmx.org";
 
 const login = document.querySelector("#login-form");
 if (login) {
     login.addEventListener("htmx:confirm", function (evt) {
-        alert("NOT SENDING");
         evt.preventDefault();
     });
 }
@@ -17,69 +16,83 @@ if (register) {
     const password = document.querySelector("#password-field");
     const confirmPassword = document.querySelector("#confirm-password-field");
 
-    email.addEventListener("keyup", debounce(async function() {
-        if (email.value) {
-            try {
-                const request = new Request(
-                    "/accounts/checkEmail",
-                    { 
+    email.addEventListener(
+        "keyup",
+        debounce(async function () {
+            if (email.value) {
+                try {
+                    const data = new FormData();
+                    data.append("username", "");
+                    data.append("email", email.value);
+                    data.append("password", "");
+
+                    const request = new Request("/accounts/checkEmail", {
                         method: "POST",
-                        headers: { "Content-Type": "application/json", },
-                        body: JSON.stringify({ username: "", email: email.text, password: "" }),
-                    },
-                        
-                );
-                const response = await fetch(request);
-                if (response.ok) {
-                    console.log("the response was", response);
-                } else {
-                    throw new Error(`Response status: ${response.status}`)
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(
+                            Object.fromEntries(data.entries()),
+                        ),
+                    });
+                    const response = await fetch(request);
+
+                    if (response.ok) {
+                        // TODO 
+                    } else {
+                        throw new Error(`Response status: ${response.status}`);
+                    }
+                } catch (e) {
+                    // TODO
+                    console.log(e.message);
                 }
-            } catch (e) {
-                console.log(e.message);
             }
-        }
+        }, 500),
+    );
 
-    }, 500))
-
-    register.addEventListener("htmx:confirm", function (evt) {
+    register.addEventListener("submit", async function (evt) {
         evt.preventDefault();
-
-        if (!email.value || !username.value || !password.value || !confirmPassword.value) {
+        if (
+            !email.value ||
+            !username.value ||
+            !password.value ||
+            !confirmPassword.value
+        ) {
+            // TODO
             alert("Must fill in all fields");
             return;
         }
         if (password.value !== confirmPassword.value) {
+            // TODO
             alert("Passwords must match");
             return;
         }
-        alert(evt.detail.xhr);
+        try {
+            const data = new FormData(register);
+            data.delete("confirm-password");
 
-        evt.detail.issueRequest();
-    });
-    register.addEventListener("htmx:configRequest", function(evt){
-        delete evt.detail.parameters["confirm-password"];
-        evt.detail.headers["Content-Type"] = "application/json";
-    })
+            const JSONdata = Object.fromEntries(data.entries());
 
-    register.addEventListener("htmx:afterRequest", function(evt) {
-        const status = evt.detail.successful;
-        if (status) {
-            alert("Everything went well");
-            return;
+            const request = new Request("/accounts/create", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(JSONdata),
+            });
+            const response = await fetch(request);
+
+            if (response.ok) {
+                htmx.ajax("GET","/");
+            } else {
+                throw new Error(`Response status: ${response.status}`);
+            }
+        } catch (e) {
+            console.log(e.message);
         }
-        alert(evt.detail.xhr.status);
-
-    })
+    });
 }
 
 export function checkSession() {
-    alert("it's working");
     let jwtToken = getCookie("jwt_token");
 
     if (!jwtToken) {
-        htmx.ajax('GET', '/login', '.content');
+        htmx.ajax("GET", "/login", ".content");
     }
 }
-
-
