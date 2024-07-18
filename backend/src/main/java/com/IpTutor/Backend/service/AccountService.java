@@ -37,7 +37,7 @@ public class AccountService {
 
     public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
-        if(checkExistence("username", accountRequestDTO.username())){
+        if(checkExistence("username", accountRequestDTO.username()) || checkExistence("email", accountRequestDTO.email())){
             return null;
         }
 

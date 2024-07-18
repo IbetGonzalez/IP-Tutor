@@ -13,7 +13,7 @@ To run in production mode:
 ## localhost:xxxx/accounts/create (Post Mapping)
 Creates account and adds it to the database
 
-Returns null if the username already exists
+Returns null if the username or email already exists
 ```
     {
         "username": "",
