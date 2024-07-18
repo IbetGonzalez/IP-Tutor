@@ -8,6 +8,7 @@
 *.nar
 
 ## Maven
+backend/target
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
@@ -30,7 +31,7 @@ buildNumber.properties
 .env
 
 # backup files
-*.bk
+*.bak
 
 # npm packages
 node_modules/
