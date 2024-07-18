@@ -38,5 +38,4 @@ function updateNav() {
         currSelNav.item(i).classList.remove("nav-selected");
     }
     selNav.classList.add("nav-selected");
-
 }
