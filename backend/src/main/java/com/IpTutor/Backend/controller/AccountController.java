@@ -26,10 +26,29 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public List<AccountDTO> getAllAccounts() {return accountService.getAllAccounts();}
 
+    @GetMapping("/getAccount/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public AccountDTO getAccount(@PathVariable String email) {
+        return accountService.getAccount(email);
+    }
+
+    @GetMapping("/checkEmail/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkEmail(@PathVariable String email) {
+        return accountService.checkEmail(email);
+    }
+
+    @GetMapping("/checkUsername/{username}")
+    @ResponseStatus(HttpStatus.OK)
+    public boolean checkUsername(@PathVariable String username) {
+        return accountService.checkUsername(username);
+    }
+
     @PutMapping("/update/username")
     @ResponseStatus(HttpStatus.OK)
     public String updateUsername(@RequestBody AccountRequestDTO accountRequestDTO){
         return accountService.updateUsername(accountRequestDTO);
+
     }
 
     @DeleteMapping("/delete/{email}")

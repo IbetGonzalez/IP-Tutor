@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
+import java.io.Console;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -25,7 +26,21 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final MongoTemplate mongoTemplate;
 
+    private boolean checkExistence(String key, String var) {
+        Query find = new Query(Criteria.where(key).is(var));
+        if(mongoTemplate.find(find, Account.class).isEmpty()) {
+            return false;
+        }
+
+        return true;
+    }
+
     public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
+
+        if(!checkExistence("username", accountRequestDTO.username())){
+            return null;
+        }
+
         Account account = Account.builder()
                 .email(accountRequestDTO.email())
                 .username(accountRequestDTO.username())
@@ -37,15 +52,35 @@ public class AccountService {
 
         accountRepository.save(account);
         log.info("Account successfully created");
-        return new AccountDTO(account.getUsername(), account.getEmail());
+        return new AccountDTO(account.getUsername(), account.getEmail(), account.getAccountCreation());
     }
 
     public List<AccountDTO> getAllAccounts() {
         return accountRepository.findAll()
                 .stream()
                 .map(account -> new AccountDTO(account.getUsername(),
-                                                account.getEmail()))
+                                                account.getEmail(),
+                                                account.getAccountCreation()))
                 .toList();
+    }
+
+    public AccountDTO getAccount(String email) {
+        Query findAccount = new Query(Criteria.where("email").is(email));
+        List<Account> account = mongoTemplate.find(findAccount, Account.class);
+
+        if(account.isEmpty()) {
+            return null;
+        }
+
+        return new AccountDTO(account.get(0).getUsername(), account.get(0).getEmail(), account.get(0).getAccountCreation());
+    }
+
+    public boolean checkEmail(String email) {
+        return checkExistence("email", email);
+    }
+
+    public boolean checkUsername(String username) {
+        return checkExistence("username", username);
     }
 
     public String updateUsername(AccountRequestDTO accountRequestDTO) {
