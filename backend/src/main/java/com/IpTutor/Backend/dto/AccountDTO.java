@@ -1,4 +1,6 @@
 package com.IpTutor.Backend.dto;
 
-public record AccountDTO(String username, String email) {
+import java.time.LocalDate;
+
+public record AccountDTO(String username, String email, LocalDate accountCreation) {
 }
