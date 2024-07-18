@@ -91,11 +91,9 @@ public class AccountService {
         return "Username update: " + updateResult;
     }
 
-    public String deleteAccount(AccountRequestDTO accountRequestDTO) {
+    public Long deleteAccount(AccountRequestDTO accountRequestDTO) {
         Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
         DeleteResult deleteResult = mongoTemplate.remove(findAccount, Account.class);
-
-        return "Account Deletion: " + deleteResult;
+        return deleteResult.getDeletedCount();
     }
-
 }

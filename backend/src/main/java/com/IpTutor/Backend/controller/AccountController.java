@@ -53,7 +53,7 @@ public class AccountController {
 
     @DeleteMapping("/deleteAccount")
     @ResponseStatus(HttpStatus.OK)
-    public String deleteAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
+    public Long deleteAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
         return accountService.deleteAccount(accountRequestDTO);
     }
 }
