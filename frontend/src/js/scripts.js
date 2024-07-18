@@ -1,8 +1,14 @@
+import 'htmx.org';
+
 document.addEventListener("DOMContentLoaded", function() {
     updateNav();
     
 });
 document.addEventListener("htmx:afterRequest", updateNav);
+document.addEventListener("htmx:beforeRequest", function(evt) {
+    console.log(evt.detail.xhr);
+});
+
 function MinimizeNav() {
     let nav = document.getElementById("nav-bar");
 

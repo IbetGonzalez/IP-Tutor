@@ -3,6 +3,7 @@ const path = require('path');
 module.exports = {
     mode: "production",
     entry: {
+        'scripts': './src/js/scripts.js',
         'games/tuninggame/tuninggame': './src/js/games/tuninggame/tuninggame.js',
         'login/scripts':'./src/js/login/scripts.js',
     },
