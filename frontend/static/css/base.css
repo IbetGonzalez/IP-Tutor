@@ -296,14 +296,12 @@ footer .link svg path {
     transform: translate(-50%, -50%);
     height: 50px;
     width: 50px;
-}
-.card .icon #icon-svg {
     fill: url("#icon-grad") !important;
 }
 .card .top-gradient {
     position: absolute;
     left: -10%;
-    top: -6%;
+    top: -7%;
     width: 150%;
     height: 128px;
     transform: rotateZ(-5deg);
@@ -311,6 +309,7 @@ footer .link svg path {
     background: linear-gradient(to right, var(--gradient1), var(--gradient2));
 }
 .card .header {
+    color: var(--background);
     position: relative;
     margin-top: 128px;
     font-size: 28px;
@@ -319,7 +318,7 @@ footer .link svg path {
 .card .desc {
     height: 5rem;
 }
-.card .play-button {
+.card .button{
     background-color: var(--background);
     color: white;
     position: relative;

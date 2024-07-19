@@ -1,0 +1,43 @@
+.text-box {
+    font-family: inherit;
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid var(--background);
+    outline: 0;
+    font-size: 1.3rem;
+    color: $white;
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+}
+.w-sm {
+    width: 50svw;
+}
+.w-med{
+    width: 75svw;
+}
+.w-lg{
+    width: 90svw;
+}
+.w-xlg{
+    width: 100svw;
+}
+.center {
+    margin: auto;
+    text-align: center;
+}
+.mt-5{
+    margin-top: 5%;
+}
+.mt-25 {
+    margin-top: 25%;
+}
+.mt-50{
+    margin-top: 50%;
+}
+.mt-75{
+    margin-top: 75%;
+}
+pb-10 {
+    padding-bottom: 50%;
+}

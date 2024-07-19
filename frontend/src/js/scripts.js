@@ -7,6 +7,7 @@ document.addEventListener("htmx:afterRequest", function(evt) {
         if (statusCode === 403 || statusCode === 401) {
             evt.preventDefault();
             htmx.ajax("GET", "/login", ".content");
+            history.pushState({}, "", "/login");
         }
     }
     updateNav() 
