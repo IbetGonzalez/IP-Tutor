@@ -15,6 +15,7 @@
   "author": "Ibet Gonzalez (backend)",
   "license": "GPL-3.0",
   "devDependencies": {
+    "prettier": "3.3.3",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4"
   },

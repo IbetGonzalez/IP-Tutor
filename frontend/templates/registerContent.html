@@ -1,0 +1,74 @@
+<div
+  class="mt-25 card w-lg center text-primary"
+  style="--gradient1: var(--secondary); --gradient2: #0b6e4f"
+>
+  <div class="top-gradient" style="top: -10%"></div>
+  <div class="header">Create Account</div>
+  <div class="card-content">
+      <form id="register-form" hx-post="/accounts/create" hx-target=".content" class="form center w-med">
+      <div hx-target="this" class="form-input">
+        <input
+          class="text-input"
+          id="email-field"
+          name="email"
+          type="text"
+          placeholder="email"
+        />
+        <label class="text-input-label" for="#email-field">Email</label>
+      </div>
+      <br />
+      <div class="form-input">
+        <input
+          class="text-input"
+          id="username-field"
+          name="username"
+          type="text"
+          placeholder="Username"
+        />
+        <label class="text-input-label" for="#username-field"
+          >Create Username</label
+        >
+      </div>
+      <br />
+      <div class="form-input">
+        <input
+          class="text-input"
+          id="password-field"
+          name="password"
+          type="password"
+          placeholder="Password"
+        />
+        <label class="text-input-label" for="#password-field"
+          >Create Password</label
+        >
+      </div>
+      <br />
+      <div class="form-input">
+        <input
+          class="text-input"
+          id="confirm-password-field"
+          name="confirm-password"
+          type="password"
+          placeholder="Password"
+        />
+        <label class="text-input-label" for="#confirm-password-field"
+          >Confirm Password</label
+        >
+      </div>
+      <br />
+      <button id="submit-button" type="submit" class="button"> Submit </button>
+      <br />
+    </form>
+  </div>
+</div>
+<div
+  id="login"
+  class="mt-5 center"
+  hx-push-url="true"
+  hx-boost="true"
+  hx-target=".content"
+  hx-trigger="click"
+>
+  <a class="link-text" href="/login">Sign in</a>
+</div>
+<script defer src="/js/login/scripts.build.js"></script>

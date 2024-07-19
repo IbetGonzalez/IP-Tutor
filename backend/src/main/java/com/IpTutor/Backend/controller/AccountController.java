@@ -5,6 +5,8 @@ import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,10 +34,12 @@ public class AccountController {
         return accountService.getAccount(accountRequestDTO);
     }
 
-    @GetMapping("/checkEmail")
-    @ResponseStatus(HttpStatus.OK)
-    public boolean checkEmail(@RequestBody AccountRequestDTO accountRequestDTO) {
-        return accountService.checkEmail(accountRequestDTO);
+    @PostMapping("/checkEmail")
+    public ResponseEntity<String> checkEmail(@RequestBody AccountRequestDTO accountRequestDTO) {
+        if (accountService.checkEmail(accountRequestDTO)) {
+            return ResponseEntity.status(HttpStatus.OK).body("Account found");
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No account found");
     }
 
     @GetMapping("/checkUsername")

@@ -1,15 +1,3 @@
-.text-box {
-    font-family: inherit;
-    width: 100%;
-    border: 0;
-    border-bottom: 2px solid var(--background);
-    outline: 0;
-    font-size: 1.3rem;
-    color: $white;
-    padding: 7px 0;
-    background: transparent;
-    transition: border-color 0.2s;
-}
 .w-sm {
     width: 50svw;
 }
@@ -38,6 +26,66 @@
 .mt-75{
     margin-top: 75%;
 }
-pb-10 {
+.pb-10 {
     padding-bottom: 50%;
+}
+.form-input {
+    position: relative;
+} 
+.form-input .text-input{
+    font-family: inherit;
+    width: 100%;
+    border: 0;
+    border-bottom: 2px solid var(--background);
+    outline: 0;
+    font-size: 1.3rem;
+    color: var(--background);
+    padding: 7px 0;
+    background: transparent;
+    transition: border-color 0.2s;
+
+    &::placeholder {
+        color: transparent;
+    }
+    &:placeholder-shown ~ .text-input-label{
+        font-size: 1.3rem;
+        cursor: text;
+        top: 12px;
+    }
+
+}
+
+.form-input .text-input-label {
+    position: absolute;
+    pointer-events:none;
+    top: -12px;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: var(--background);;
+}
+
+.text-input:focus ~ .text-input-label {
+    position: absolute;
+    top: -16px !important;
+    display: block;
+    transition: 0.2s;
+    color: var(--gradient2);
+    font-size: 1rem;
+    font-weight:700;    
+}
+.text-input:focus {
+    padding-bottom: 6px;  
+    font-weight: 700;
+    border-width: 3px;
+    border-image: linear-gradient(to right, var(--gradient2),var(--secondary));
+    border-image-slice: 1;
+}
+.link-text {
+    text-decoration: none;
+    color: var(--text);
+}
+.link-bg {
+    text-decoration: none;
+    color: var(--background);
 }

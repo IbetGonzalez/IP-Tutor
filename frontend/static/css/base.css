@@ -319,15 +319,21 @@ footer .link svg path {
     height: 5rem;
 }
 .card .button{
+    border: none;
     background-color: var(--background);
     color: white;
     position: relative;
     margin: auto;
     text-align: center;
     width: 8rem;
+    font-family: inherit;
     font-size: 28px;
     font-weight: 600;
 }
+.card .button:hover{
+    cursor: pointer;
+}
+
 .content .title {
     margin-left: 5%;
 }
