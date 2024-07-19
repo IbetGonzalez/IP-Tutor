@@ -1,6 +1,6 @@
 @font-face {
     font-family: "roboto";
-    src: url("fonts/Roboto-Regular.ttf");
+    src: url("/fonts/Roboto-Regular.ttf");
 }
 :root {
     --background: #080f11;

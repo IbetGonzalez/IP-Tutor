@@ -10,18 +10,17 @@
     <script type="text/javascript" src="https://livejs.com/live.js"></script>
         -->
     <!-- END PRODUCTION FEATURES -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <title>IP Tutor: {{ .Title }}</title>
 </head>
 <body>
     <header>
         <div class="logo">
-            <img src="images/icons/favicon.ico">
+            <img src="/images/icons/favicon.ico">
             <h1>IP Tutor</h1>
         </div>
     </header>
-    <main class="content">
-        <div th:include=${content}></div>
+    <main class="content" th:include=${content}>
     </main>
     <nav id="nav-bar">
         <div class="nav-buttons">
@@ -52,7 +51,7 @@
                     <path clip-rule="evenodd" d="M11 3C10.1879 3 7.96237 3.25817 6.21782 3.5093C3.94305 3.83676 2.09096 5.51696 1.60993 7.7883C1.34074 9.05935 1.07694 10.5622 1.01649 11.8204C0.973146 12.7225 0.877981 13.9831 0.777155 15.1923C0.672256 16.4504 1.09148 17.7464 1.86079 18.6681C2.64583 19.6087 3.88915 20.2427 5.32365 19.8413C6.24214 19.5842 6.97608 18.9387 7.5205 18.3026C8.07701 17.6525 8.51992 16.9124 8.83535 16.3103C9.07821 15.8467 9.50933 15.5855 9.91539 15.5855H14.0846C14.4906 15.5855 14.9218 15.8467 15.1646 16.3103C15.4801 16.9124 15.923 17.6525 16.4795 18.3026C17.0239 18.9387 17.7578 19.5842 18.6763 19.8413C20.1108 20.2427 21.3541 19.6087 22.1392 18.6681C22.9085 17.7464 23.3277 16.4504 23.2228 15.1923C23.122 13.9831 23.0268 12.7225 22.9835 11.8204C22.923 10.5622 22.6592 9.05935 22.39 7.7883C21.909 5.51696 20.0569 3.83676 17.7821 3.5093C16.0376 3.25817 13.8121 3 12 3ZM6.50279 5.48889C8.22744 5.24063 10.3368 5 12 5C13.6632 5 15.7725 5.24063 17.4972 5.4889C18.965 5.70019 20.1311 6.77489 20.4334 8.20267C20.6967 9.44565 20.9332 10.8223 20.9858 11.9164C21.0309 12.856 21.1287 14.1463 21.2297 15.3585C21.2912 16.0956 21.0342 16.8708 20.6037 17.3866C20.1889 17.8836 19.7089 18.0534 19.2153 17.9153C18.8497 17.8129 18.4327 17.509 17.9989 17.0021C17.5771 16.5094 17.2144 15.9131 16.9362 15.3822C16.4043 14.3667 15.3482 13.5855 14.0846 13.5855H9.91539C8.65178 13.5855 7.59571 14.3667 7.06374 15.3822C6.78558 15.9131 6.42285 16.5094 6.00109 17.0021C5.56723 17.509 5.15027 17.8129 4.78463 17.9153C4.29109 18.0534 3.81102 17.8836 3.39625 17.3866C2.96576 16.8708 2.70878 16.0956 2.77024 15.3585C2.87131 14.1463 2.96904 12.856 3.01418 11.9164C3.06675 10.8223 3.30329 9.44565 3.56653 8.20267C3.86891 6.77489 5.03497 5.70019 6.50279 5.48889Z"/>
                 </svg>
             </button>
-            <button id="settings" hx-target=".content" hx-push-url="true" hx-get="/settings">
+            <button id="settings" hx-on:load="checkSession()" hx-target=".content" hx-push-url="true" hx-get="/settings">
                 <svg class="icon" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                      viewBox="0 0 932.179 932.179"
                      xml:space="preserve">
@@ -89,7 +88,7 @@
                         C302.1,704.538,332,675.438,368.3,675.837z"/>
                 </svg>
             </button>
-            <button id="hide-button" onclick="MinimizeNav()">
+            <button id="hide-button">
                 <svg class="icon" version="1.1" id="hide-nav-btn" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
                     viewBox="0 0 404.258 404.258" xml:space="preserve">
                     <polygon points="289.927,18 265.927,0 114.331,202.129 265.927,404.258 289.927,386.258 151.831,202.129 "/>
@@ -108,6 +107,6 @@
             </a>
         </div>
     </footer>
-    <script src="js/scripts.build.js"></script>
+    <script src="/js/scripts.build.js"></script>
 </body>
 </html>

@@ -28,12 +28,9 @@ buildNumber.properties
 *.dylib
 
 # scripts
+*.log
 *.sh
-
-# env file
 .env
-
-# backup files
 *.bak
 
 

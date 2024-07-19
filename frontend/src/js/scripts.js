@@ -1,13 +1,19 @@
-import 'htmx.org';
+import htmx from 'htmx.org';
 
-document.addEventListener("DOMContentLoaded", function() {
-    updateNav();
-    
+document.addEventListener("DOMContentLoaded", function() { updateNav() });
+document.addEventListener("htmx:afterRequest", function(evt) { 
+    if (evt.detail.failed){
+        const statusCode = evt.detail.xhr.status;
+        if (statusCode === 403 || statusCode === 401) {
+            evt.preventDefault();
+            htmx.ajax("GET", "/login", ".content");
+        }
+    }
+    updateNav() 
 });
-document.addEventListener("htmx:afterRequest", updateNav);
-document.addEventListener("htmx:beforeRequest", function(evt) {
-    console.log(evt.detail.xhr);
-});
+
+document.querySelector("#hide-button").addEventListener("click", MinimizeNav);
+
 
 function MinimizeNav() {
     let nav = document.getElementById("nav-bar");
