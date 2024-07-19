@@ -14,38 +14,24 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @Controller
 public class HomeController {
 
-    @HxRequest
     @RequestMapping("")
-    public String homeHx(Model model) {
-        return "homeContent";
-    }
-
-    @HxRequest
-    @RequestMapping("/{name}")
-    public String slugHx(@PathVariable String name, Model model) {
-        if(name.equals("settings")) {
-            return "redirect:/unauthorized";
+    public String home(Model model, HtmxRequest hxRequest) {
+        if(hxRequest.isHtmxRequest()){
+            return "homeContent";
         }
 
-        return name + "Content";
-    }
-
-    @HxRequest
-    @RequestMapping("/games/{name}")
-    public String gamesSlugHx(@PathVariable String name, Model model) {
-        return "games/" + name;
-    }
-
-    @RequestMapping("")
-    public String home(Model model) {
         model.addAttribute("content", "homeContent");
         return "base";
     }
 
     @RequestMapping("/{name}")
-    public String slug(@PathVariable String name, Model model) {
+    public String slug(@PathVariable String name, Model model, HtmxRequest hxRequest) {
         if(name.equals("settings")) {
             return "redirect:/unauthorized";
+        }
+
+        if(hxRequest.isHtmxRequest()) {
+            return name + "Content";
         }
 
         model.addAttribute("content", name + "Content");
@@ -53,14 +39,25 @@ public class HomeController {
     }
 
     @RequestMapping("/games/{name}")
-    public String gamesSlug(@PathVariable String name, Model model) {
+    public String gamesSlug(@PathVariable String name, Model model, HtmxRequest hxRequest) {
+
+        if(hxRequest.isHtmxRequest()){
+            return "/games/" + name;
+        }
+
         model.addAttribute("content", "/games/" + name);
         return "base";
     }
 
     @RequestMapping("/test/register")
-    public String registerTest() {
-        return "registerTemp";
+    public String registerTest(Model model, HtmxRequest hxRequest) {
+
+        if(hxRequest.isHtmxRequest()) {
+            return "registerContent";
+        }
+
+        model.addAttribute("content", "registerContent");
+        return "base";
     }
 
     @GetMapping("/unauthorized")
