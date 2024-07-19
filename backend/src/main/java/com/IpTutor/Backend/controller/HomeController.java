@@ -58,6 +58,11 @@ public class HomeController {
         return "base";
     }
 
+    @RequestMapping("/test/register")
+    public String registerTest() {
+        return "registerTemp";
+    }
+
     @GetMapping("/unauthorized")
     public ResponseEntity<String> getNotImplemented() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login Required");

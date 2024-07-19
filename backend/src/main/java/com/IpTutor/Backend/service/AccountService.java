@@ -13,6 +13,10 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.io.Console;
@@ -22,7 +26,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AccountService {
+public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final MongoTemplate mongoTemplate;
 
@@ -95,5 +99,22 @@ public class AccountService {
         Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
         DeleteResult deleteResult = mongoTemplate.remove(findAccount, Account.class);
         return deleteResult.getDeletedCount();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Query findAccount = new Query(Criteria.where("email").is(email));
+        List<Account> accounts = mongoTemplate.find(findAccount, Account.class);
+
+        if(!accounts.isEmpty()) {
+            Account account = accounts.get(0);
+            var accountUser = User.withUsername(account.getEmail())
+                    .password(account.getPassword())
+                    .roles("USER")
+                    .build();
+
+            return accountUser;
+        }
+        return null;
     }
 }
