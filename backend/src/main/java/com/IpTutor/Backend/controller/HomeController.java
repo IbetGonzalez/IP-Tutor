@@ -49,19 +49,8 @@ public class HomeController {
         return "base";
     }
 
-    @RequestMapping("/test/register")
-    public String registerTest(Model model, HtmxRequest hxRequest) {
-
-        if(hxRequest.isHtmxRequest()) {
-            return "registerContent";
-        }
-
-        model.addAttribute("content", "registerContent");
-        return "base";
-    }
-
     @GetMapping("/unauthorized")
-    public ResponseEntity<String> getNotImplemented() {
+    public ResponseEntity<String> getNotUnauthorized() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login Required");
     }
 }

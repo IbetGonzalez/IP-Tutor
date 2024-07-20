@@ -1,5 +1,6 @@
 package com.IpTutor.Backend.service;
 
+import com.IpTutor.Backend.dto.AccountLoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.model.Account;
@@ -9,6 +10,7 @@ import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -18,6 +20,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.Console;
@@ -30,6 +33,9 @@ import java.util.List;
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final MongoTemplate mongoTemplate;
+
+    private final PasswordEncoder passwordEncoder;
+
     private boolean checkExistence(String key, String var) {
         Query find = new Query(Criteria.where(key).is(var));
         if(mongoTemplate.find(find, Account.class).isEmpty()) {
@@ -45,12 +51,10 @@ public class AccountService implements UserDetailsService {
             return null;
         }
 
-        var encoder = new BCryptPasswordEncoder();
-
         Account account = Account.builder()
                 .email(accountRequestDTO.email())
                 .username(accountRequestDTO.username())
-                .password(encoder.encode(accountRequestDTO.password()))
+                .password(passwordEncoder.encode(accountRequestDTO.password()))
                 .build();
 
         account.setAccountCreation(LocalDate.now());
@@ -70,12 +74,16 @@ public class AccountService implements UserDetailsService {
                 .toList();
     }
 
-    public AccountDTO getAccount(AccountRequestDTO accountRequestDTO) {
-        Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
+    public AccountDTO getAccount(AccountLoginRequestDTO accountLoginRequestDTO) {
+        Query findAccount = new Query(Criteria.where("email").is(accountLoginRequestDTO.email()));
         List<Account> account = mongoTemplate.find(findAccount, Account.class);
 
         if(account.isEmpty()) {
             return null;
+        }
+
+        if(!passwordEncoder.matches(accountLoginRequestDTO.password(), account.get(0).getPassword())) {
+            return new AccountDTO(null, account.get(0).getEmail(), null);
         }
 
         return new AccountDTO(account.get(0).getUsername(), account.get(0).getEmail(), account.get(0).getAccountCreation());
@@ -85,9 +93,6 @@ public class AccountService implements UserDetailsService {
         return checkExistence("email", accountRequestDTO.email());
     }
 
-    public boolean checkUsername(AccountRequestDTO accountRequestDTO) {
-        return checkExistence("username", accountRequestDTO.username());
-    }
 
     public String updateUsername(AccountRequestDTO accountRequestDTO) {
         Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));

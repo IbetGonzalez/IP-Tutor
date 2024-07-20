@@ -1,5 +1,6 @@
 package com.IpTutor.Backend.controller;
 
+import com.IpTutor.Backend.dto.AccountLoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.service.AccountService;
@@ -28,10 +29,19 @@ public class AccountController {
     @ResponseStatus(HttpStatus.OK)
     public List<AccountDTO> getAllAccounts() {return accountService.getAllAccounts();}
 
-    @GetMapping("/getAccount")
+    @GetMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public AccountDTO getAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
-        return accountService.getAccount(accountRequestDTO);
+    public ResponseEntity<AccountDTO> getAccount(@RequestBody AccountLoginRequestDTO accountLoginRequestDTO) {
+
+        AccountDTO result = accountService.getAccount(accountLoginRequestDTO);
+
+        if(result == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } else if(result.username() == null && result.email() != null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PostMapping("/checkEmail")
@@ -40,12 +50,6 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Account found");
         }
         return ResponseEntity.status(HttpStatus.OK).body("No account found");
-    }
-
-    @GetMapping("/checkUsername")
-    @ResponseStatus(HttpStatus.OK)
-    public boolean checkUsername(@RequestBody AccountRequestDTO accountRequestDTO) {
-        return accountService.checkUsername(accountRequestDTO);
     }
 
     @PutMapping("/update/username")
