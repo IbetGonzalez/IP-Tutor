@@ -41,7 +41,7 @@ if (register) {
     })
 
     email.addEventListener( "keyup", debounce(async function (e) {
-        if (!symbolKeyPressed(e)) {
+        if (!symbolKeyPressed(e) && !e.shiftKey) {
             return;
         }
         if (email.value !== "") {
