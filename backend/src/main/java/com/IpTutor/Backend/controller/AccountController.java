@@ -20,9 +20,15 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/create")
-    @ResponseStatus(HttpStatus.CREATED)
-    public AccountDTO createAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
-        return accountService.createAccount(accountRequestDTO);
+    public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
+
+        AccountDTO results = accountService.createAccount(accountRequestDTO);
+
+        if(results == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(results);
     }
 
     @GetMapping("/getAll")
@@ -45,10 +51,26 @@ public class AccountController {
 
     @PostMapping("/checkEmail")
     public ResponseEntity<String> checkEmail(@RequestBody AccountRequestDTO accountRequestDTO) {
-        if (accountService.checkEmail(accountRequestDTO)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Account found");
+
+        switch (accountService.checkEmail(accountRequestDTO)) {
+            case 1:
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already associated with an account");
+
+            case 2:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email format is invalid");
+
+            default:
+                return ResponseEntity.status(HttpStatus.OK).body("Email format is valid and not associated with an account");
         }
-        return ResponseEntity.status(HttpStatus.OK).body("No account found");
+
+    }
+
+    @PostMapping("/checkPassword")
+    public ResponseEntity<String> checkPassword(@RequestBody AccountRequestDTO accountRequestDTO) {
+        if(!accountService.checkPassword(accountRequestDTO)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Password");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Valid Password");
     }
 
     @PutMapping("/update/username")

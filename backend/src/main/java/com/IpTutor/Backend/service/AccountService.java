@@ -52,9 +52,15 @@ public class AccountService implements UserDetailsService {
         return matcher.matches();
     }
 
+    private boolean checkPasswordPattern(String password) {
+        Pattern validEmail = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&-+=()])(?=\\S+$).{8,20}$");
+        Matcher matcher = validEmail.matcher(password);
+        return matcher.matches();
+    }
+
     public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
-        if(checkExistence("email", accountRequestDTO.email()) || !checkEmailPattern(accountRequestDTO.email())){
+        if(checkExistence("email", accountRequestDTO.email()) || !checkEmailPattern(accountRequestDTO.email()) || !checkPasswordPattern(accountRequestDTO.password())){
             return null;
         }
 
@@ -96,8 +102,20 @@ public class AccountService implements UserDetailsService {
         return new AccountDTO(account.get(0).getUsername(), account.get(0).getEmail(), account.get(0).getAccountCreation());
     }
 
-    public boolean checkEmail(AccountRequestDTO accountRequestDTO) {
-        return checkExistence("email", accountRequestDTO.email());
+    public int checkEmail(AccountRequestDTO accountRequestDTO) {
+
+        if(checkExistence("email", accountRequestDTO.email())) {
+            return 1;
+        }
+        if(!checkEmailPattern(accountRequestDTO.email())) {
+            return 2;
+        }
+
+        return 0;
+    }
+
+    public boolean checkPassword(AccountRequestDTO accountRequestDTO) {
+        return checkPasswordPattern(accountRequestDTO.password());
     }
 
 
