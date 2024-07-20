@@ -37,9 +37,9 @@ public class AccountController {
     @PostMapping("/checkEmail")
     public ResponseEntity<String> checkEmail(@RequestBody AccountRequestDTO accountRequestDTO) {
         if (accountService.checkEmail(accountRequestDTO)) {
-            return ResponseEntity.status(HttpStatus.OK).body("Account found");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Account found");
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No account found");
+        return ResponseEntity.status(HttpStatus.OK).body("No account found");
     }
 
     @GetMapping("/checkUsername")

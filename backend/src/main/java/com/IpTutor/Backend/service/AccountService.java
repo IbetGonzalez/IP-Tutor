@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.Console;
@@ -29,7 +30,6 @@ import java.util.List;
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final MongoTemplate mongoTemplate;
-
     private boolean checkExistence(String key, String var) {
         Query find = new Query(Criteria.where(key).is(var));
         if(mongoTemplate.find(find, Account.class).isEmpty()) {
@@ -41,14 +41,16 @@ public class AccountService implements UserDetailsService {
 
     public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
-        if(checkExistence("username", accountRequestDTO.username()) || checkExistence("email", accountRequestDTO.email())){
+        if(checkExistence("email", accountRequestDTO.email())){
             return null;
         }
+
+        var encoder = new BCryptPasswordEncoder();
 
         Account account = Account.builder()
                 .email(accountRequestDTO.email())
                 .username(accountRequestDTO.username())
-                .password(accountRequestDTO.password())
+                .password(encoder.encode(accountRequestDTO.password()))
                 .build();
 
         account.setAccountCreation(LocalDate.now());
