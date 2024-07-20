@@ -11,6 +11,17 @@ if (login) {
 }
 
 const register = document.querySelector("#register-form");
+var empty = true;
+
+function symbolKeyPressed(event) {
+    const printableKeys = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:'",.<>\/?\\|`~]$/;
+
+    if (printableKeys.test(event.key)) {
+        return true;
+    } else {
+        return false;
+    }
+}
 if (register) {
     const email = document.querySelector("#email-field");
     const emailIndcicator = document.querySelector("#email-field ~ .indicator svg");
@@ -18,9 +29,25 @@ if (register) {
     const password = document.querySelector("#password-field");
     const confirmPassword = document.querySelector("#confirm-password-field");
 
-    email.addEventListener( "keyup", debounce(async function () {
-        if (email.value) {
+
+    email.addEventListener("keydown", function(e) {
+        if (empty || !symbolKeyPressed(e)) {
+            return;
+        }
+        emailIndcicator.classList.remove("hidden");
+        emailIndcicator.classList.remove("deny");
+        emailIndcicator.classList.remove("allow");
+        emailIndcicator.classList.add("progress");
+    })
+
+    email.addEventListener( "keyup", debounce(async function (e) {
+        if (!symbolKeyPressed(e)) {
+            return;
+        }
+        if (email.value !== "") {
             emailIndcicator.classList.remove("hidden");
+            emailIndcicator.classList.remove("deny");
+            emailIndcicator.classList.remove("allow");
             emailIndcicator.classList.add("progress");
 
             const data = new FormData();
@@ -28,12 +55,28 @@ if (register) {
             data.append("email", email.value);
             data.append("password", "");
 
-            if (!postRequest(data)) {
-                emailIndcicator.classList.remove("progress");
-                emailIndcicator.classList.add("tick");
-            } else {
-                alert("Oh no else!");
+            try {
+                const available = await postRequest("/accounts/checkEmail", data);
+
+                if (available) {
+                    setTimeout(() => {
+                        emailIndcicator.classList.remove("progress");
+                        emailIndcicator.classList.add("allow");
+                    }, 250);
+                }
+            } catch (e) {
+                setTimeout(() => {
+                    emailIndcicator.classList.remove("progress");
+                    emailIndcicator.classList.add("deny");
+                }, 250);
             }
+            empty = false;
+        } else {
+            empty = true;
+            emailIndcicator.classList.remove("deny");
+            emailIndcicator.classList.remove("allow");
+            emailIndcicator.classList.remove("progress");
+            emailIndcicator.classList.add("hidden");
         }
     }, 500)
     );
@@ -59,10 +102,14 @@ if (register) {
         const data = new FormData(register);
         data.delete("confirm-password");
 
-        if (postRequest(data)) {
-            htmx.ajax("GET", "/login", ".content");
-        } else {
-            // TODO:  Could not create account
+        try {
+            const created = await postRequest("/accounts/create", data);
+
+            if (created) {
+                htmx.ajax("GET", "/login", ".content");
+            }
+        } catch (e) {
+            // TODO
         }
     });
 }
@@ -75,23 +122,19 @@ export function checkSession() {
     }
 }
 
-async function postRequest(formData) {
-    try {
-        const request = new Request("/accounts/checkEmail", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(
-                Object.fromEntries(formData.entries()),
-            ),
-        });
-        const response = await fetch(request);
+async function postRequest(url, formData) {
+    const request = new Request(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(
+            Object.fromEntries(formData.entries()),
+        ),
+    });
+    const response = await fetch(request);
 
-        if (response.ok) {
-            return true;
-        } else {
-            throw new Error(`Response status: ${response.status}`);
-        }
-    } catch (e) {
-        return false;
+    if (response.ok) {
+        return true;
+    } else {
+        throw new Error(`Response status: ${response.status}`);
     }
 }

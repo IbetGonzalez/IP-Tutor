@@ -35,6 +35,7 @@
     display: flex;
 } 
 .form-input .text-input{
+    padding-bottom: 6px;  
     font-family: inherit;
     width: 100%;
     border: 0;
@@ -56,56 +57,85 @@
 
 }
 
-.form-input .text-input-label {
-    position: absolute;
-    pointer-events:none;
-    top: -12px;
-    display: block;
-    transition: 0.2s;
-    font-size: 1rem;
-    color: var(--background);;
-}
 .indicator {
     position: absolute;
     right: 0; 
     height: 30px;
 }
+.indicator .cross{
+    opacity: 0;
+    stroke: #ff0000;
+    stroke-width: 6;
+    transition: all 1s;
+}
+
 .indicator #tick {
-  stroke: var(--secondary);
-  stroke-width: 6;
-  transition: all 1s;
+    opacity: 0;
+    stroke: var(--secondary);
+    stroke-width: 6;
+    transition: all 1s;
 }
 
 .indicator #circle {
-  stroke: var(--secondary);
-  stroke-width: 6;
-  transform-origin: 50px 50px 0;
-  transition: all 1s;
+    stroke: var(--secondary);
+    stroke-width: 6;
+    transform-origin: 50px 50px 0;
 }
-
 
 .indicator .hidden {
     display: none;
 }
-.indicator .progress #tick {
-  opacity: 0;
-}
-
 .indicator .progress #circle {
-  stroke: #4c4c4c;
-  stroke-dasharray: 314;
-  stroke-dashoffset: 1000;
-  animation: spin 3s linear infinite;
+    stroke: #4c4c4c;
+    stroke-dasharray: 314;
+    stroke-dashoffset: 1000;
+    animation: spin 3s linear infinite;
+}
+.indicator .progress #tick{
+    display: none;
+}
+.indicator .progress .cross{
+    display: none;
 }
 
-.indicator .ready #circle {
-  stroke-dashoffset: 66;
-  stroke: var(--secondary);
+.indicator .allow #circle {
+    stroke-dashoffset: 66;
+    stroke: var(--secondary);
 }
-.indicator .ready #tick {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-  animation: draw 8s ease-out forwards;
+.indicator .allow #tick {
+    opacity: 1;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 3s ease-out forwards;
+}
+.indicator .allow .cross{
+    display: none;
+}
+
+.indicator .deny #circle {
+    stroke-dashoffset: 66;
+    stroke: #ff0000;
+}
+.indicator .deny .cross{
+    opacity: 1;
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: draw 4s ease-out forwards;
+}
+
+.indicator #cross #line-one {
+    animation-delay: 250ms;
+}
+.indicator .deny #tick{
+    display: none;
+}
+.form-input:has(.indicator .deny) .text-input{
+    border-width: 3px;
+    border-image: linear-gradient(to right, #aa0534, #ff0000);
+    border-image-slice: 1;
+}
+.form-input:has(.indicator .deny) .text-input-label{
+    color: #aa0534;
 }
 
 @keyframes draw {
@@ -128,6 +158,15 @@
   }
 }
 
+.form-input .text-input-label {
+    position: absolute;
+    pointer-events:none;
+    top: -12px;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: var(--background);;
+}
 .text-input:focus ~ .text-input-label {
     position: absolute;
     top: -16px !important;
@@ -138,7 +177,6 @@
     font-weight:700;    
 }
 .text-input:focus {
-    padding-bottom: 6px;  
     font-weight: 700;
     border-width: 3px;
     border-image: linear-gradient(to right, var(--gradient2),var(--secondary));
