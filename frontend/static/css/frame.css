@@ -71,13 +71,13 @@
 
 .indicator #tick {
     opacity: 0;
-    stroke: var(--secondary);
+    stroke: var(--gradient2);
     stroke-width: 6;
     transition: all 1s;
 }
 
 .indicator #circle {
-    stroke: var(--secondary);
+    stroke: var(--gradient2);
     stroke-width: 6;
     transform-origin: 50px 50px 0;
 }
@@ -100,7 +100,7 @@
 
 .indicator .allow #circle {
     stroke-dashoffset: 66;
-    stroke: var(--secondary);
+    stroke: var(--gradient2);
 }
 .indicator .allow #tick {
     opacity: 1;
