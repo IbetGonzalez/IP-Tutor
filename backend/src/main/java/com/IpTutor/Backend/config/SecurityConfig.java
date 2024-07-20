@@ -25,6 +25,7 @@ public class SecurityConfig {
               .requestMatchers("/settings").authenticated()
               .anyRequest().permitAll()
               )
+              .csrf(AbstractHttpConfigurer::disable)
               .formLogin(form -> form.defaultSuccessUrl("/", true).loginPage("/login"))
               .logout(config -> config.logoutSuccessUrl("/").logoutUrl("/logout"))
               .build();
