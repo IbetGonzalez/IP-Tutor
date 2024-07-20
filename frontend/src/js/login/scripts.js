@@ -1,5 +1,6 @@
 import { getCookie, makeCookie } from "./client.js";
 import { debounce } from "../scripts.js";
+
 import htmx from "htmx.org";
 
 const login = document.querySelector("#login-form");
@@ -20,29 +21,13 @@ if (register) {
         "keyup",
         debounce(async function () {
             if (email.value) {
-                try {
-                    const data = new FormData();
-                    data.append("username", "");
-                    data.append("email", email.value);
-                    data.append("password", "");
+                const data = new FormData();
+                data.append("username", "");
+                data.append("email", email.value);
+                data.append("password", "");
 
-                    const request = new Request("/accounts/checkEmail", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(
-                            Object.fromEntries(data.entries()),
-                        ),
-                    });
-                    const response = await fetch(request);
-
-                    if (response.ok) {
-                        // TODO 
-                    } else {
-                        throw new Error(`Response status: ${response.status}`);
-                    }
-                } catch (e) {
-                    // TODO
-                    console.log(e.message);
+                if (postRequest(data)) {
+                    // TODO:  Display email availability
                 }
             }
         }, 500),
@@ -65,26 +50,14 @@ if (register) {
             alert("Passwords must match");
             return;
         }
-        try {
-            const data = new FormData(register);
-            data.delete("confirm-password");
 
-            const JSONdata = Object.fromEntries(data.entries());
+        const data = new FormData(register);
+        data.delete("confirm-password");
 
-            const request = new Request("/accounts/create", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(JSONdata),
-            });
-            const response = await fetch(request);
-
-            if (response.ok) {
-                htmx.ajax("GET","/");
-            } else {
-                throw new Error(`Response status: ${response.status}`);
-            }
-        } catch (e) {
-            console.log(e.message);
+        if (postRequest(data)) {
+            htmx.ajax("GET", "/login", ".content");
+        } else {
+            // TODO:  Could not create account
         }
     });
 }
@@ -94,5 +67,26 @@ export function checkSession() {
 
     if (!jwtToken) {
         htmx.ajax("GET", "/login", ".content");
+    }
+}
+
+async function postRequest(formData) {
+    try {
+        const request = new Request("/accounts/checkEmail", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(
+                Object.fromEntries(formData.entries()),
+            ),
+        });
+        const response = await fetch(request);
+
+        if (response.ok) {
+            return true;
+        } else {
+            throw new Error(`Response status: ${response.status}`);
+        }
+    } catch (e) {
+        return false;
     }
 }
