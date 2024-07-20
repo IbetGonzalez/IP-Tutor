@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import java.io.Console;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +35,6 @@ import java.util.List;
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final MongoTemplate mongoTemplate;
-
     private final PasswordEncoder passwordEncoder;
 
     private boolean checkExistence(String key, String var) {
@@ -45,9 +46,15 @@ public class AccountService implements UserDetailsService {
         return true;
     }
 
+    private boolean checkEmailPattern(String email) {
+        Pattern validEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = validEmail.matcher(email);
+        return matcher.matches();
+    }
+
     public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
-        if(checkExistence("email", accountRequestDTO.email())){
+        if(checkExistence("email", accountRequestDTO.email()) || !checkEmailPattern(accountRequestDTO.email())){
             return null;
         }
 
