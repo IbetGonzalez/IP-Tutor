@@ -31,6 +31,8 @@
 }
 .form-input {
     position: relative;
+    padding: 7px 0;
+    display: flex;
 } 
 .form-input .text-input{
     font-family: inherit;
@@ -40,7 +42,6 @@
     outline: 0;
     font-size: 1.3rem;
     color: var(--background);
-    padding: 7px 0;
     background: transparent;
     transition: border-color 0.2s;
 
@@ -63,6 +64,68 @@
     transition: 0.2s;
     font-size: 1rem;
     color: var(--background);;
+}
+.indicator {
+    position: absolute;
+    right: 0; 
+    height: 30px;
+}
+.indicator #tick {
+  stroke: var(--secondary);
+  stroke-width: 6;
+  transition: all 1s;
+}
+
+.indicator #circle {
+  stroke: var(--secondary);
+  stroke-width: 6;
+  transform-origin: 50px 50px 0;
+  transition: all 1s;
+}
+
+
+.indicator .hidden {
+    display: none;
+}
+.indicator .progress #tick {
+  opacity: 0;
+}
+
+.indicator .progress #circle {
+  stroke: #4c4c4c;
+  stroke-dasharray: 314;
+  stroke-dashoffset: 1000;
+  animation: spin 3s linear infinite;
+}
+
+.indicator .ready #circle {
+  stroke-dashoffset: 66;
+  stroke: var(--secondary);
+}
+.indicator .ready #tick {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: draw 8s ease-out forwards;
+}
+
+@keyframes draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes spin {
+  0% { 
+    transform: rotate(0deg);
+    stroke-dashoffset: 66;
+  } 
+  50% {
+    transform: rotate(540deg);
+    stroke-dashoffset: 314;
+  } 
+  100% {
+    transform: rotate(1080deg);
+    stroke-dashoffset: 66;
+  }
 }
 
 .text-input:focus ~ .text-input-label {
@@ -89,3 +152,4 @@
     text-decoration: none;
     color: var(--background);
 }
+
