@@ -13,24 +13,29 @@ if (login) {
 const register = document.querySelector("#register-form");
 if (register) {
     const email = document.querySelector("#email-field");
+    const emailIndcicator = document.querySelector("#email-field ~ .indicator svg");
     const username = document.querySelector("#username-field");
     const password = document.querySelector("#password-field");
     const confirmPassword = document.querySelector("#confirm-password-field");
 
-    email.addEventListener(
-        "keyup",
-        debounce(async function () {
-            if (email.value) {
-                const data = new FormData();
-                data.append("username", "");
-                data.append("email", email.value);
-                data.append("password", "");
+    email.addEventListener( "keyup", debounce(async function () {
+        if (email.value) {
+            emailIndcicator.classList.remove("hidden");
+            emailIndcicator.classList.add("progress");
 
-                if (postRequest(data)) {
-                    // TODO:  Display email availability
-                }
+            const data = new FormData();
+            data.append("username", "");
+            data.append("email", email.value);
+            data.append("password", "");
+
+            if (!postRequest(data)) {
+                emailIndcicator.classList.remove("progress");
+                emailIndcicator.classList.add("tick");
+            } else {
+                alert("Oh no else!");
             }
-        }, 500),
+        }
+    }, 500)
     );
 
     register.addEventListener("submit", async function (evt) {
