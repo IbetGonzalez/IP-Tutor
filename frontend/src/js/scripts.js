@@ -1,3 +1,4 @@
+import { debounce } from './util/util.js'
 import htmx from 'htmx.org';
 
 document.addEventListener("DOMContentLoaded", function() { updateNav() });
@@ -24,21 +25,6 @@ function MinimizeNav() {
     }, 50);
     Toggle();
 }
-
-export function debounce(func, wait) {
-    let timeout;
-
-    return function(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func.apply(this, args);
-        };
-
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
 
 function updateNav() {
     let path = document.location.pathname.split("/")[1];
