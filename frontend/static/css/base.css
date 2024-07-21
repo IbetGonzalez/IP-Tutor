@@ -1,15 +1,3 @@
-@font-face {
-    font-family: "roboto";
-    src: url("/fonts/Roboto-Regular.ttf");
-}
-:root {
-    --background: #080f11;
-    --text: #fbfbfe;
-    --primary: #0d3b59;
-    --secondary: #82ed9b;
-    --accent: #57cb99;
-}
-
 * {
     margin: 0;
 }

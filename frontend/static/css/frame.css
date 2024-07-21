@@ -178,6 +178,41 @@
     font-size: 1rem;
     font-weight:700;    
 }
+.form-input .checklist {
+    list-style-type: none;
+    overflow: hidden;
+    text-align: left;
+    transition: height 100ms ease-out, margin-top 100ms ease-out;
+    height: 0;
+}
+
+.form-input .checklist li {
+    display: flex;
+    margin-top: 5px;
+    gap: 1rem;
+    &::before {
+        content: "⨯";
+        display: flex;
+        border-radius: 5px;
+        justify-content: center;
+        align-items: center;
+        height: 1rem;
+        width: 1rem;
+        overflow: hidden;
+        padding: 0.125rem;
+        font-weight: 900;
+        background-color: var(--danger);
+        color: white;
+    }
+}
+.form-input .checklist li.checked::before {
+    content:"✓";
+    background-color: var(--success);
+}
+.text-input:focus ~ .checklist {
+    margin-top: 1rem;
+    height: 8rem;
+}
 #password-field:focus ~ .strength {
     margin-top: 4px;
     height: 4px;
@@ -202,26 +237,23 @@
 }
 #password-field ~ .strength-1{
     #bar-1 {
-        background-color: red;
+        background-color: var(--danger);
     }
 }
 #password-field ~ .strength-2{
     #bar-1, #bar-2 {
-        background-color: orange;
+        background-color: var(--warning);
     }
 }
 #password-field ~ .strength-3{
     #bar-1, #bar-2, #bar-3 {
-        background-color: yellow;
+        background-color: var(--caution);
     }
 }
 #password-field ~ .strength-4{
     .bar {
-        background-color: green;
+        background-color: var(--success);
     }
-}
-#password-field ~ .strength .strength-2 .bar {
-    background-color: yellow;
 }
 .text-input:focus {
     font-weight: 700;

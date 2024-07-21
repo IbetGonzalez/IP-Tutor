@@ -5,14 +5,8 @@ export function makeCookie(c_name, c_value, expires_min) {
     const new_cookie = c_name + "=" + c_value + ";" + expires + ";path=/";
     return new_cookie;
 } 
-export function validatePassword (password) {
-    const validation = [
-        (password.length > 5),
-        (password.search(/[A-Z]/) > -1),
-        (password.search(/[0-9]/) > -1),
-        (password.search(/[!@#$%^&*,;]/) > -1)
-    ]
-    return validation.reduce((acc, curr) => acc + curr);
+export function validatePassword (validationRules, password) {
+    return validationRules.reduce((acc, curr) => acc + curr);
 }
 
 export function getCookie(c_name){
