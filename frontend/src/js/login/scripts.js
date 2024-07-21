@@ -20,7 +20,8 @@ if (register) {
     const username = document.querySelector("#username-field");
 
     const password = document.querySelector("#password-field");
-    const passwordIndicator = document.querySelector("#password-field ~ .indicator svg");
+    const passwordStrength = document.querySelector("#password-field ~ .strength");
+    const passwordChecklist = document.querySelector("#password-field ~ .checklist");
 
     const confirmPassword = document.querySelector("#confirm-password-field");
 
@@ -68,19 +69,34 @@ if (register) {
     }, 500)
     );
 
-    password.addEventListener( "input" , function () {
+    let updateStrength = debounce(function (strength) {
+        removeClasses(passwordStrength, ["strength-1", "strength-2", "strength-3", "strength-4"]);
         if (password.value.length <= 0) {
             return;
         }
+        passwordStrength.classList.add("strength-" + strength);
+    }, 250)
 
-        removeClasses(passwordIndicator, ["hidden", "progress", "deny", "allow"]);
-        const strength = validatePassword(password.value);
+    password.addEventListener( "input" , () => {
+        const passwordInput = password.value;
+        const validation = [
+            (passwordInput.length > 8),
+            (passwordInput.search(/[A-Z]/) > -1),
+            (passwordInput.search(/[0-9]/) > -1),
+            (passwordInput.search(/[!@#$%^&*,;]/) > -1)
+        ]
 
-        if (strength >= 4) {
-            passwordIndicator.classList.add("allow");
-        } else {
-            passwordIndicator.classList.add("deny");
+        const strength = validatePassword(validation, password.value);
+        for (let i = 0; i < validation.length; i++) {
+            const li =passwordChecklist.children.item(i)
+            if (validation[i]) {
+                li.classList.add("checked");
+            } else {
+                li.classList.remove("checked");
+            }
         }
+
+        updateStrength(strength);
     });
 
     register.addEventListener("submit", async function (evt) {
