@@ -1,5 +1,5 @@
-import { getCookie, makeCookie } from "./client.js";
-import { debounce } from "../scripts.js";
+import { validatePassword, getCookie, makeCookie } from "./client-util.js";
+import { removeClasses, addClasses, inputKeyPressed, debounce } from "../util/util.js";
 
 import htmx from "htmx.org";
 
@@ -11,75 +11,77 @@ if (login) {
 }
 
 const register = document.querySelector("#register-form");
-var empty = true;
 
-function symbolKeyPressed(event) {
-    const printableKeys = /^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};:'",.<>\/?\\|`~]$/;
-
-    if (printableKeys.test(event.key)) {
-        return true;
-    } else {
-        return false;
-    }
-}
 if (register) {
     const email = document.querySelector("#email-field");
-    const emailIndcicator = document.querySelector("#email-field ~ .indicator svg");
+    const emailIndicator = document.querySelector("#email-field ~ .indicator svg");
+    var emailEmpty = true;
+
     const username = document.querySelector("#username-field");
+
     const password = document.querySelector("#password-field");
+    const passwordIndicator = document.querySelector("#password-field ~ .indicator svg");
+
     const confirmPassword = document.querySelector("#confirm-password-field");
 
 
-    email.addEventListener("keydown", function(e) {
-        if (empty || !symbolKeyPressed(e)) {
+    email.addEventListener( "keydown" , function(e) {
+        if (emailEmpty || !inputKeyPressed(e)) {
             return;
         }
-        emailIndcicator.classList.remove("hidden");
-        emailIndcicator.classList.remove("deny");
-        emailIndcicator.classList.remove("allow");
-        emailIndcicator.classList.add("progress");
+
+        removeClasses(emailIndicator, ["hidden", "deny", "allow"]);
+        addClasses(emailIndicator, ["progress"]);
     })
 
-    email.addEventListener( "keyup", debounce(async function (e) {
-        if (!symbolKeyPressed(e) && !e.shiftKey) {
+    email.addEventListener( "input", debounce(async function () {
+        if (email.value.length <= 0) {
+            emailEmpty = true;
+            removeClasses(emailIndicator, ["progress", "deny", "allow"]);
+            emailIndicator.classList.add("hidden");
             return;
         }
-        if (email.value !== "") {
-            emailIndcicator.classList.remove("hidden");
-            emailIndcicator.classList.remove("deny");
-            emailIndcicator.classList.remove("allow");
-            emailIndcicator.classList.add("progress");
+        
+        removeClasses(emailIndicator, ["hidden", "deny", "allow"]);
+        addClasses(emailIndicator, ["progress"]);
 
-            const data = new FormData();
-            data.append("username", "");
-            data.append("email", email.value);
-            data.append("password", "");
+        const data = new FormData();
+        data.append("email", email.value);
 
-            try {
-                const available = await postRequest("/accounts/checkEmail", data);
+        try {
+            const available = await postRequest("/accounts/checkEmail", data);
 
-                if (available) {
-                    setTimeout(() => {
-                        emailIndcicator.classList.remove("progress");
-                        emailIndcicator.classList.add("allow");
-                    }, 250);
-                }
-            } catch (e) {
+            if (available) {
                 setTimeout(() => {
-                    emailIndcicator.classList.remove("progress");
-                    emailIndcicator.classList.add("deny");
+                    emailIndicator.classList.remove("progress");
+                    emailIndicator.classList.add("allow");
                 }, 250);
             }
-            empty = false;
-        } else {
-            empty = true;
-            emailIndcicator.classList.remove("deny");
-            emailIndcicator.classList.remove("allow");
-            emailIndcicator.classList.remove("progress");
-            emailIndcicator.classList.add("hidden");
+        } catch (e) {
+            setTimeout(() => {
+                emailIndicator.classList.remove("progress");
+                emailIndicator.classList.add("deny");
+            }, 250);
         }
+
+        emailEmpty = false;
     }, 500)
     );
+
+    password.addEventListener( "input" , function () {
+        if (password.value.length <= 0) {
+            return;
+        }
+
+        removeClasses(passwordIndicator, ["hidden", "progress", "deny", "allow"]);
+        const strength = validatePassword(password.value);
+
+        if (strength >= 4) {
+            passwordIndicator.classList.add("allow");
+        } else {
+            passwordIndicator.classList.add("deny");
+        }
+    });
 
     register.addEventListener("submit", async function (evt) {
         evt.preventDefault();
