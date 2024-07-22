@@ -3,6 +3,7 @@ package com.IpTutor.Backend.service;
 import com.IpTutor.Backend.dto.AccountLoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
+import com.IpTutor.Backend.dto.LoginResponseDTO;
 import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;
 import com.mongodb.client.result.DeleteResult;
@@ -15,6 +16,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,10 +35,12 @@ import java.util.regex.Pattern;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AccountService implements UserDetailsService {
+public class AccountService{
     private final AccountRepository accountRepository;
     private final MongoTemplate mongoTemplate;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
     private boolean checkExistence(String key, String var) {
         Query find = new Query(Criteria.where(key).is(var));
@@ -87,7 +92,16 @@ public class AccountService implements UserDetailsService {
                 .toList();
     }
 
-    public AccountDTO getAccount(AccountLoginRequestDTO accountLoginRequestDTO) {
+    public LoginResponseDTO getAccount(AccountLoginRequestDTO accountLoginRequestDTO) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        accountLoginRequestDTO.email(),
+                        accountLoginRequestDTO.password()
+                )
+        );
+
+
         Query findAccount = new Query(Criteria.where("email").is(accountLoginRequestDTO.email()));
         List<Account> account = mongoTemplate.find(findAccount, Account.class);
 
@@ -96,10 +110,12 @@ public class AccountService implements UserDetailsService {
         }
 
         if(!passwordEncoder.matches(accountLoginRequestDTO.password(), account.get(0).getPassword())) {
-            return new AccountDTO(null, account.get(0).getEmail(), null);
+            return new LoginResponseDTO(null,-1);
         }
 
-        return new AccountDTO(account.get(0).getUsername(), account.get(0).getEmail(), account.get(0).getAccountCreation());
+        String jwtToken = jwtService.generateToken(account.get(0));
+
+        return new LoginResponseDTO(jwtToken, jwtService.getExpirationTime());
     }
 
     public int checkEmail(AccountRequestDTO accountRequestDTO) {
@@ -131,22 +147,5 @@ public class AccountService implements UserDetailsService {
         Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
         DeleteResult deleteResult = mongoTemplate.remove(findAccount, Account.class);
         return deleteResult.getDeletedCount();
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Query findAccount = new Query(Criteria.where("email").is(email));
-        List<Account> accounts = mongoTemplate.find(findAccount, Account.class);
-
-        if(!accounts.isEmpty()) {
-            Account account = accounts.get(0);
-            var accountUser = User.withUsername(account.getEmail())
-                    .password(account.getPassword())
-                    .roles("USER")
-                    .build();
-
-            return accountUser;
-        }
-        return null;
     }
 }
