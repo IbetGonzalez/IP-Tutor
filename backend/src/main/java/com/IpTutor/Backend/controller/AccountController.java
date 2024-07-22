@@ -4,6 +4,7 @@ import com.IpTutor.Backend.dto.AccountLoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.dto.LoginResponseDTO;
+import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.service.AccountService;
 import com.IpTutor.Backend.service.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -89,4 +90,9 @@ public class AccountController {
         return accountService.deleteAccount(accountRequestDTO);
     }
 
+    @GetMapping("/test")
+    @ResponseStatus(HttpStatus.OK)
+    public Account test(@RequestBody AccountRequestDTO accountRequestDTO) {
+        return accountService.test(accountRequestDTO);
+    }
 }

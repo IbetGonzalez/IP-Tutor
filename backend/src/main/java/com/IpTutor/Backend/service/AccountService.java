@@ -148,4 +148,10 @@ public class AccountService{
         DeleteResult deleteResult = mongoTemplate.remove(findAccount, Account.class);
         return deleteResult.getDeletedCount();
     }
+
+    public Account test(AccountRequestDTO accountRequestDTO) {
+        Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
+        List<Account> account = mongoTemplate.find(findAccount, Account.class);
+        return account.get(0);
+    }
 }
