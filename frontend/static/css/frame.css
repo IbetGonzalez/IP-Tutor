@@ -183,21 +183,24 @@
     overflow: hidden;
     text-align: left;
     transition: height 100ms ease-out, margin-top 100ms ease-out;
+    padding-left: 5%;
     height: 0;
 }
 
 .form-input .checklist li {
     display: flex;
     margin-top: 5px;
-    gap: 1rem;
+    gap: 0.5rem;
     &::before {
         content: "⨯";
         display: flex;
-        border-radius: 5px;
+        border-radius: 3px;
         justify-content: center;
         align-items: center;
         height: 1rem;
+        min-height: 1rem;
         width: 1rem;
+        min-width: 1rem;
         overflow: hidden;
         padding: 0.125rem;
         font-weight: 900;
@@ -235,6 +238,7 @@
     height: 4px;
     width: 25%;
 }
+
 #password-field ~ .strength-1{
     #bar-1 {
         background-color: var(--danger);

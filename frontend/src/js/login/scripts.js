@@ -20,10 +20,12 @@ if (register) {
     const username = document.querySelector("#username-field");
 
     const password = document.querySelector("#password-field");
+    const passwordIndicator = document.querySelector("#password-field ~ .indicator svg");
     const passwordStrength = document.querySelector("#password-field ~ .strength");
     const passwordChecklist = document.querySelector("#password-field ~ .checklist");
 
     const confirmPassword = document.querySelector("#confirm-password-field");
+    const confirmPasswordIndicator = document.querySelector("#confirm-password-field ~ .indicator svg");
 
 
     email.addEventListener( "keydown" , function(e) {
@@ -71,10 +73,20 @@ if (register) {
 
     let updateStrength = debounce(function (strength) {
         removeClasses(passwordStrength, ["strength-1", "strength-2", "strength-3", "strength-4"]);
-        if (password.value.length <= 0) {
-            return;
+
+        if (password.value.length > 0) {
+            passwordStrength.classList.add("strength-" + strength);
+
+            if (strength >= 4) {
+                updateConfirm();
+                passwordIndicator.classList.remove("deny");
+                passwordIndicator.classList.add("hidden");
+                return;
+            } 
         }
-        passwordStrength.classList.add("strength-" + strength);
+        
+        passwordIndicator.classList.add("deny");
+        passwordIndicator.classList.remove("hidden");
     }, 250)
 
     password.addEventListener( "input" , () => {
@@ -87,6 +99,7 @@ if (register) {
         ]
 
         const strength = validatePassword(validation, password.value);
+
         for (let i = 0; i < validation.length; i++) {
             const li =passwordChecklist.children.item(i)
             if (validation[i]) {
@@ -99,6 +112,21 @@ if (register) {
         updateStrength(strength);
     });
 
+    function updateConfirm() {
+        removeClasses(confirmPasswordIndicator, ["hidden", "deny", "allow"]);
+        if (confirmPassword.value.length <= 0) {
+            confirmPasswordIndicator.classList.add("hidden");
+            return;
+        }
+
+        if (confirmPassword.value != password.value) {
+            confirmPasswordIndicator.classList.add("deny");
+            return;
+        }
+        confirmPasswordIndicator.classList.add("allow");
+    }
+
+    confirmPassword.addEventListener( "input" , debounce(updateConfirm, 500));
     register.addEventListener("submit", async function (evt) {
         evt.preventDefault();
         if (
