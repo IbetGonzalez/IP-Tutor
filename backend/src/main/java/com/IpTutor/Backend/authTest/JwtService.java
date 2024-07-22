@@ -1,4 +1,4 @@
-package com.IpTutor.Backend.service;
+package com.IpTutor.Backend.authTest;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

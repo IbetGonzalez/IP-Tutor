@@ -1,4 +1,4 @@
-package com.IpTutor.Backend.config;
+package com.IpTutor.Backend.authTest;
 
 import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;
@@ -30,7 +30,7 @@ public class ApplicationConfig {
     //TODO: Implement this somewhere else
     UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found -> here"));
     }
     @Bean
     BCryptPasswordEncoder passwordEncoder() {

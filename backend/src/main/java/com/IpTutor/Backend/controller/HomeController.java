@@ -53,10 +53,10 @@ public class HomeController {
     }
 
     @GetMapping("/test/settings")
-    public Account testAuth() {
+    public String testAuth() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Account a = (Account) authentication.getPrincipal();
-        return a;
+        //Account a = (Account) authentication.getPrincipal();
+        return "Hello There";
     }
 
     @GetMapping("/unauthorized")
