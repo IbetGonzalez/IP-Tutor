@@ -37,7 +37,6 @@ if (register) {
     }
 
     function updateFieldValidity(field, isValid) {
-        console.log("updating ", isValid);
         submitBtn.diabled = !isValid;
         fieldsValidity[field] = isValid;
     }
