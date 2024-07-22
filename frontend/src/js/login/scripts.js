@@ -27,6 +27,20 @@ if (register) {
     const confirmPassword = document.querySelector("#confirm-password-field");
     const confirmPasswordIndicator = document.querySelector("#confirm-password-field ~ .indicator svg");
 
+    const submitBtn = register.querySelector("#submit-button");
+
+    const fieldsValidity = {
+        email: false,
+        username: false,
+        password: false,
+        confirmPassword: false,
+    }
+
+    function updateFieldValidity(field, isValid) {
+        submitBtn.diabled = !isValid;
+        fieldsValidity[field] = isValid;
+    }
+
 
     email.addEventListener( "keydown" , function(e) {
         if (emailEmpty || !inputKeyPressed(e)) {
@@ -35,9 +49,11 @@ if (register) {
 
         removeClasses(emailIndicator, ["hidden", "deny", "allow"]);
         addClasses(emailIndicator, ["progress"]);
+        updateFieldValidity("email", false);
     })
 
     email.addEventListener( "input", debounce(async function () {
+        updateFieldValidity("email", false);
         if (email.value.length <= 0) {
             emailEmpty = true;
             removeClasses(emailIndicator, ["progress", "deny", "allow"]);
@@ -58,6 +74,7 @@ if (register) {
                 setTimeout(() => {
                     emailIndicator.classList.remove("progress");
                     emailIndicator.classList.add("allow");
+                    updateFieldValidity("email", true);
                 }, 250);
             }
         } catch (e) {
@@ -79,6 +96,7 @@ if (register) {
 
             if (strength >= 4) {
                 updateConfirm();
+                updateFieldValidity("password", true);
                 passwordIndicator.classList.remove("deny");
                 passwordIndicator.classList.add("hidden");
                 return;
@@ -91,6 +109,8 @@ if (register) {
 
     password.addEventListener( "input" , () => {
         const passwordInput = password.value;
+        updateFieldValidity("password", false);
+
         const validation = [
             (passwordInput.length > 8),
             (passwordInput.search(/[A-Z]/) > -1),
@@ -114,6 +134,7 @@ if (register) {
 
     function updateConfirm() {
         removeClasses(confirmPasswordIndicator, ["hidden", "deny", "allow"]);
+        updateFieldValidity("password", false);
         if (confirmPassword.value.length <= 0) {
             confirmPasswordIndicator.classList.add("hidden");
             return;
@@ -123,10 +144,13 @@ if (register) {
             confirmPasswordIndicator.classList.add("deny");
             return;
         }
+
+        updateFieldValidity("password", true);
         confirmPasswordIndicator.classList.add("allow");
     }
 
     confirmPassword.addEventListener( "input" , debounce(updateConfirm, 500));
+
     register.addEventListener("submit", async function (evt) {
         evt.preventDefault();
         if (

@@ -317,9 +317,13 @@ footer .link svg path {
     font-family: inherit;
     font-size: 28px;
     font-weight: 600;
-}
-.card .button:hover{
-    cursor: pointer;
+    &:hover {
+        cursor: pointer;
+    }
+    &:disabled {
+        cursor: not-allowed;
+        background-color: #515151 !important;
+    }
 }
 
 .content .title {
