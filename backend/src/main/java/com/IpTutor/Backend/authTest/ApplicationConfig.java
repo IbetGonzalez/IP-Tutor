@@ -30,7 +30,7 @@ public class ApplicationConfig {
     //TODO: Implement this somewhere else
     UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found -> here"));
+                .orElseThrow(() -> new UsernameNotFoundException("Account not found"));
     }
     @Bean
     BCryptPasswordEncoder passwordEncoder() {

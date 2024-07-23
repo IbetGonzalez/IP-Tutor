@@ -2,6 +2,8 @@ package com.IpTutor.Backend.authTest;
 
 import com.IpTutor.Backend.model.Account;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,4 +27,10 @@ public class AuthController {
         return jwtService.extractUsername(token);
     }
 
+    @GetMapping("/test/settings")
+    public String testAuth() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        //Account a = (Account) authentication.getPrincipal();
+        return "Test";
+    }
 }
