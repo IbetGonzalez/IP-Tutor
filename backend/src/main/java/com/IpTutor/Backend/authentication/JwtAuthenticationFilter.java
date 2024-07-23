@@ -1,6 +1,5 @@
-package com.IpTutor.Backend.authTest;
+package com.IpTutor.Backend.authentication;
 
-import com.IpTutor.Backend.authTest.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

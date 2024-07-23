@@ -1,4 +1,4 @@
-package com.IpTutor.Backend.authTest;
+package com.IpTutor.Backend.config;
 
 import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;

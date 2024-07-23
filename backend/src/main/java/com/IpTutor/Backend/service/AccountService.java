@@ -1,6 +1,6 @@
 package com.IpTutor.Backend.service;
 
-import com.IpTutor.Backend.authTest.JwtService;
+import com.IpTutor.Backend.authentication.JwtService;
 import com.IpTutor.Backend.dto.AccountLoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
@@ -48,7 +48,7 @@ public class AccountService{
     }
 
     private boolean checkUsernamePattern(String username) {
-        Pattern validEmail = Pattern.compile("^[A-Za-z0-9]+$");
+        Pattern validEmail = Pattern.compile("^[A-Za-z0-9_]+$");
         Matcher matcher = validEmail.matcher(username);
         return !matcher.matches();
     }
