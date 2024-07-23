@@ -59,10 +59,17 @@
 
 }
 
+.form-input .err-message {
+    color: var(--danger);
+    font-size: 0.75rem;
+    transition: height 100ms ease-out;
+}
 .indicator {
     position: absolute;
     right: 0; 
     height: 30px;
+    &.cross {
+    }
 }
 .indicator .cross{
     opacity: 0;
@@ -273,4 +280,3 @@
     text-decoration: none;
     color: var(--background);
 }
-
