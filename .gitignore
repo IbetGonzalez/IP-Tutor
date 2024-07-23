@@ -38,5 +38,5 @@ buildNumber.properties
 node_modules/
 package-lock.json
 
-dist/*
-*.build.*
+frontend/static/js/
+*.bundle.js
