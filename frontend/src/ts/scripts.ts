@@ -1,5 +1,5 @@
 import { debounce } from './util/util'
-import { htmx, HtmxResponseInfo } from 'htmx.org';
+import htmx, { HtmxResponseInfo } from 'htmx.org';
 
 type htmxEvent = {
     detail: HtmxResponseInfo;

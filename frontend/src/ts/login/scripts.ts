@@ -1,6 +1,6 @@
 import { validatePassword, getCookie } from "./client-util";
 import { removeClasses, addClasses, inputKeyPressed, debounce } from "../util/util";
-import * as htmx from "htmx.org";
+import htmx from "htmx.org";
 
 const login = document.querySelector("#login-form");
 if (login) {
@@ -177,7 +177,7 @@ if (register) {
             const created = await postRequest("/accounts/create", data);
 
             if (created) {
-                htmx.htmx.ajax("get", "/login", ".content");
+                htmx.ajax("get", "/login", ".content");
             }
         } catch (e) {
             // TODO
@@ -189,7 +189,7 @@ export function checkSession() {
     let jwtToken = getCookie("jwt_token");
 
     if (!jwtToken) {
-        htmx.htmx.ajax("get", "/login", ".content");
+        htmx.ajax("get", "/login", ".content");
     }
 }
 
