@@ -51,9 +51,6 @@ public class HomeController {
         model.addAttribute("content", "/games/" + name);
         return "base";
     }
-
-
-
     @GetMapping("/unauthorized")
     public ResponseEntity<String> getNotUnauthorized() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login Required");
