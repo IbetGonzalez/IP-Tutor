@@ -1,14 +1,14 @@
-import * as Tone from "tone";
+import * as Tone from 'tone/build/esm';
 
 export default class Pitch {
-    synth;
-    note;
-    playing = false;
-    btn;
-    detune = 0;
+    synth: Tone.Synth | undefined;
+    note: number;
+    btn: HTMLButtonElement;
+    playing: boolean = false;
+    detune= 0;
 
-    constructor (elem, hold=true, hz=440) {
-        this.frequency = hz;
+    constructor (elem: HTMLButtonElement, hold=true, hz=440) {
+        this.note = hz;
         this.btn = elem;
 
         this.InitPitch();
@@ -33,9 +33,9 @@ export default class Pitch {
         }
     }
 
-    Detune(cents) {
+    Detune(cents: number) {
         this.detune += cents;
-        this.synth.detune.value = this.detune;
+        this.synth!.detune.value = this.detune;
     }
 
     TogglePitch() {
@@ -46,20 +46,20 @@ export default class Pitch {
         }
     }
 
-    SetNote(note) {
+    SetNote(note: number) {
         this.note = note;
     }
 
     PlayPitch(note=this.note) {
         console.log(note);
         console.log("playing");
-        this.synth.triggerAttack(note);
+        this.synth!.triggerAttack(note);
         this.playing = true;
     }
 
     StopPitch(){
         console.log("stopping");
-        this.synth.triggerRelease();
+        this.synth!.triggerRelease();
         this.playing = false;
     }
     

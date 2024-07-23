@@ -1,7 +1,6 @@
-import { validatePassword, getCookie, makeCookie } from "./client-util.js";
-import { removeClasses, addClasses, inputKeyPressed, debounce } from "../util/util.js";
-
-import htmx from "htmx.org";
+import { validatePassword, getCookie } from "./client-util";
+import { removeClasses, addClasses, inputKeyPressed, debounce } from "../util/util";
+import * as htmx from "htmx.org";
 
 const login = document.querySelector("#login-form");
 if (login) {
@@ -10,24 +9,24 @@ if (login) {
     });
 }
 
-const register = document.querySelector("#register-form");
+const register: HTMLFormElement = document.querySelector("#register-form")!;
 
 if (register) {
-    const email = document.querySelector("#email-field");
-    const emailIndicator = document.querySelector("#email-field ~ .indicator svg");
+    const email: HTMLInputElement = document.querySelector("#email-field")!;
+    const emailIndicator = document.querySelector("#email-field ~ .indicator svg")!;
     var emailEmpty = true;
 
-    const username = document.querySelector("#username-field");
+    const username: HTMLInputElement = document.querySelector("#username-field")!;
 
-    const password = document.querySelector("#password-field");
-    const passwordIndicator = document.querySelector("#password-field ~ .indicator svg");
-    const passwordStrength = document.querySelector("#password-field ~ .strength");
-    const passwordChecklist = document.querySelector("#password-field ~ .checklist");
+    const password: HTMLInputElement = document.querySelector("#password-field")!;
+    const passwordIndicator = document.querySelector("#password-field ~ .indicator svg")!;
+    const passwordStrength = document.querySelector("#password-field ~ .strength")!;
+    const passwordChecklist = document.querySelector("#password-field ~ .checklist")!;
 
-    const confirmPassword = document.querySelector("#confirm-password-field");
-    const confirmPasswordIndicator = document.querySelector("#confirm-password-field ~ .indicator svg");
+    const confirmPassword: HTMLInputElement = document.querySelector("#confirm-password-field")!;
+    const confirmPasswordIndicator = document.querySelector("#confirm-password-field ~ .indicator svg")!;
 
-    const submitBtn = register.querySelector("#submit-button");
+    const submitBtn: HTMLButtonElement = register.querySelector("#submit-button")!;
 
     const fieldsValidity = {
         email: false,
@@ -36,14 +35,16 @@ if (register) {
         confirmPassword: false,
     }
 
-    function updateFieldValidity(field, isValid) {
-        submitBtn.diabled = !isValid;
+    type inputField = keyof typeof fieldsValidity;
+
+    function updateFieldValidity(field: inputField, isValid: boolean) {
+        submitBtn.disabled = !isValid;
         fieldsValidity[field] = isValid;
     }
 
 
     email.addEventListener( "keydown" , function(e) {
-        if (emailEmpty || !inputKeyPressed(e)) {
+        if (emailEmpty || !inputKeyPressed(e as KeyboardEvent)) {
             return;
         }
 
@@ -88,7 +89,7 @@ if (register) {
     }, 500)
     );
 
-    let updateStrength = debounce(function (strength) {
+    let updateStrength = debounce(function (strength: number) {
         removeClasses(passwordStrength, ["strength-1", "strength-2", "strength-3", "strength-4"]);
 
         if (password.value.length > 0) {
@@ -112,16 +113,16 @@ if (register) {
         updateFieldValidity("password", false);
 
         const validation = [
-            (passwordInput.length > 8),
-            (passwordInput.search(/[A-Z]/) > -1),
-            (passwordInput.search(/[0-9]/) > -1),
-            (passwordInput.search(/[!@#$%^&*,;]/) > -1)
+            (passwordInput.length > 8) ? 1: 0,
+            (passwordInput.search(/[A-Z]/) > -1) ? 1 : 0,
+            (passwordInput.search(/[0-9]/) > -1) ? 1: 0,
+            (passwordInput.search(/[!@#$%^&*,;]/) > -1) ? 1: 0
         ]
 
-        const strength = validatePassword(validation, password.value);
+        const strength = validatePassword(validation);
 
         for (let i = 0; i < validation.length; i++) {
-            const li =passwordChecklist.children.item(i)
+            const li =passwordChecklist.children.item(i)!;
             if (validation[i]) {
                 li.classList.add("checked");
             } else {
@@ -176,7 +177,7 @@ if (register) {
             const created = await postRequest("/accounts/create", data);
 
             if (created) {
-                htmx.ajax("GET", "/login", ".content");
+                htmx.htmx.ajax("get", "/login", ".content");
             }
         } catch (e) {
             // TODO
@@ -188,11 +189,11 @@ export function checkSession() {
     let jwtToken = getCookie("jwt_token");
 
     if (!jwtToken) {
-        htmx.ajax("GET", "/login", ".content");
+        htmx.htmx.ajax("get", "/login", ".content");
     }
 }
 
-async function postRequest(url, formData) {
+async function postRequest(url: string, formData: FormData) {
     const request = new Request(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

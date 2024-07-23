@@ -2,16 +2,25 @@ const path = require('path');
 
 module.exports = {
     mode: "production",
+    module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: 'ts-loader',
+                exclude: /node_modules/,
+            },
+        ],
+    },
     entry: {
-        'scripts': './src/js/scripts.js',
-        'games/tuninggame/tuninggame': './src/js/games/tuninggame/tuninggame.js',
-        'login/scripts':'./src/js/login/scripts.js',
+        'scripts': './src/ts/scripts.ts',
+        'login/scripts':'./src/ts/login/scripts.ts'
     },
     output: {
+        filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'static/js'),
-        filename: '[name].build.js',
     },
     resolve: {
+        extensions:  ['.tsx', '.ts', '.js'],
         modules: [path.resolve(__dirname, 'node_modules')],
     }
 };
