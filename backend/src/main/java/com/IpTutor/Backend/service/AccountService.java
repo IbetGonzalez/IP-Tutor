@@ -38,7 +38,6 @@ public class AccountService{
         if(mongoTemplate.find(find, Account.class).isEmpty()) {
             return false;
         }
-
         return true;
     }
 
@@ -101,19 +100,15 @@ public class AccountService{
                 )
         );
 
+        Account account = accountRepository.findByEmail(accountLoginRequestDTO.email()).orElse(null);
 
-        Query findAccount = new Query(Criteria.where("email").is(accountLoginRequestDTO.email()));
-        List<Account> account = mongoTemplate.find(findAccount, Account.class);
-
-        if(account.isEmpty()) {
+        if(account == null) {
             return null;
-        }
-
-        if(!passwordEncoder.matches(accountLoginRequestDTO.password(), account.get(0).getPassword())) {
+        } else if(!passwordEncoder.matches(accountLoginRequestDTO.password(), account.getPassword())) {
             return new LoginResponseDTO(null,-1);
         }
 
-        String jwtToken = jwtService.generateToken(account.get(0));
+        String jwtToken = jwtService.generateToken(account);
 
         return new LoginResponseDTO(jwtToken, jwtService.getExpirationTime());
     }
@@ -153,10 +148,4 @@ public class AccountService{
         return 0;
     }
 
-    public int test(AccountRequestDTO accountRequestDTO) {
-        if(checkUsernamePattern(accountRequestDTO.username())) {
-            return -1;
-        }
-        return 0;
-    }
 }

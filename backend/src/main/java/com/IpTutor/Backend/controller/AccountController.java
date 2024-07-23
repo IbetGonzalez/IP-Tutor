@@ -87,13 +87,4 @@ public class AccountController {
         }
         return ResponseEntity.status(HttpStatus.OK).body("Account successfully deleted");
     }
-
-    @GetMapping("/test")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<String> test(@RequestBody AccountRequestDTO accountRequestDTO) {
-        if (accountService.test(accountRequestDTO) == -1) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body("valid");
-    }
 }
