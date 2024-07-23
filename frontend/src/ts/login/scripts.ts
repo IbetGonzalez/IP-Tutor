@@ -1,5 +1,5 @@
 import { validatePassword, getCookie } from "./client-util";
-import { removeClasses, addClasses, inputKeyPressed, debounce } from "../util/util";
+import { removeClasses, inputKeyPressed, debounce, queryElement, ErrMsg, MarkIndicator, IndicatorStates } from "../util/util";
 import htmx from "htmx.org";
 
 const login = document.querySelector("#login-form");
@@ -11,29 +11,26 @@ if (login) {
 
 const register: HTMLFormElement | null = document.querySelector("#register-form");
 
+
 if (register) {
-    const email: HTMLInputElement | null = document.querySelector("#email-field");
-    if (!email) {
-        throw new Error(`No email input-field, expecting #email-field.`);
-    }
-    const emailIndicator = document.querySelector("#email-field ~ .indicator svg");
+    const email: HTMLInputElement = queryElement<HTMLInputElement>("#email-field");
+    const emailIndicator = new MarkIndicator(email); 
+    const emailMsg = new ErrMsg(email);
+
     var emailEmpty = true;
 
-    const username: HTMLInputElement | null = document.querySelector("#username-field");
-    if (!username) {
-        throw new Error(`No username input-field, expecting #username-field.`);
-    }
+    const username: HTMLInputElement = queryElement<HTMLInputElement>("#username-field");
+    const usernameIndicator = new MarkIndicator(username);
+    const usernameMsg = new ErrMsg(username);
 
-    const password: HTMLInputElement | null = document.querySelector("#password-field");
-    if (!password) {
-        throw new Error(`No password input-field, expecting #password-field.`);
-    }
-    const passwordIndicator = document.querySelector("#password-field ~ .indicator svg");
-    const passwordStrength = document.querySelector("#password-field ~ .strength");
-    const passwordChecklist = document.querySelector("#password-field ~ .checklist");
+    const password: HTMLInputElement = queryElement<HTMLInputElement>("#password-field");
+    const passwordIndicator = new MarkIndicator(password);
+    const passwordStrength = queryElement("#password-field ~ .strength");
+    const passwordChecklist = queryElement("#password-field ~ .checklist");
 
-    const confirmPassword: HTMLInputElement | null = document.querySelector("#confirm-password-field");
-    const confirmPasswordIndicator = document.querySelector("#confirm-password-field ~ .indicator svg");
+    const confirmPassword: HTMLInputElement = queryElement<HTMLInputElement>("#confirm-password-field");
+    const confirmPasswordIndicator = new MarkIndicator(confirmPassword);
+    const confirmPasswordMsg = new ErrMsg(confirmPassword);
 
     const submitBtn: HTMLButtonElement | null = register.querySelector("#submit-button");
     if (!submitBtn) {
@@ -54,61 +51,74 @@ if (register) {
         fieldsValidity[field] = isValid;
     }
 
+    async function checkEmail (email: string): Promise<boolean>{
+        const data = new FormData();
+        data.append("email", email);
 
+        try {
+            const isValid = await postRequest("/accounts/checkEmail", data);
+            return isValid;
+        } catch (e) {
+            console.warn(`Error in checkEmail(): ${e}`);
+            return false;
+        }
+
+    }
     email.addEventListener( "keydown" , function(e) {
         if (emailEmpty || !inputKeyPressed(e as KeyboardEvent)) {
             return;
         }
-        if (emailIndicator) {
-            removeClasses(emailIndicator, ["hidden", "deny", "allow"]);
-            addClasses(emailIndicator, ["progress"]);
-        }
+        emailIndicator.setState(IndicatorStates.PROGRESS);
         updateFieldValidity("email", false);
     })
 
     email.addEventListener( "input", debounce(async function () {
-        if (emailIndicator) {
-            removeClasses(emailIndicator, ["hidden", "deny", "allow"]);
-            addClasses(emailIndicator, ["progress"]);
-        }
+        emailIndicator.setState(IndicatorStates.PROGRESS);
 
+        emailMsg.setMsg("");
         updateFieldValidity("email", false);
         if (email.value.length <= 0) {
-            if (emailIndicator) {
-                emailIndicator.classList.add("hidden");
-            }
+            emailIndicator.setState(IndicatorStates.HIDDEN);
             emailEmpty = true;
             return;
         }
+        emailEmpty = false;
         
+        const isValidEmail: boolean = await checkEmail(email.value);
 
-        const data = new FormData();
-        data.append("email", email.value);
-
-        try {
-            const available = await postRequest("/accounts/checkEmail", data);
-
-            if (available) {
-                setTimeout(() => {
-                    if (emailIndicator) {
-                        emailIndicator.classList.remove("progress");
-                        emailIndicator.classList.add("allow");
-                    }
-                    updateFieldValidity("email", true);
-                }, 250);
-            }
-        } catch (e) {
+        if (isValidEmail) {
             setTimeout(() => {
-                if (emailIndicator) {
-                    emailIndicator.classList.remove("progress");
-                    emailIndicator.classList.add("deny");
-                }
+                emailIndicator.setState(IndicatorStates.ALLOW);
+                updateFieldValidity("email", true);
+            }, 250);
+        } else {
+            emailMsg.setMsg("Not valid email format");
+            setTimeout(() => {
+                emailIndicator.setState(IndicatorStates.DENY);
             }, 250);
         }
 
-        emailEmpty = false;
     }, 500)
     );
+
+    username.addEventListener("input", debounce(function () {
+        usernameMsg.setMsg("");
+        usernameIndicator.setState(IndicatorStates.HIDDEN);
+        updateFieldValidity("username", false);
+        const enteredName = username.value;
+        if (enteredName.length <= 0) {
+            return;
+        }
+        if (enteredName.search(/[^A-Za-z0-9]/) > -1) {
+            usernameMsg.setMsg("Username cannot contain special characters or spaces");
+            usernameIndicator.setState(IndicatorStates.DENY);
+            return;
+        };
+        usernameIndicator.setState(IndicatorStates.ALLOW);
+
+        updateFieldValidity("username", true);
+    }, 500));
+
 
     let updateStrength = debounce(function (strength: number) {
         if (passwordStrength) {
@@ -116,23 +126,16 @@ if (register) {
         }
 
         if (password.value.length > 0) {
-            if (passwordStrength) { passwordStrength.classList.add("strength-" + strength); }
+            if (passwordStrength) passwordStrength.classList.add("strength-" + strength); 
 
             if (strength >= 4) {
                 updateConfirm();
                 updateFieldValidity("password", true);
-                if (passwordIndicator) {
-                    passwordIndicator.classList.remove("deny");
-                    passwordIndicator.classList.add("hidden");
-                }
+                passwordIndicator.setState(IndicatorStates.HIDDEN);
                 return;
             } 
         }
-        
-        if (passwordIndicator) {
-            passwordIndicator.classList.add("deny");
-            passwordIndicator.classList.remove("hidden");
-        }
+        passwordIndicator.setState(IndicatorStates.DENY);
     }, 250)
 
     password.addEventListener( "input" , () => {
@@ -147,6 +150,7 @@ if (register) {
         ]
 
         const strength = validatePassword(validation);
+        updateStrength(strength);
 
         if (passwordChecklist) {
             for (let i = 0; i < validation.length; i++) {
@@ -158,30 +162,25 @@ if (register) {
                 }
             }
         }
-
-        updateStrength(strength);
     });
 
     function updateConfirm() {
+        confirmPasswordMsg.setMsg("");
+        updateFieldValidity("password", false);
         if (!confirmPassword) {
             throw new Error("updateConfirm cannot be called without a #confirm-password-field");
         }
-        if (confirmPasswordIndicator) {
-            removeClasses(confirmPasswordIndicator, ["hidden", "deny", "allow"]);
-        }
-        updateFieldValidity("password", false);
         if (confirmPassword.value.length <= 0) {
-            if (confirmPasswordIndicator) confirmPasswordIndicator.classList.add("hidden");
+            confirmPasswordIndicator.setState(IndicatorStates.HIDDEN);
             return;
-        }
-
-        if (confirmPassword.value != password!.value) {
-            if (confirmPasswordIndicator) confirmPasswordIndicator.classList.add("deny");
+        } else  if (confirmPassword.value != password!.value) {
+            confirmPasswordMsg.setMsg("Passwords do not match");
+            confirmPasswordIndicator.setState(IndicatorStates.DENY);
             return;
         }
 
         updateFieldValidity("password", true);
-        if (confirmPasswordIndicator) confirmPasswordIndicator.classList.add("allow");
+        confirmPasswordIndicator.setState(IndicatorStates.ALLOW);
     }
 
     if (confirmPassword) {
@@ -190,7 +189,7 @@ if (register) {
 
     register.addEventListener("submit", async function (evt) {
         evt.preventDefault();
-        const aFieldIsNotFilled = (!email.value || !username.value || !password.value || (confirmPassword ? confirmPassword.value : false));
+        const aFieldIsNotFilled = (!email.value || !username.value || !password.value || (confirmPassword ? !confirmPassword.value : false));
         if (aFieldIsNotFilled) {
             // TODO
             alert("Must fill in all fields");

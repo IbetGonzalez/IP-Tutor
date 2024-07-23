@@ -16,7 +16,7 @@ document.addEventListener("htmx:afterRequest", function(evt) {
             history.pushState({}, "", "/login");
         }
     }
-    updateNav() 
+    updateNav();
 });
 let hideBtn: HTMLButtonElement | null = document.querySelector("#hide-button");
 if (hideBtn) {
@@ -39,13 +39,14 @@ function MinimizeNav() {
 }
 
 function updateNav() {
-    let path = document.location.pathname.split("/")[1];
+    const path = document.location.pathname.split("/")[1];
+    const elemId = path ? path : "home";
 
-    let currSelNavList = document.getElementsByClassName("nav-selected");
-    
-    let selNav = path ? document.getElementById(path) : document.getElementById("home");
+    const currSelNavList = document.getElementsByClassName("nav-selected");
+    const selNav = document.getElementById(elemId) ? document.getElementById(elemId) : document.getElementById("settings");
+
     if (!selNav) {
-        throw new Error("No #home nav button");
+        throw new Error("No #settings nav button");
     }
 
     for (let i = 0; i < currSelNavList.length; i++) {
