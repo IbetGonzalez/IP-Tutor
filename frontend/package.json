@@ -2,7 +2,6 @@
   "name": "music-site",
   "version": "0.0.1",
   "description": "A site of music practice games to improve technical playin abilities",
-  "main": "index.js",
   "scripts": {
     "build": "webpack",
     "build-w": "webpack -w"
@@ -21,6 +20,8 @@
   },
   "dependencies": {
     "htmx.org": "^2.0.1",
-    "tone": "^15.0.4"
+    "tone": "^15.1.2",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4"
   }
 }
