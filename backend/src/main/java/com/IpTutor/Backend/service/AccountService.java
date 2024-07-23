@@ -7,18 +7,14 @@ import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.dto.LoginResponseDTO;
 import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;
-import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -49,18 +45,27 @@ public class AccountService{
     private boolean checkEmailPattern(String email) {
         Pattern validEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
         Matcher matcher = validEmail.matcher(email);
-        return matcher.matches();
+        return !matcher.matches();
+    }
+
+    private boolean checkUsernamePattern(String username) {
+        Pattern validEmail = Pattern.compile("^[A-Za-z0-9]+$");
+        Matcher matcher = validEmail.matcher(username);
+        return !matcher.matches();
     }
 
     private boolean checkPasswordPattern(String password) {
-        Pattern validEmail = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&-+=()])(?=\\S+$).{8,20}$");
+        Pattern validEmail = Pattern.compile("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&-+=()])(?=\\S+$).{8,}$");
         Matcher matcher = validEmail.matcher(password);
-        return matcher.matches();
+        return !matcher.matches();
     }
 
     public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
-        if(checkExistence("email", accountRequestDTO.email()) || !checkEmailPattern(accountRequestDTO.email()) || !checkPasswordPattern(accountRequestDTO.password())){
+        if(checkExistence("email", accountRequestDTO.email())
+                || checkEmailPattern(accountRequestDTO.email())
+                || checkPasswordPattern(accountRequestDTO.password())
+                || checkUsernamePattern(accountRequestDTO.username())){
             return null;
         }
 
@@ -87,7 +92,7 @@ public class AccountService{
                 .toList();
     }
 
-    public LoginResponseDTO getAccount(AccountLoginRequestDTO accountLoginRequestDTO) {
+    public LoginResponseDTO login(AccountLoginRequestDTO accountLoginRequestDTO) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -116,37 +121,42 @@ public class AccountService{
     public int checkEmail(AccountRequestDTO accountRequestDTO) {
 
         if(checkExistence("email", accountRequestDTO.email())) {
-            return 1;
+            return -1;
         }
-        if(!checkEmailPattern(accountRequestDTO.email())) {
-            return 2;
+        if(checkEmailPattern(accountRequestDTO.email())) {
+            return -2;
         }
 
         return 0;
     }
 
-    public boolean checkPassword(AccountRequestDTO accountRequestDTO) {
-        return checkPasswordPattern(accountRequestDTO.password());
+    public int updateUsername(AccountRequestDTO accountRequestDTO) {
+        Account account = accountRepository.findByEmail(accountRequestDTO.email()).orElse(null);
+
+        if (account == null) {
+            return -1;
+        } else if(checkUsernamePattern(accountRequestDTO.username())) {
+            return -2;
+        }
+
+        account.setUsername(accountRequestDTO.username());
+        accountRepository.save(account);
+        return 0;
     }
 
-
-    public String updateUsername(AccountRequestDTO accountRequestDTO) {
-        Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
-        Update update = new Update().set("username", accountRequestDTO.username());
-        UpdateResult updateResult = mongoTemplate.updateFirst(findAccount, update, Account.class);
-
-        return "Username update: " + updateResult;
+    public int deleteAccount(AccountRequestDTO accountRequestDTO) {
+        Account toDelete = accountRepository.findByEmail(accountRequestDTO.email()).orElse(null);
+        if(toDelete != null) {
+            accountRepository.delete(toDelete);
+            return 1;
+        }
+        return 0;
     }
 
-    public Long deleteAccount(AccountRequestDTO accountRequestDTO) {
-        Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
-        DeleteResult deleteResult = mongoTemplate.remove(findAccount, Account.class);
-        return deleteResult.getDeletedCount();
-    }
-
-    public Account test(AccountRequestDTO accountRequestDTO) {
-        Query findAccount = new Query(Criteria.where("email").is(accountRequestDTO.email()));
-        List<Account> account = mongoTemplate.find(findAccount, Account.class);
-        return account.get(0);
+    public int test(AccountRequestDTO accountRequestDTO) {
+        if(checkUsernamePattern(accountRequestDTO.username())) {
+            return -1;
+        }
+        return 0;
     }
 }

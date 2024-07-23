@@ -11,5 +11,4 @@ import java.util.Optional;
 @Repository
 public interface AccountRepository extends MongoRepository<Account, ObjectId> {
     Optional<Account> findByEmail(String email);
-    List<Account> findByUsername(String username);
 }

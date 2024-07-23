@@ -4,7 +4,6 @@ import com.IpTutor.Backend.dto.AccountLoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.dto.LoginResponseDTO;
-import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.service.AccountService;
 import com.IpTutor.Backend.authTest.JwtService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import java.util.List;
 public class AccountController {
 
     private final AccountService accountService;
-    private final JwtService jwtService;
 
     @PostMapping("/create")
     public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
@@ -40,9 +38,9 @@ public class AccountController {
     public List<AccountDTO> getAllAccounts() {return accountService.getAllAccounts();}
 
     @GetMapping("/login")
-    public ResponseEntity<LoginResponseDTO> getAccount(@RequestBody AccountLoginRequestDTO accountLoginRequestDTO) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody AccountLoginRequestDTO accountLoginRequestDTO) {
 
-        LoginResponseDTO result = accountService.getAccount(accountLoginRequestDTO);
+        LoginResponseDTO result = accountService.login(accountLoginRequestDTO);
 
         if(result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -57,10 +55,10 @@ public class AccountController {
     public ResponseEntity<String> checkEmail(@RequestBody AccountRequestDTO accountRequestDTO) {
 
         switch (accountService.checkEmail(accountRequestDTO)) {
-            case 1:
+            case -1:
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already associated with an account");
 
-            case 2:
+            case -2:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email format is invalid");
 
             default:
@@ -69,30 +67,33 @@ public class AccountController {
 
     }
 
-    @PostMapping("/checkPassword")
-    public ResponseEntity<String> checkPassword(@RequestBody AccountRequestDTO accountRequestDTO) {
-        if(!accountService.checkPassword(accountRequestDTO)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid Password");
-        }
-        return ResponseEntity.status(HttpStatus.OK).body("Valid Password");
-    }
-
     @PutMapping("/update/username")
-    @ResponseStatus(HttpStatus.OK)
-    public String updateUsername(@RequestBody AccountRequestDTO accountRequestDTO){
-        return accountService.updateUsername(accountRequestDTO);
+    public ResponseEntity<String> updateUsername(@RequestBody AccountRequestDTO accountRequestDTO){
 
+        switch (accountService.updateUsername(accountRequestDTO)) {
+            case -1:
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+            case -2:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username not valid");
+            default:
+                return ResponseEntity.status(HttpStatus.OK).body("Username successfully updated");
+        }
     }
 
     @DeleteMapping("/deleteAccount")
-    @ResponseStatus(HttpStatus.OK)
-    public Long deleteAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
-        return accountService.deleteAccount(accountRequestDTO);
+    public ResponseEntity<String> deleteAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
+        if (accountService.deleteAccount(accountRequestDTO) == -1) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The account to be deleted was not found");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("Account successfully deleted");
     }
 
     @GetMapping("/test")
     @ResponseStatus(HttpStatus.OK)
-    public Account test(@RequestBody AccountRequestDTO accountRequestDTO) {
-        return accountService.test(accountRequestDTO);
+    public ResponseEntity<String> test(@RequestBody AccountRequestDTO accountRequestDTO) {
+        if (accountService.test(accountRequestDTO) == -1) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Invalid");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body("valid");
     }
 }
