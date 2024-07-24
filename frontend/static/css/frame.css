@@ -29,6 +29,25 @@
 .pb-10 {
     padding-bottom: 50%;
 }
+.bg-warning {
+    background-color: var(--warning);
+    color: var(--text);
+}
+.bg-success {
+    background-color: var(--success);
+    color: var(--text);
+}
+.bg-secondary {
+    background-color: var(--secondary);
+    color: var(--text);
+}
+.alert-box {
+    padding: 1rem;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    top: 0;
+}
 .form-input {
     position: relative;
     padding: 7px 0;

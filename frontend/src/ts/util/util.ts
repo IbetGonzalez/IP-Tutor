@@ -43,6 +43,24 @@ export class ErrMsg {
         this.elem.innerText = msg;
     }
 }
+export enum AlertColors {
+    WARNING = "bg-warning",
+    SUCCESS = "bg-success",
+    INFO = "bg-info",
+    SECONDARY = "bg-secondary"
+}
+export function createAlert(msg: string, timeMs: number, color: AlertColors) {
+    const alertNode = document.createElement("div");
+    alertNode.classList.add("alert-box");
+    alertNode.classList.add(color);
+    alertNode.innerText = msg;
+    document.body.appendChild(alertNode);
+
+    setTimeout(function () {
+        alertNode.remove()
+    }, timeMs);
+}
+
 export function queryElement<T extends HTMLElement>(selector: string): T {
     const element = document.querySelector<T>(selector);
     if (!element) {

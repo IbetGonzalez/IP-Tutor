@@ -7,6 +7,8 @@ import {
     ErrMsg,
     MarkIndicator,
     IndicatorStates,
+    createAlert,
+    AlertColors,
 } from "@util/util";
 import htmx from "htmx.org";
 
@@ -39,11 +41,6 @@ if (register) {
     const confirmPasswordIndicator = new MarkIndicator(confirmPassword);
     const confirmPasswordMsg = new ErrMsg(confirmPassword);
 
-    const submitBtn: HTMLButtonElement | null = register.querySelector("#submit-button");
-    if (!submitBtn) {
-        throw new Error(`No submit button, expecting #submit-button.`);
-    }
-
     const fieldsValidity = {
         email: false,
         username: false,
@@ -74,7 +71,6 @@ if (register) {
 
 
     function updateFieldValidity(field: inputField, isValid: boolean) {
-        submitBtn!.disabled = !isValid;
         fieldsValidity[field] = isValid;
     }
 
@@ -103,15 +99,16 @@ if (register) {
         "input",
         debounce(async function () {
             emailIndicator.setState(IndicatorStates.PROGRESS);
-
+            emailEmpty = false;
             emailMsg.setMsg("");
             updateFieldValidity("email", false);
+
+
             if (email.value.length <= 0) {
-                emailIndicator.setState(IndicatorStates.HIDDEN);
                 emailEmpty = true;
+                emailIndicator.setState(IndicatorStates.DENY);
                 return;
             }
-            emailEmpty = false;
 
             const isValidEmail: boolean = await checkEmail(email.value);
 
@@ -134,6 +131,7 @@ if (register) {
             usernameMsg.setMsg("");
             usernameIndicator.setState(IndicatorStates.HIDDEN);
             updateFieldValidity("username", false);
+
             const enteredName = username.value;
             if (enteredName.length <= 0) {
                 return;
@@ -143,8 +141,8 @@ if (register) {
                 usernameIndicator.setState(IndicatorStates.DENY);
                 return;
             }
-            usernameIndicator.setState(IndicatorStates.ALLOW);
 
+            usernameIndicator.setState(IndicatorStates.ALLOW);
             updateFieldValidity("username", true);
         }, 500),
     );
@@ -161,7 +159,7 @@ if (register) {
             if (strength >= 4) {
                 updateConfirm();
                 updateFieldValidity("password", true);
-                passwordIndicator.setState(IndicatorStates.HIDDEN);
+                passwordIndicator.setState(IndicatorStates.ALLOW);
                 return;
             }
         }
@@ -195,23 +193,39 @@ if (register) {
     });
 
     // confirm-password input hanlders -------------------------------------------
-
     confirmPassword.addEventListener("input", debounce(updateConfirm, 500));
 
+    interface FormField {
+        input: HTMLInputElement,
+        indicator: MarkIndicator
+    }
 
+    const formFields: FormField[] = [
+        {input: email, indicator: emailIndicator},
+        {input: username, indicator: usernameIndicator},
+        {input: password, indicator: passwordIndicator},
+        {input: confirmPassword, indicator: confirmPasswordIndicator},
+    ]
+
+    // register submit handler ---------------------------------------------------
     register.addEventListener("submit", async function (evt) {
         evt.preventDefault();
-        const aFieldIsNotFilled =
-            !email.value || !username.value || !password.value || (confirmPassword ? !confirmPassword.value : false);
+
+        let aFieldIsNotFilled = false; 
+        formFields.forEach((field) => {
+            if (!field.input.value) {
+                field.indicator.setState(IndicatorStates.DENY);
+                aFieldIsNotFilled = true;
+            }
+        });
         if (aFieldIsNotFilled) {
-            // TODO
-            alert("Must fill in all fields");
+            createAlert("All fields must be properly filled out", 5000, AlertColors.WARNING);
             return;
         }
         const passwordDoNotMatch = confirmPassword && password.value !== confirmPassword.value;
         if (passwordDoNotMatch) {
-            // todo
-            alert("passwords must match");
+            confirmPasswordIndicator.setState(IndicatorStates.DENY);
+            createAlert("Passwords do not match", 5000, AlertColors.WARNING);
             return;
         }
 
@@ -221,11 +235,12 @@ if (register) {
         try {
             const created = await postRequest("/accounts/create", data);
 
+            createAlert("Account created", 5000, AlertColors.SECONDARY);
             if (created) {
                 htmx.ajax("get", "/settings", ".content");
             }
         } catch (e) {
-            // TODO
+            createAlert("Could not create account", 5000, AlertColors.WARNING);
         }
     });
 }
