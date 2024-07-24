@@ -1,13 +1,13 @@
-import * as Tone from 'tone/build/esm';
+import * as Tone from "tone/build/esm";
 
 export default class Pitch {
     synth: Tone.Synth | undefined;
     note: number;
     btn: HTMLButtonElement;
     playing: boolean = false;
-    detune= 0;
+    detune = 0;
 
-    constructor (elem: HTMLButtonElement, hold=true, hz=440) {
+    constructor(elem: HTMLButtonElement, hold = true, hz = 440) {
         this.note = hz;
         this.btn = elem;
 
@@ -50,22 +50,21 @@ export default class Pitch {
         this.note = note;
     }
 
-    PlayPitch(note=this.note) {
+    PlayPitch(note = this.note) {
         console.log(note);
         console.log("playing");
         this.synth!.triggerAttack(note);
         this.playing = true;
     }
 
-    StopPitch(){
+    StopPitch() {
         console.log("stopping");
         this.synth!.triggerRelease();
         this.playing = false;
     }
-    
+
     InitPitch() {
         console.log("initing");
         this.synth = new Tone.Synth().toDestination();
     }
 }
-

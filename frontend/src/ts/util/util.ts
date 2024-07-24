@@ -2,9 +2,9 @@ export enum IndicatorStates {
     HIDDEN = "hidden",
     PROGRESS = "progress",
     ALLOW = "allow",
-    DENY = "deny" 
+    DENY = "deny",
 }
-export class MarkIndicator{
+export class MarkIndicator {
     indicator: HTMLElement | null;
 
     constructor(inputElem: HTMLElement) {
@@ -16,7 +16,6 @@ export class MarkIndicator{
             return;
         }
         this.indicator = parent.querySelector(".indicator svg");
-
     }
     setState(state: IndicatorStates) {
         if (!this.indicator) {
@@ -43,10 +42,8 @@ export class ErrMsg {
         }
         this.elem.innerText = msg;
     }
-
-
 }
-export function queryElement<T extends HTMLElement>(selector: string,): T {
+export function queryElement<T extends HTMLElement>(selector: string): T {
     const element = document.querySelector<T>(selector);
     if (!element) {
         throw new Error(`Could not find element: ${selector}`);
@@ -56,7 +53,7 @@ export function queryElement<T extends HTMLElement>(selector: string,): T {
 export function debounce(func: Function, waitMs: number) {
     let timeout: ReturnType<typeof setTimeout>;
 
-    return function(this: any,...args: any[]) {
+    return function (this: any, ...args: any[]) {
         const later = () => {
             clearTimeout(timeout);
             func.apply(this, args);
