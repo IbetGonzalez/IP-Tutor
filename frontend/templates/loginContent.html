@@ -1,51 +1,24 @@
-<div
-  class="mt-25 card w-lg center text-primary"
-  style="--gradient1: var(--secondary); --gradient2: #0b6e4f"
->
-  <div class="top-gradient" style="top: -10%"></div>
-  <div class="header">LOGIN</div>
-  <div class="card-content">
-    <form
-      id="login-form"
-      hx-target=".content"
-      hx-post="/login"
-      class="form center w-med"
-    >
-      <div class="form-input">
-        <input
-          id="email-field"
-          class="text-input"
-          name="email"
-          type="text"
-          placeholder="Username"
-        />
-        <label class="text-input-label" for="#email-field">Email</label>
-      </div>
-      <br />
-      <div class="form-input">
-        <input
-          class="text-input"
-          id="password-field"
-          name="password"
-          type="password"
-          placeholder="Password"
-        />
-        <label class="text-input-label" for="#password-field">Password</label>
-      </div>
-      <br />
-      <br />
-      <div class="button">Login</div>
-      <br />
-    </form>
-  </div>
+<div class="mt-25 card w-lg center text-primary" style="--gradient1: var(--secondary); --gradient2: #0b6e4f">
+    <div class="top-gradient" style="top: -10%"></div>
+    <div class="header">LOGIN</div>
+    <div class="card-content">
+        <form id="login-form" hx-target=".content" hx-post="/login" class="form center w-med">
+            <div class="form-input">
+                <input id="email-field" class="text-input" name="email" type="text" placeholder="Username" />
+                <label class="text-input-label" for="#email-field">Email</label>
+            </div>
+            <br />
+            <div class="form-input">
+                <input class="text-input" id="password-field" name="password" type="password" placeholder="Password" />
+                <label class="text-input-label" for="#password-field">Password</label>
+            </div>
+            <br />
+            <br />
+            <div class="button">Login</div>
+            <br />
+        </form>
+    </div>
 </div>
-<div
-  id="register"
-  class="mt-5 center"
-  hx-push-url="true"
-  hx-boost="true"
-  hx-target=".content"
-  hx-trigger="click"
->
-  <a class="link-text" href="/register">Register</a>
+<div id="register" class="mt-5 center" hx-push-url="true" hx-boost="true" hx-target=".content" hx-trigger="click">
+    <a class="link-text" href="/register">Register</a>
 </div>
