@@ -1,15 +1,3 @@
-@font-face {
-    font-family: "roboto";
-    src: url("/static/fonts/Roboto-Regular.ttf");
-}
-:root {
-    --background: #080f11;
-    --text: #fbfbfe;
-    --primary: #0d3b59;
-    --secondary: #82ed9b;
-    --accent: #57cb99;
-}
-
 * {
     margin: 0;
 }
@@ -296,14 +284,12 @@ footer .link svg path {
     transform: translate(-50%, -50%);
     height: 50px;
     width: 50px;
-}
-.card .icon #icon-svg {
     fill: url("#icon-grad") !important;
 }
 .card .top-gradient {
     position: absolute;
     left: -10%;
-    top: -6%;
+    top: -7%;
     width: 150%;
     height: 128px;
     transform: rotateZ(-5deg);
@@ -311,6 +297,7 @@ footer .link svg path {
     background: linear-gradient(to right, var(--gradient1), var(--gradient2));
 }
 .card .header {
+    color: var(--background);
     position: relative;
     margin-top: 128px;
     font-size: 28px;
@@ -319,16 +306,26 @@ footer .link svg path {
 .card .desc {
     height: 5rem;
 }
-.card .play-button {
+.card .button{
+    border: none;
     background-color: var(--background);
     color: white;
     position: relative;
     margin: auto;
     text-align: center;
     width: 8rem;
+    font-family: inherit;
     font-size: 28px;
     font-weight: 600;
+    &:hover {
+        cursor: pointer;
+    }
+    &:disabled {
+        cursor: not-allowed;
+        background-color: #515151 !important;
+    }
 }
+
 .content .title {
     margin-left: 5%;
 }

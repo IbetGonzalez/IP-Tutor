@@ -27,14 +27,16 @@ buildNumber.properties
 *.so
 *.dylib
 
-# env file
+# scripts
+*.log
+*.sh
 .env
-
-# backup files
 *.bak
+
 
 # npm packages
 node_modules/
 package-lock.json
 
-dist/*
+frontend/static/js/
+*.bundle.js

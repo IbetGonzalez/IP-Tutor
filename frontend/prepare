@@ -1,0 +1,17 @@
+#! /usr/bin/bash
+
+HTMXPATH=./node_modules/htmx.org/dist/htmx.d.ts
+
+FIRSTLINE=$(head -n 1 $HTMXPATH)
+if [ "$FIRSTLINE" == "export default htmx" ]; then
+    echo -e "\n\nyou're already prep'd!"
+    exit 0
+fi
+
+npm i
+sed -i '1i\export default htmx' $HTMXPATH;
+sed -i 's/^\s*type\b/export type/g' $HTMXPATH; 
+npm run build
+
+
+echo -e "\n\nget prep'd"

@@ -1,2 +1,19 @@
 @import url("base.css");
 @import url("games.css");
+@import url("frame.css");
+
+@font-face {
+    font-family: "roboto";
+    src: url("/fonts/Roboto-Regular.ttf");
+}
+:root {
+    --background: #080f11;
+    --text: #fbfbfe;
+    --primary: #0d3b59;
+    --secondary: #82ed9b;
+    --accent: #57cb99;
+    --danger: #fe333a;
+    --warning: #e4572e;
+    --caution: #e4cd44;
+    --success: #87C32A;
+}
