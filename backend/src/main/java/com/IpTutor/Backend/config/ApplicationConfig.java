@@ -1,6 +1,5 @@
 package com.IpTutor.Backend.config;
 
-import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.List;
 
 
 @Configuration
