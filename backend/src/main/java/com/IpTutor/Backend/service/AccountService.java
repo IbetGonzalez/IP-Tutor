@@ -1,7 +1,7 @@
 package com.IpTutor.Backend.service;
 
 import com.IpTutor.Backend.authentication.JwtService;
-import com.IpTutor.Backend.dto.AccountLoginRequestDTO;
+import com.IpTutor.Backend.dto.LoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.dto.LoginResponseDTO;
@@ -10,16 +10,12 @@ import com.IpTutor.Backend.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,18 +24,9 @@ import java.util.regex.Pattern;
 @Slf4j
 public class AccountService{
     private final AccountRepository accountRepository;
-    private final MongoTemplate mongoTemplate;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-
-    private boolean checkExistence(String key, String var) {
-        Query find = new Query(Criteria.where(key).is(var));
-        if(mongoTemplate.find(find, Account.class).isEmpty()) {
-            return false;
-        }
-        return true;
-    }
 
     private boolean checkEmailPattern(String email) {
         Pattern validEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -61,7 +48,7 @@ public class AccountService{
 
     public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
-        if(checkExistence("email", accountRequestDTO.email())
+        if(accountRepository.findByEmail(accountRequestDTO.email()).isPresent()
                 || checkEmailPattern(accountRequestDTO.email())
                 || checkPasswordPattern(accountRequestDTO.password())
                 || checkUsernamePattern(accountRequestDTO.username())){
@@ -78,24 +65,26 @@ public class AccountService{
         account.setId(new ObjectId());
 
         accountRepository.save(account);
+
+        //TODO: Keep log.info or remove it
         log.info("Account successfully created");
         return new AccountDTO(account.getUsername(), account.getEmail(), account.getAccountCreation());
     }
 
-    public LoginResponseDTO login(AccountLoginRequestDTO accountLoginRequestDTO) {
+    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        accountLoginRequestDTO.email(),
-                        accountLoginRequestDTO.password()
+                        loginRequestDTO.email(),
+                        loginRequestDTO.password()
                 )
         );
 
-        Account account = accountRepository.findByEmail(accountLoginRequestDTO.email()).orElse(null);
+        Account account = accountRepository.findByEmail(loginRequestDTO.email()).orElse(null);
 
         if(account == null) {
             return null;
-        } else if(!passwordEncoder.matches(accountLoginRequestDTO.password(), account.getPassword())) {
+        } else if(!passwordEncoder.matches(loginRequestDTO.password(), account.getPassword())) {
             return new LoginResponseDTO(null,-1);
         }
 
@@ -106,7 +95,7 @@ public class AccountService{
 
     public int checkEmail(AccountRequestDTO accountRequestDTO) {
 
-        if(checkExistence("email", accountRequestDTO.email())) {
+        if(accountRepository.findByEmail(accountRequestDTO.email()).isPresent()) {
             return -1;
         }
         if(checkEmailPattern(accountRequestDTO.email())) {

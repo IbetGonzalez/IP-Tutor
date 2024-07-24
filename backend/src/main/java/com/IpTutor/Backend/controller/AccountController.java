@@ -1,6 +1,6 @@
 package com.IpTutor.Backend.controller;
 
-import com.IpTutor.Backend.dto.AccountLoginRequestDTO;
+import com.IpTutor.Backend.dto.LoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.AccountDTO;
 import com.IpTutor.Backend.dto.LoginResponseDTO;
@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/accounts")
@@ -32,9 +30,9 @@ public class AccountController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody AccountLoginRequestDTO accountLoginRequestDTO) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
 
-        LoginResponseDTO result = accountService.login(accountLoginRequestDTO);
+        LoginResponseDTO result = accountService.login(loginRequestDTO);
 
         if(result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
