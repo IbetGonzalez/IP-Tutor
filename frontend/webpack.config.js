@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    mode: "production",
+    mode: "development",
     module: {
         rules: [
             {
@@ -22,5 +22,8 @@ module.exports = {
     resolve: {
         extensions:  ['.tsx', '.ts', '.js'],
         modules: [path.resolve(__dirname, 'node_modules')],
+        alias: {
+            "@util" : path.resolve(__dirname, "src/ts/util/")
+        },
     }
 };
