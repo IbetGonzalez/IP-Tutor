@@ -1,16 +1,14 @@
-import { debounce } from "./util/util";
-import htmx, { HtmxResponseInfo } from "htmx.org";
+import { debounce } from './util/util'
+import htmx, { HtmxResponseInfo } from 'htmx.org';
 
 type htmxEvent = {
     detail: HtmxResponseInfo;
-} & Event;
+} &Event
 
-document.addEventListener("DOMContentLoaded", function () {
-    updateNav();
-});
-document.addEventListener("htmx:afterRequest", function (evt) {
+document.addEventListener("DOMContentLoaded", function() { updateNav() });
+document.addEventListener("htmx:afterRequest", function(evt) { 
     const htmxEvt = evt as htmxEvent;
-    if (htmxEvt.detail.failed) {
+    if (htmxEvt.detail.failed){
         const statusCode = htmxEvt.detail.xhr.status;
         if (statusCode === 403 || statusCode === 401) {
             htmxEvt.preventDefault();
@@ -26,6 +24,7 @@ if (hideBtn) {
 } else {
     console.warn("No #hide-button element");
 }
+
 
 function MinimizeNav() {
     let nav = document.getElementById("nav-bar");
@@ -44,9 +43,7 @@ function updateNav() {
     const elemId = path ? path : "home";
 
     const currSelNavList = document.getElementsByClassName("nav-selected");
-    const selNav = document.getElementById(elemId)
-        ? document.getElementById(elemId)
-        : document.getElementById("settings");
+    const selNav = document.getElementById(elemId) ? document.getElementById(elemId) : document.getElementById("settings");
 
     if (!selNav) {
         throw new Error("No #settings nav button");
