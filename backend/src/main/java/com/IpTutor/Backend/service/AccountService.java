@@ -82,15 +82,6 @@ public class AccountService{
         return new AccountDTO(account.getUsername(), account.getEmail(), account.getAccountCreation());
     }
 
-    public List<AccountDTO> getAllAccounts() {
-        return accountRepository.findAll()
-                .stream()
-                .map(account -> new AccountDTO(account.getUsername(),
-                                                account.getEmail(),
-                                                account.getAccountCreation()))
-                .toList();
-    }
-
     public LoginResponseDTO login(AccountLoginRequestDTO accountLoginRequestDTO) {
 
         authenticationManager.authenticate(

@@ -32,10 +32,6 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(results);
     }
 
-    @GetMapping("/getAll")
-    @ResponseStatus(HttpStatus.OK)
-    public List<AccountDTO> getAllAccounts() {return accountService.getAllAccounts();}
-
     @GetMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody AccountLoginRequestDTO accountLoginRequestDTO) {
 
