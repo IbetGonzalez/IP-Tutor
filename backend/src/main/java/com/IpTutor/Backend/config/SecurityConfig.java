@@ -1,5 +1,6 @@
-package com.IpTutor.Backend.authTest;
+package com.IpTutor.Backend.config;
 
+import com.IpTutor.Backend.authentication.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
       return http.authorizeHttpRequests(auth -> auth
               .requestMatchers("/settings").authenticated()
-              .requestMatchers("/auth/test/settings").authenticated()
               .anyRequest().permitAll()
               )
               .authenticationProvider(authenticationProvider)

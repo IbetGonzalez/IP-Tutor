@@ -1,4 +1,4 @@
-package com.IpTutor.Backend.authTest;
+package com.IpTutor.Backend.authentication;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
