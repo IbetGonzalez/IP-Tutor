@@ -29,7 +29,7 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(results);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
 
         LoginResponseDTO result = accountService.login(loginRequestDTO);

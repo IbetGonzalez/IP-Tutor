@@ -1,14 +1,24 @@
-export async function postRequest(url: string, formData: FormData) {
+type Header = {
+    [key: string]: string,
+}
+
+export async function postRequest(url: string, headers: Header[],formData: FormData) {
+    if (!headers) {
+        console.error("No headers provided");
+    }
+    const requestHeaders = headers.reduce( (obj, item) => Object.assign(obj, { [item.name]: item.val }) );
+
     const request = new Request(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: requestHeaders,
         body: JSON.stringify(Object.fromEntries(formData.entries())),
     });
     const response = await fetch(request);
+    const responseJson = response.json();
 
     return {
         status: response.status, 
-        body: response.body
+        body: responseJson
     };
 }
 
@@ -20,7 +30,7 @@ export function makeCookie(c_name: string, c_value: string, expires_min: number)
     const d = new Date();
     d.setTime(d.getTime() + expires_min * 60 * 1000);
     let expires = "expires=" + d.toUTCString();
-    const new_cookie = c_name + "=" + c_value + ";" + expires + ";path=/";
+    const new_cookie = c_name + "=" + c_value + ";" + expires + ";path=/;SameSite=strict";
     return new_cookie;
 }
 
