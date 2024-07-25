@@ -6,12 +6,12 @@ export async function postRequest(url: string, formData: FormData) {
     });
     const response = await fetch(request);
 
-    if (response.ok) {
-        return true;
-    } else {
-        throw new Error(`Response status: ${response.status}`);
-    }
+    return {
+        status: response.status, 
+        body: response.body
+    };
 }
+
 export function validatePassword(validationRules: number[]) {
     return validationRules.reduce((acc, curr) => acc + curr);
 }
