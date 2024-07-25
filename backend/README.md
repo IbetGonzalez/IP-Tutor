@@ -10,10 +10,7 @@ To run in production mode:
     mvn spring-boot:run -Pprod
 
 # JSON file formats for accounts:
-## localhost:xxxx/accounts/create (Post Mapping)
-Creates account and adds it to the database
-
-Returns null if the username or email already exists
+### localhost:xxxx/accounts/create (Post Mapping)
 ```
     {
         "username": "",
@@ -22,37 +19,56 @@ Returns null if the username or email already exists
     }
 ```
 
-### localhost:xxxx/accounts/getAccount (Get Mapping)
-Returns the username, email, and creation date if the email is found
+#### Returns Http Status:
+* Unsuccessful: 400 (bad request)
+* Successful: 201 (created)
+  * Json with account username, email, and creation date
 
-Returns null if the email is not found
-
+### localhost:xxxx/accounts/login (Get Mapping)
 ```
     {
-        "email": ""
+        "email": "",
+        "password": ""
     }
 ```
+#### Returns Https Status:
+* Account not found: 404 (not found)
+* Incorrect password: 401 (unauthorized)
+* Successful: 200 (ok)
+  * New token and its expiration time
 
 ### localhost:xxxx/accounts/checkEmail (Get Mapping)
-Returns true if there is an account with the email and false if not
 ```
     {
         "email": ""
     }
 ```
 
-### localhost:xxxx/accounts/checkUsername (Get Mapping)
-Returns true if there is an account with the username and false if not
+#### Returns Http Status:
+* Email exists: 409 (conflict)
+* Invalid email format: 400 (bad request)
+* Email doesn't exist (Successful): 200 (ok)
+
+### localhost:xxxx/accounts/update/username (Put Mapping)
 ```
     {
+        "email": "",
         "username": ""
     }
 ```
 
+#### Returns Http Status:
+* Account not found: 404 (not found)
+* Invalid username format: 400 (bad request)
+* Successful: 200 (ok)
+
 ### localhost:xxxx/accounts/deleteAccount (Delete Mapping)
-Returns the number of accounts deleted
 ```
     {
         "email": ""
     }
 ```
+
+#### Returns Http Status:
+* Account not found: 404 (not found)
+* Success: 200 (ok)
