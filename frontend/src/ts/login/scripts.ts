@@ -12,10 +12,31 @@ import {
 } from "@util/util";
 import htmx from "htmx.org";
 
-const login = document.querySelector("#login-form");
+const login: HTMLFormElement | null = document.querySelector("#login-form");
 if (login) {
-    login.addEventListener("htmx:confirm", function (evt) {
+    const email = queryElement<HTMLInputElement>("#email-field");
+    const emailIndicator = new MarkIndicator(email);
+    const password = queryElement<HTMLInputElement>("#password-field");
+    const passwordIndicator = new MarkIndicator(password);
+
+    const loginFields = {
+        email: {input: email, indicator: emailIndicator, valid: false},
+        password: {input: password, indicator: passwordIndicator, valid: false}
+    }
+
+    type field = keyof typeof loginFields;
+    login.addEventListener("submit", function (evt) {
         evt.preventDefault();
+        for (let key in loginFields) {
+            const fieldObj = loginFields[(key as field)];
+            const isValid: boolean = fieldObj.valid;
+            if (!isValid) {
+                fieldObj.indicator.setState(IndicatorStates.DENY);
+            }
+        }
+
+        // const data = new FormData(login);
+        // const loginData = postRequest("/accounts/login", data);
     });
 }
 
@@ -50,6 +71,10 @@ if (register) {
 
     type inputField = keyof typeof fieldsValidity;
 
+    function updateFieldValidity(field: inputField, isValid: boolean) {
+        fieldsValidity[field] = isValid;
+    }
+
     function updateConfirm() {
         confirmPasswordMsg.setMsg("");
         updateFieldValidity("password", false);
@@ -70,9 +95,6 @@ if (register) {
 
 
 
-    function updateFieldValidity(field: inputField, isValid: boolean) {
-        fieldsValidity[field] = isValid;
-    }
 
     async function checkEmail(email: string): Promise<number> {
         const data = new FormData();
