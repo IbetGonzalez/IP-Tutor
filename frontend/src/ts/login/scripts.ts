@@ -74,16 +74,16 @@ if (register) {
         fieldsValidity[field] = isValid;
     }
 
-    async function checkEmail(email: string): Promise<boolean> {
+    async function checkEmail(email: string): Promise<number> {
         const data = new FormData();
         data.append("email", email);
 
         try {
-            const isValid = await postRequest("/accounts/checkEmail", data);
-            return isValid;
+            const response = await postRequest("/accounts/checkEmail", data);
+            return response.status;
         } catch (e) {
             console.warn(`Error in checkEmail(): ${e}`);
-            return false;
+            return 0;
         }
     }
     // email input hanlders -------------------------------------------
@@ -110,15 +110,22 @@ if (register) {
                 return;
             }
 
-            const isValidEmail: boolean = await checkEmail(email.value);
+            const responseStatus: number= await checkEmail(email.value);
 
             setTimeout(() => {
-                if (isValidEmail) {
-                    emailIndicator.setState(IndicatorStates.ALLOW);
-                    updateFieldValidity("email", true);
-                } else {
-                    emailMsg.setMsg("Not valid email format");
-                    emailIndicator.setState(IndicatorStates.DENY);
+                switch (responseStatus) {
+                    case 200:
+                        emailIndicator.setState(IndicatorStates.ALLOW);
+                        updateFieldValidity("email", true);
+                    break;
+                    case 409:
+                        emailMsg.setMsg("Account already asscociated with that email");
+                        emailIndicator.setState(IndicatorStates.DENY);
+                    break;
+                    default:
+                        emailMsg.setMsg("Not valid email format");
+                        emailIndicator.setState(IndicatorStates.DENY);
+                    break;
                 }
             }, 250);
         }, 1000),
@@ -236,10 +243,14 @@ if (register) {
             const created = await postRequest("/accounts/create", data);
 
             createAlert("Account created", 5000, AlertColors.SECONDARY);
-            if (created) {
+            if (created.status == 201) {
                 htmx.ajax("get", "/settings", ".content");
+                history.pushState(null, "", "/settings");
+            } else {
+                throw new Error("Error: " + created);
             }
         } catch (e) {
+            console.error(JSON.stringify(e));
             createAlert("Could not create account", 5000, AlertColors.WARNING);
         }
     });
