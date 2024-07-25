@@ -188,11 +188,11 @@ footer .link svg path {
     z-index: -2;
     position: absolute;
     width: 100%;
-    max-width: 568px;
+    max-width: 600px;
     margin-top: 7.5rem;
     left: 50%;
     transform: translateX(-50%);
-    mask-image: url("/static/images/icons/SVG/Musicbar.svg");
+    mask-image: url("/images/icons/SVG/Musicbar.svg");
     mask-repeat: no-repeat;
     mask-size: contain;
 }
