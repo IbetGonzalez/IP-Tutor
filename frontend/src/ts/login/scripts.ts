@@ -1,4 +1,4 @@
-import { validatePassword, postRequest } from "./client-util";
+import { validatePassword, postRequest, makeCookie, getCookie } from "./client-util";
 import {
     removeClasses,
     inputKeyPressed,
@@ -12,10 +12,102 @@ import {
 } from "@util/util";
 import htmx from "htmx.org";
 
-const login = document.querySelector("#login-form");
+if (getCookie("jwt_token")) {
+    htmx.ajax("get","/settings", {target: ".content", headers: {"Authentication": `Bearer ${getCookie("jwt_token")}`}});
+}
+
+async function checkEmail(email: string): Promise<number> {
+    const headers = [ { "Content-Type": "application/json" } ]
+    const data = new FormData();
+    data.append("email", email);
+
+    try {
+        const response = await postRequest("/accounts/checkEmail", headers, data);
+        return response.status;
+    } catch (e) {
+        console.warn(`Error in checkEmail(): ${e}`);
+        return 0;
+    }
+}
+
+const login: HTMLFormElement | null = document.querySelector("#login-form");
 if (login) {
-    login.addEventListener("htmx:confirm", function (evt) {
+    const email = queryElement<HTMLInputElement>("#email-field");
+    const emailIndicator = new MarkIndicator(email);
+    const emailMsg = new ErrMsg(email);
+    const password = queryElement<HTMLInputElement>("#password-field");
+    const passwordIndicator = new MarkIndicator(password);
+
+    const loginFields = {
+        email: { input: email, indicator: emailIndicator, valid: false },
+        password: { input: password, indicator: passwordIndicator, valid: false },
+    };
+    type field = keyof typeof loginFields;
+
+    email.addEventListener(
+        "input",
+        debounce(async function () {
+            loginFields.email.indicator.setState(IndicatorStates.PROGRESS);
+            emailMsg.setMsg("");
+
+            if (email.value.length <= 0) {
+                loginFields.email.valid = false;
+                loginFields.email.indicator.setState(IndicatorStates.HIDDEN);
+                return;
+            }
+            const responseCode = await checkEmail(email.value);
+            setTimeout( function () {
+                    switch (responseCode) {
+                        case 409:
+                            loginFields.email.valid = true;
+                            loginFields.email.indicator.setState(IndicatorStates.ALLOW);
+                        break;
+                        default:
+                            emailMsg.setMsg("No account asscociated with that email");
+                            loginFields.email.indicator.setState(IndicatorStates.DENY);
+                    }
+                }, 250);
+        }, 1000),
+    );
+    password.addEventListener(
+        "input",
+        function () {
+            loginFields.password.valid = false
+            if (password.value.length > 0) {
+                loginFields.password.valid = true; 
+            }
+        }
+    );
+    login.addEventListener("submit", async function (evt) {
         evt.preventDefault();
+        for (let key in loginFields) {
+            const fieldObj = loginFields[key as field];
+            const isValid: boolean = fieldObj.valid;
+            if (!isValid) {
+                fieldObj.indicator.setState(IndicatorStates.DENY);
+                createAlert("Must fill out all fields", 5000, AlertColors.WARNING);
+            }
+        }
+
+        const data = new FormData(login);
+        const headers = [{ "Content-Type": "application/json" }]
+
+        const loginData = await postRequest("/accounts/login", headers, data);
+        loginData.body.then(
+            (res) => {
+                document.cookie = makeCookie("jwt_token", res.token, res.expiresIn)
+            }
+        )
+
+        switch (loginData.status) {
+            case 200:
+                htmx.ajax("get","/", ".content");
+                history.pushState(null, "", "/")
+            break;
+            default:
+                passwordIndicator.setState(IndicatorStates.DENY);
+                createAlert("Incorrect password", 5000, AlertColors.WARNING);
+        }
     });
 }
 
@@ -50,6 +142,10 @@ if (register) {
 
     type inputField = keyof typeof fieldsValidity;
 
+    function updateFieldValidity(field: inputField, isValid: boolean) {
+        fieldsValidity[field] = isValid;
+    }
+
     function updateConfirm() {
         confirmPasswordMsg.setMsg("");
         updateFieldValidity("password", false);
@@ -57,7 +153,6 @@ if (register) {
         if (confirmPassword.value.length <= 0) {
             confirmPasswordIndicator.setState(IndicatorStates.HIDDEN);
             return;
-
         } else if (confirmPassword.value != password!.value) {
             confirmPasswordMsg.setMsg("Passwords do not match");
             confirmPasswordIndicator.setState(IndicatorStates.DENY);
@@ -68,24 +163,6 @@ if (register) {
         confirmPasswordIndicator.setState(IndicatorStates.ALLOW);
     }
 
-
-
-    function updateFieldValidity(field: inputField, isValid: boolean) {
-        fieldsValidity[field] = isValid;
-    }
-
-    async function checkEmail(email: string): Promise<number> {
-        const data = new FormData();
-        data.append("email", email);
-
-        try {
-            const response = await postRequest("/accounts/checkEmail", data);
-            return response.status;
-        } catch (e) {
-            console.warn(`Error in checkEmail(): ${e}`);
-            return 0;
-        }
-    }
     // email input hanlders -------------------------------------------
     email.addEventListener("keydown", function (e) {
         if (emailEmpty || !inputKeyPressed(e as KeyboardEvent)) {
@@ -103,29 +180,28 @@ if (register) {
             emailMsg.setMsg("");
             updateFieldValidity("email", false);
 
-
             if (email.value.length <= 0) {
                 emailEmpty = true;
                 emailIndicator.setState(IndicatorStates.DENY);
                 return;
             }
 
-            const responseStatus: number= await checkEmail(email.value);
+            const responseStatus: number = await checkEmail(email.value);
 
             setTimeout(() => {
                 switch (responseStatus) {
                     case 200:
                         emailIndicator.setState(IndicatorStates.ALLOW);
                         updateFieldValidity("email", true);
-                    break;
+                        break;
                     case 409:
                         emailMsg.setMsg("Account already asscociated with that email");
                         emailIndicator.setState(IndicatorStates.DENY);
-                    break;
+                        break;
                     default:
                         emailMsg.setMsg("Not valid email format");
                         emailIndicator.setState(IndicatorStates.DENY);
-                    break;
+                        break;
                 }
             }, 250);
         }, 1000),
@@ -171,7 +247,7 @@ if (register) {
             }
         }
         passwordIndicator.setState(IndicatorStates.DENY);
-     }, 250);
+    }, 250);
 
     password.addEventListener("input", () => {
         const passwordInput = password.value;
@@ -203,22 +279,22 @@ if (register) {
     confirmPassword.addEventListener("input", debounce(updateConfirm, 500));
 
     interface FormField {
-        input: HTMLInputElement,
-        indicator: MarkIndicator
+        input: HTMLInputElement;
+        indicator: MarkIndicator;
     }
 
     const formFields: FormField[] = [
-        {input: email, indicator: emailIndicator},
-        {input: username, indicator: usernameIndicator},
-        {input: password, indicator: passwordIndicator},
-        {input: confirmPassword, indicator: confirmPasswordIndicator},
-    ]
+        { input: email, indicator: emailIndicator },
+        { input: username, indicator: usernameIndicator },
+        { input: password, indicator: passwordIndicator },
+        { input: confirmPassword, indicator: confirmPasswordIndicator },
+    ];
 
     // register submit handler ---------------------------------------------------
     register.addEventListener("submit", async function (evt) {
         evt.preventDefault();
 
-        let aFieldIsNotFilled = false; 
+        let aFieldIsNotFilled = false;
         formFields.forEach((field) => {
             if (!field.input.value) {
                 field.indicator.setState(IndicatorStates.DENY);
@@ -237,10 +313,11 @@ if (register) {
         }
 
         const data = new FormData(register);
+        const headers = [{ "Content-Type": "application/json" }]
         data.delete("confirm-password");
 
         try {
-            const created = await postRequest("/accounts/create", data);
+            const created = await postRequest("/accounts/create", headers, data);
 
             createAlert("Account created", 5000, AlertColors.SECONDARY);
             if (created.status == 201) {

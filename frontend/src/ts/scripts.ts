@@ -1,3 +1,4 @@
+import { getCookie } from "./login/client-util";
 import { debounce } from "./util/util";
 import htmx, { HtmxResponseInfo } from "htmx.org";
 
@@ -20,6 +21,16 @@ document.addEventListener("htmx:afterRequest", function (evt) {
     }
     updateNav();
 });
+document.addEventListener("htmx:beforeRequest", function (evt) {
+    const htmxEvt = evt as htmxEvent;
+
+    if (htmxEvt.detail.pathInfo.requestPath === "/settings") {
+        if (getCookie("jwt_token")){
+            htmxEvt.detail.xhr.setRequestHeader("Authorization", `Bearer ${getCookie("jwt_token")}`);
+        }
+    }
+})
+
 let hideBtn: HTMLButtonElement | null = document.querySelector("#hide-button");
 if (hideBtn) {
     hideBtn.addEventListener("click", MinimizeNav);
