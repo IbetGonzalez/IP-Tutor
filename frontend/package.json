@@ -2,9 +2,10 @@
   "name": "music-site",
   "version": "0.0.1",
   "description": "A site of music practice games to improve technical playin abilities",
+  "type": "module",
   "scripts": {
-    "build": "webpack",
-    "build-w": "webpack -w"
+    "build": "vite build",
+    "build-w": "vite build -w"
   },
   "keywords": [
     "music",
@@ -15,18 +16,16 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "prettier": "3.3.3",
-    "webpack": "^5.93.0",
-    "webpack-cli": "^5.1.4",
-    "ts-loader": "^9.5.1",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vite": "^5.3.5"
   },
   "dependencies": {
     "htmx.org": "^2.0.1",
     "tone": "^15.1.2"
   },
-  "prettier" :{
-      "tabWidth": 4,
-      "semi": true,
-      "printWidth": 120 
+  "prettier": {
+    "tabWidth": 4,
+    "semi": true,
+    "printWidth": 120
   }
 }
