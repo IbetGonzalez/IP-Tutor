@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "build-w": "vite build -w"
+    "build-w": "vite build -w",
+    "test": "vitest"
   },
   "keywords": [
     "music",
@@ -17,7 +18,8 @@
   "devDependencies": {
     "prettier": "3.3.3",
     "typescript": "^5.5.4",
-    "vite": "^5.3.5"
+    "vite": "^5.3.5",
+    "vitest": "^2.0.4"
   },
   "dependencies": {
     "htmx.org": "^2.0.1",
