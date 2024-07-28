@@ -1,9 +1,10 @@
-import { validatePassword, postRequest, makeCookie, checkEmail, getCookie } from "./client-util";
+import { Signal, Computed, createEffect } from "@util/signal";
+import { validatePassword, postRequest, queryElement, checkEmail, makeCookie, getCookie } from "./client-util";
 import {
     removeClasses,
     inputKeyPressed,
     debounce,
-    queryElement,
+    // queryElement,
     ErrMsg,
     MarkIndicator,
     IndicatorStates,
@@ -17,50 +18,95 @@ if (getCookie("jwt_token")) {
 }
 
 const login: HTMLFormElement | null = document.querySelector("#login-form");
+
+enum FieldStates {
+    EMPTY = 0,
+    INVALID = 1,
+    VALID = 2,
+    CHECKING = 3
+};
+
+
 if (login) {
     const email = queryElement<HTMLInputElement>("#email-field");
-    const emailIndicator = new MarkIndicator(email);
-    const emailMsg = new ErrMsg(email);
-    const password = queryElement<HTMLInputElement>("#password-field");
-    const passwordIndicator = new MarkIndicator(password);
-
-    const loginFields = {
-        email: { input: email, indicator: emailIndicator, valid: false },
-        password: { input: password, indicator: passwordIndicator, valid: false },
-    };
-    type field = keyof typeof loginFields;
+    const emailState = new Signal<FieldStates>(FieldStates.EMPTY);
 
     email.addEventListener(
         "input",
         debounce(async function () {
-            loginFields.email.indicator.setState(IndicatorStates.PROGRESS);
-            loginFields.email.valid = false;
-            emailMsg.setMsg("");
+            emailState.value = FieldStates.CHECKING;
 
             if (email.value.length <= 0) {
-                loginFields.email.indicator.setState(IndicatorStates.HIDDEN);
+                emailState.value = FieldStates.EMPTY;
                 return;
             }
             const responseCode = await checkEmail(email.value);
             setTimeout( function () {
-                    switch (responseCode) {
-                        case 409:
-                            loginFields.email.valid = true;
-                            loginFields.email.indicator.setState(IndicatorStates.ALLOW);
-                        break;
-                        default:
-                            emailMsg.setMsg("No account asscociated with that email");
-                            loginFields.email.indicator.setState(IndicatorStates.DENY);
-                    }
-                }, 250);
-        }, 1000),
+                switch (responseCode) {
+                    case 409:
+                        emailState.value = FieldStates.VALID;
+                    break;
+                    default:
+                        emailState.value = FieldStates.INVALID;
+                }
+            }, 250);
+        }, 1000)
     );
+
+    createEffect(() => {
+        const emailIndicator = new MarkIndicator(email);
+        const emailMsg = new ErrMsg(email);
+
+        switch (emailState.value) { 
+            case FieldStates.EMPTY:
+                emailIndicator.setState(IndicatorStates.HIDDEN);
+                emailMsg.setMsg("");
+            break;
+            case FieldStates.INVALID:
+                emailIndicator.setState(IndicatorStates.DENY);
+                emailMsg.setMsg("No account asscociated with that email");
+            break;
+            case FieldStates.VALID:
+                emailIndicator.setState(IndicatorStates.ALLOW);
+                emailMsg.setMsg("");
+            break;
+            default:
+                emailIndicator.setState(IndicatorStates.PROGRESS);
+                emailMsg.setMsg("");
+            break;
+        }
+    });
+
+    const password = queryElement<HTMLInputElement>("#password-field");
+    const passwordState = new Signal<FieldStates>(FieldStates.EMPTY);
+
+    createEffect(() => {
+        const passwordIndicator = new MarkIndicator(password);
+
+        switch(passwordState.value) {
+            case FieldStates.INVALID:
+                passwordIndicator.setState(IndicatorStates.DENY);
+            break;
+            default:
+                passwordIndicator.setState(IndicatorStates.HIDDEN);
+            break;
+
+        }
+    });
+
+
+    const loginFields = {
+          email: { input: email, state: emailState, valid: new Computed(() => emailState.value === FieldStates.VALID)},
+          password: { input: password, state: passwordState, valid: new Computed(() => passwordState.value === FieldStates.VALID) },
+    };
+    type field = keyof typeof loginFields;
+
     password.addEventListener(
         "input",
         function () {
-            loginFields.password.valid = false
+            passwordState.value = FieldStates.EMPTY;
             if (password.value.length > 0) {
-                loginFields.password.valid = true; 
+                passwordState.value = FieldStates.VALID;
             }
         }
     );
@@ -68,13 +114,13 @@ if (login) {
         evt.preventDefault();
         for (let key in loginFields) {
             const fieldObj = loginFields[key as field];
-            const isValid: boolean = fieldObj.valid;
+            const isValid: boolean = fieldObj.valid.value;
+
             if (!isValid) {
-                fieldObj.indicator.setState(IndicatorStates.DENY);
+                fieldObj.state.value = FieldStates.INVALID;
                 createAlert("Must fill out all fields", 5000, AlertColors.WARNING);
             }
         }
-
         const data = new FormData(login);
         const headers = [{ "Content-Type": "application/json" }]
 
@@ -91,7 +137,6 @@ if (login) {
                 history.pushState(null, "", "/")
             break;
             default:
-                passwordIndicator.setState(IndicatorStates.DENY);
                 createAlert("Incorrect password", 5000, AlertColors.WARNING);
         }
     });

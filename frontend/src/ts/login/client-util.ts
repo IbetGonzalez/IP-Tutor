@@ -2,6 +2,13 @@ type Header = {
     [key: string]: string,
 }
 
+export function queryElement<T extends HTMLElement>(selector: string): T {
+    const element = document.querySelector<T>(selector);
+    if (!element) {
+        throw new Error(`Could not find element: ${selector}`);
+    }
+    return element;
+}
 
 export async function checkEmail(email: string): Promise<number> {
     const headers = [ { "Content-Type": "application/json" } ]
@@ -16,6 +23,7 @@ export async function checkEmail(email: string): Promise<number> {
         return 0;
     }
 }
+
 export async function postRequest(url: string, headers: Header[],formData: FormData) {
     if (!headers) {
         console.error("No headers provided");

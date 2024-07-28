@@ -33,6 +33,10 @@ function runAndSubscribe(task: Effect | Computed) {
     RUNNING = null;
 }
 
+export function createEffect(callback: Function) {
+    return new Effect(callback);
+}
+
 export class Effect {
     private callBack: Function;
 
