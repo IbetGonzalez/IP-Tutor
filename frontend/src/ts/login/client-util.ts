@@ -2,6 +2,20 @@ type Header = {
     [key: string]: string,
 }
 
+
+export async function checkEmail(email: string): Promise<number> {
+    const headers = [ { "Content-Type": "application/json" } ]
+    const data = new FormData();
+    data.append("email", email);
+
+    try {
+        const response = await postRequest("/accounts/checkEmail", headers, data);
+        return response.status;
+    } catch (e) {
+        console.warn(`Error in checkEmail(): ${e}`);
+        return 0;
+    }
+}
 export async function postRequest(url: string, headers: Header[],formData: FormData) {
     if (!headers) {
         console.error("No headers provided");

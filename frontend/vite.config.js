@@ -9,15 +9,16 @@ export default {
         extensions: [".ts", '.js'],
     },
     build: {
-        outDir: "src/js",
+        outDir: "static",
+        emptyOutDir: false,
         rollupOptions: {
             input: {
                 'scripts': './src/ts/scripts.ts',
                 'login/scripts':'./src/ts/login/scripts.ts'
             },
             output: {
-                dir: "static/js",
-                entryFileNames: '[name].bundle.js'
+                dir: "static",
+                entryFileNames: 'js/[name].bundle.js'
             }
         }
     },

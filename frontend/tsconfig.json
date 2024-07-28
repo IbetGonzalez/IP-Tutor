@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es6",
     "useDefineForClassFields": true,
-    "module": "ES6",
+    "module": "esnext",
     "lib": ["ES6", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 

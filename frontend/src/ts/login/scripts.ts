@@ -1,4 +1,4 @@
-import { validatePassword, postRequest, makeCookie, getCookie } from "./client-util";
+import { validatePassword, postRequest, makeCookie, checkEmail, getCookie } from "./client-util";
 import {
     removeClasses,
     inputKeyPressed,
@@ -14,20 +14,6 @@ import htmx from "htmx.org";
 
 if (getCookie("jwt_token")) {
     htmx.ajax("get","/settings", {target: ".content", headers: {"Authentication": `Bearer ${getCookie("jwt_token")}`}});
-}
-
-async function checkEmail(email: string): Promise<number> {
-    const headers = [ { "Content-Type": "application/json" } ]
-    const data = new FormData();
-    data.append("email", email);
-
-    try {
-        const response = await postRequest("/accounts/checkEmail", headers, data);
-        return response.status;
-    } catch (e) {
-        console.warn(`Error in checkEmail(): ${e}`);
-        return 0;
-    }
 }
 
 const login: HTMLFormElement | null = document.querySelector("#login-form");
@@ -48,10 +34,10 @@ if (login) {
         "input",
         debounce(async function () {
             loginFields.email.indicator.setState(IndicatorStates.PROGRESS);
+            loginFields.email.valid = false;
             emailMsg.setMsg("");
 
             if (email.value.length <= 0) {
-                loginFields.email.valid = false;
                 loginFields.email.indicator.setState(IndicatorStates.HIDDEN);
                 return;
             }
