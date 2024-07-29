@@ -40,5 +40,7 @@ package-lock.json
 
 frontend/static/js/
 frontend/static/assets/
+frontend/coverage
+src/_tests_/
 
 *.bundle.js

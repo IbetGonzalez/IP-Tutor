@@ -10,17 +10,30 @@ export function queryElement<T extends HTMLElement>(selector: string): T {
     return element;
 }
 
-export async function checkEmail(email: string): Promise<number> {
+export const EmailStatus = {
+    INVALID: 0,
+    EXISTS: 1,
+    AVAILABLE: 2,
+    ERR: 3
+} as const;
+type emailStatus = (typeof EmailStatus)[keyof typeof EmailStatus]
+
+export async function checkEmail(email: string): Promise<emailStatus> {
     const headers = [ { "Content-Type": "application/json" } ]
     const data = new FormData();
     data.append("email", email);
 
-    try {
-        const response = await postRequest("/accounts/checkEmail", headers, data);
-        return response.status;
-    } catch (e) {
-        console.warn(`Error in checkEmail(): ${e}`);
-        return 0;
+    const response = await postRequest("/accounts/checkEmail", headers, data);
+
+    switch (response.status) {
+        case 200:
+            return EmailStatus.AVAILABLE;
+        case 400:
+            return EmailStatus.INVALID;
+        case 409:
+            return EmailStatus.EXISTS;
+        default:
+            return EmailStatus.ERR;
     }
 }
 
@@ -55,7 +68,6 @@ export function makeCookie(c_name: string, c_value: string, expires_min: number)
     const new_cookie = c_name + "=" + c_value + ";" + expires + ";path=/;SameSite=strict";
     return new_cookie;
 }
-
 export function getCookie(c_name: string) {
     let name = c_name + "=";
     let decodedCookie = decodeURIComponent(document.cookie);
