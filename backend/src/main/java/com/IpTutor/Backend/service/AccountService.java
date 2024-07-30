@@ -3,8 +3,8 @@ package com.IpTutor.Backend.service;
 import com.IpTutor.Backend.authentication.JwtService;
 import com.IpTutor.Backend.dto.LoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
-import com.IpTutor.Backend.dto.AccountDTO;
-import com.IpTutor.Backend.dto.LoginResponseDTO;
+import com.IpTutor.Backend.dto.AccountResponseDTO;
+import com.IpTutor.Backend.dto.SessionResponseDTO;
 import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +46,7 @@ public class AccountService{
         return !matcher.matches();
     }
 
-    public AccountDTO createAccount(AccountRequestDTO accountRequestDTO) {
+    public SessionResponseDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
         if(accountRepository.findByEmail(accountRequestDTO.email()).isPresent()
                 || checkEmailPattern(accountRequestDTO.email())
@@ -66,12 +66,13 @@ public class AccountService{
 
         accountRepository.save(account);
 
-        //TODO: Keep log.info or remove it
+        String jwtToken = jwtService.generateToken(account);
+
         log.info("Account successfully created");
-        return new AccountDTO(account.getUsername(), account.getEmail(), account.getAccountCreation());
+        return new SessionResponseDTO(jwtToken, jwtService.getExpirationTime());
     }
 
-    public LoginResponseDTO login(LoginRequestDTO loginRequestDTO) {
+    public SessionResponseDTO login(LoginRequestDTO loginRequestDTO) {
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -85,12 +86,13 @@ public class AccountService{
         if(account == null) {
             return null;
         } else if(!passwordEncoder.matches(loginRequestDTO.password(), account.getPassword())) {
-            return new LoginResponseDTO(null,-1);
+            return new SessionResponseDTO(null,-1);
         }
 
         String jwtToken = jwtService.generateToken(account);
 
-        return new LoginResponseDTO(jwtToken, jwtService.getExpirationTime());
+        log.info("Successfully logged in");
+        return new SessionResponseDTO(jwtToken, jwtService.getExpirationTime());
     }
 
     public int checkEmail(AccountRequestDTO accountRequestDTO) {
