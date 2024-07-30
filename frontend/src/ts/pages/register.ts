@@ -210,8 +210,7 @@ const manageConfirmState = createEffect(() => {
 
 const registerForm = new Form("#register-form", [email, username, password, confirmPassword]);
 
-registerForm.elem.addEventListener("submit", async (e) => {
-    e.preventDefault();
+registerForm.submitBtn.addEventListener("click", async () => {
     if (!registerForm.checkReady) return;
 
     const data = new FormData(registerForm.elem);
