@@ -24,10 +24,15 @@ export function createState(state: (typeof InputStates)[keyof typeof InputStates
 export class Form {
     private m_elem: HTMLFormElement;
     private m_fields: FormInput[];
+    private m_submitElem: HTMLButtonElement;
 
     constructor(formQuery: string,fields: FormInput[]) {
         this.m_elem = queryElement(formQuery);
         this.m_fields = fields;
+        this.m_submitElem = queryElement(`${formQuery} #submit-button`);
+    }
+    get submitBtn() {
+        return this.m_submitElem;
     }
     get checkReady() {
         let ready = true;

@@ -26,8 +26,7 @@ const password = new FormInput("#password-wrapper");
 
 const loginForm = new Form("#login-form", [email, password]);
 
-loginForm.elem.addEventListener("submit", async (e) => {
-    e.preventDefault();
+loginForm.submitBtn.addEventListener("click", async () => {
     if (!loginForm.checkReady) {
         return;
     }
