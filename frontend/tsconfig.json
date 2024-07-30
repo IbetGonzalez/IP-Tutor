@@ -18,7 +18,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-        "@util/*": ["./src/ts/util/*"]
+        "@util/*": ["./src/ts/util/*"],
+        "@components/*": ["./src/ts/components/*"]
     }
   },
   "include": ["src"]

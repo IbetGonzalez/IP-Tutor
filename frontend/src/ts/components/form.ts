@@ -1,5 +1,5 @@
 import { Computed, Signal } from "@util/signal";
-import { queryElement } from "./client-util";
+import { queryElement } from "@util/client-util";
 import { removeClasses } from "@util/util";
 
 export const InputStates = {
@@ -68,6 +68,7 @@ export class FormInput {
             this.m_input.value = this.m_inputElem.value;
         })
     }
+
     set state(state: State) {
         this.m_state.value = state;
     }

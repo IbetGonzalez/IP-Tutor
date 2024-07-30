@@ -7,11 +7,19 @@ import {
     MarkIndicator, 
     createState,
     Form
-} from "./form";
+} from "@components/form";
 
-import { checkEmail, EmailStatus, makeCookie, postRequest   } from "./client-util";
+import { checkEmail, EmailStatus, getCookie, makeCookie, postRequest   } from "@util/client-util";
 import {  AlertColors, createAlert, debounce  } from "@util/util";
 import htmx from "htmx.org";
+
+if (getCookie("jwt_token")) {
+    htmx.ajax("get", "/settings", {
+        target: ".content",
+        headers: { "Authorization": `Bearer ${getCookie("jwt_token")}`}
+    });
+    history.pushState(null, "", "/settings")
+}
 
 const email = new FormInput("#email-wrapper");
 const password = new FormInput("#password-wrapper");

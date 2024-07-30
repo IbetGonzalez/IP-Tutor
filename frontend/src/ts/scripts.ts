@@ -1,5 +1,5 @@
-import { getCookie } from "./login/client-util";
-import { debounce } from "./util/util";
+import { getCookie } from "@util/client-util";
+import { debounce } from "@util/util";
 import htmx, { HtmxResponseInfo } from "htmx.org";
 
 type htmxEvent = {
