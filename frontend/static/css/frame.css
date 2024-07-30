@@ -1,14 +1,14 @@
 .w-sm {
-    width: 50svw;
+    width: 50%;
 }
 .w-med{
-    width: 75svw;
+    width: 75%;
 }
 .w-lg{
-    width: 90svw;
+    width: 90%;
 }
 .w-xlg{
-    width: 100svw;
+    width: 100%;
 }
 .center {
     margin: auto;
@@ -298,4 +298,12 @@
 .link-bg {
     text-decoration: none;
     color: var(--background);
+}
+@media screen and (min-width: 1100px){
+    .lg-mt-5{
+        margin-top: 5%;
+    }
+    .sm-w-sm {
+        width: 50%;
+    }
 }
