@@ -3,7 +3,7 @@
     <div class="header">LOGIN</div>
     <div class="card-content">
         <form id="login-form" class="form center w-med">
-            <div class="form-input">
+            <div id="email-wrapper" class="form-input">
                 <input id="email-field" class="text-input" name="email" type="text" placeholder="Username" />
                 <label class="text-input-label" for="#email-field">Email</label>
                 <div class="indicator">
@@ -28,7 +28,7 @@
                 <div class="err-message"></div>
             </div>
             <br />
-            <div class="form-input">
+            <div id="password-wrapper" class="form-input">
                 <input class="text-input" id="password-field" name="password" type="password" placeholder="Password" />
                 <label class="text-input-label" for="#password-field">Password</label>
                 <div class="indicator">
@@ -50,6 +50,7 @@
                         </g>
                     </svg>
                 </div>
+                <div class="err-message"></div>
             </div>
             <br />
             <br />
@@ -58,7 +59,7 @@
         </form>
     </div>
 </div>
-<script defer src="/js/login/scripts.bundle.js"></script>
+<script defer type="module" src="/js/login/scripts.bundle.js"></script>
 <div id="register-link" class="mt-5 center" hx-push-url="true" hx-boost="true" hx-target=".content" hx-trigger="click">
     <a class="link-text" href="/register">Register</a>
 </div>

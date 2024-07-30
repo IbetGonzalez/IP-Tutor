@@ -1,48 +1,4 @@
-export enum IndicatorStates {
-    HIDDEN = "hidden",
-    PROGRESS = "progress",
-    ALLOW = "allow",
-    DENY = "deny",
-}
-export class MarkIndicator {
-    indicator: HTMLElement | null;
 
-    constructor(inputElem: HTMLElement) {
-        const parent = inputElem.parentElement;
-
-        if (!parent) {
-            console.warn("Indicator element must be contained in the same tag as input element");
-            this.indicator = null;
-            return;
-        }
-        this.indicator = parent.querySelector(".indicator svg");
-    }
-    setState(state: IndicatorStates) {
-        if (!this.indicator) {
-            console.warn("Cannot call setState on an invalid indicator");
-            return;
-        }
-        removeClasses(this.indicator, ["hidden", "progress", "allow", "deny"]);
-        this.indicator.classList.add(state);
-    }
-}
-export class ErrMsg {
-    elem: HTMLElement | null;
-
-    constructor(elem: HTMLElement) {
-        this.elem = elem.parentElement!.querySelector(".err-message");
-        if (!this.elem) {
-            console.error("No error message indicator in input-field");
-        }
-    }
-    setMsg(msg: string) {
-        if (!this.elem) {
-            console.error("No error message indicator in input-field");
-            return;
-        }
-        this.elem.innerText = msg;
-    }
-}
 export enum AlertColors {
     WARNING = "bg-warning",
     SUCCESS = "bg-success",

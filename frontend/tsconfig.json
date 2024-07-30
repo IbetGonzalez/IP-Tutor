@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es6",
     "useDefineForClassFields": true,
-    "module": "ES6",
+    "module": "esnext",
     "lib": ["ES6", "DOM", "DOM.Iterable"],
     "skipLibCheck": true,
 
@@ -15,11 +15,11 @@
 
     /* Linting */
     "strict": true,
-    "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-        "@util/*": ["./src/ts/util/*"]
+        "@util/*": ["./src/ts/util/*"],
+        "@components/*": ["./src/ts/components/*"]
     }
   },
   "include": ["src"]
