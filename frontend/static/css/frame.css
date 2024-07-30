@@ -29,6 +29,9 @@
 .pb-10 {
     padding-bottom: 50%;
 }
+.p-5 {
+    padding: 5%;
+}
 .bg-warning {
     background-color: var(--warning);
     color: var(--text);
@@ -87,8 +90,6 @@
     position: absolute;
     right: 0; 
     height: 30px;
-    &.cross {
-    }
 }
 .indicator .cross{
     opacity: 0;
@@ -299,6 +300,7 @@
     text-decoration: none;
     color: var(--background);
 }
+
 @media screen and (min-width: 1100px){
     .lg-mt-5{
         margin-top: 5%;
