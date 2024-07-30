@@ -2,9 +2,11 @@ package com.IpTutor.Backend.controller;
 
 import com.IpTutor.Backend.dto.LoginRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
-import com.IpTutor.Backend.dto.AccountDTO;
-import com.IpTutor.Backend.dto.LoginResponseDTO;
+import com.IpTutor.Backend.dto.AccountResponseDTO;
+import com.IpTutor.Backend.dto.SessionResponseDTO;
 import com.IpTutor.Backend.service.AccountService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,21 +20,22 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/create")
-    public ResponseEntity<AccountDTO> createAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
+    public ResponseEntity<SessionResponseDTO> createAccount(@RequestBody AccountRequestDTO accountRequestDTO, HttpServletResponse response) {
 
-        AccountDTO results = accountService.createAccount(accountRequestDTO);
+       SessionResponseDTO results = accountService.createAccount(accountRequestDTO);
 
         if(results == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
+        response.addCookie(new Cookie("JwtToken", results.token()));
         return ResponseEntity.status(HttpStatus.CREATED).body(results);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+    public ResponseEntity<SessionResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
 
-        LoginResponseDTO result = accountService.login(loginRequestDTO);
+        SessionResponseDTO result = accountService.login(loginRequestDTO);
 
         if(result == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
@@ -40,6 +43,7 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
+        response.addCookie(new Cookie("JwtToken", result.token()));
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
@@ -56,7 +60,6 @@ public class AccountController {
             default:
                 return ResponseEntity.status(HttpStatus.OK).body("Email format is valid and not associated with an account");
         }
-
     }
 
     @PutMapping("/update/username")

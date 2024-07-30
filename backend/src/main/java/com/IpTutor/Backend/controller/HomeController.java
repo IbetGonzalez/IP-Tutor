@@ -27,9 +27,7 @@ public class HomeController {
     @RequestMapping("/{name}")
     public String slug(@PathVariable String name, Model model, HtmxRequest hxRequest) {
         if(name.equals("settings")) {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-            if(!authentication.isAuthenticated()) {
+            if(!SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
                 return "redirect:/unauthorized";
             }
         }
@@ -37,6 +35,7 @@ public class HomeController {
         if(hxRequest.isHtmxRequest()) {
             return name + "Content";
         }
+
 
         model.addAttribute("content", name + "Content");
         return "base";
