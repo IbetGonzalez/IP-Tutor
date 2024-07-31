@@ -55,14 +55,15 @@ function MinimizeNav() {
 function updateNav() {
     const path = document.location.pathname.split("/")[1];
     const elemId = path ? path : "home";
+    const selQuery = `.${elemId}-nav`;
 
     const currSelNavList = document.getElementsByClassName("nav-selected");
-    const selNav = document.getElementById(elemId)
-        ? document.getElementById(elemId)
-        : document.getElementById("settings");
+    const selNav = document.querySelector(selQuery)
+        ? document.querySelector(selQuery)
+        : document.querySelector(`.settings-nav`);
 
     if (!selNav) {
-        throw new Error("No #settings nav button");
+        throw new Error("No .settings-nav button");
     }
 
     for (let i = 0; i < currSelNavList.length; i++) {
