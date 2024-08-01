@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -59,17 +61,34 @@ public class AccountController {
         }
     }
 
+    @GetMapping("/getData")
+    public ResponseEntity<AccountResponseDTO> getAccountData() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        AccountResponseDTO accountResponseDTO = accountService.getAccountData(authentication);
+        if(accountResponseDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(accountResponseDTO);
+    }
+
     @PutMapping("/update/username")
     public ResponseEntity<String> updateUsername(@RequestBody UpdateUsernameDTO updateUsernameDTO){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        switch (accountService.updateUsername(updateUsernameDTO)) {
+        if(!authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        switch (accountService.updateUsername(updateUsernameDTO, authentication)) {
             case -1:
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
-            case -2:
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
-            case -3:
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
-            case -4:
+            case -2:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username not valid");
             default:
                 return ResponseEntity.status(HttpStatus.OK).body("Username successfully updated");
@@ -77,10 +96,20 @@ public class AccountController {
     }
 
     @DeleteMapping("/deleteAccount")
-    public ResponseEntity<String> deleteAccount(@RequestBody AccountRequestDTO accountRequestDTO) {
-        if (accountService.deleteAccount(accountRequestDTO) == -1) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("The account to be deleted was not found");
+    public ResponseEntity<String> deleteAccount(@RequestBody AccountDeleteRequestDTO deleteRequestDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
-        return ResponseEntity.status(HttpStatus.OK).body("Account successfully deleted");
+
+        switch(accountService.deleteAccount(deleteRequestDTO, authentication)) {
+            case -1:
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+            case -2:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
+            default:
+                return ResponseEntity.status(HttpStatus.OK).body("Account successfully deleted");
+        }
     }
 }

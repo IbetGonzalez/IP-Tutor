@@ -26,7 +26,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
       return http.authorizeHttpRequests(auth -> auth
               .requestMatchers("/settings").authenticated()
-              .requestMatchers("accounts/update/username").authenticated()
+              .requestMatchers("/accounts/update/username").authenticated()
+              .requestMatchers("/accounts/deleteAccount").authenticated()
+              .requestMatchers("/accounts/getData").authenticated()
               .anyRequest().permitAll()
               )
               .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
