@@ -61,6 +61,22 @@ public class AccountController {
         }
     }
 
+    @GetMapping("/getData")
+    public ResponseEntity<AccountResponseDTO> getAccountData() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        AccountResponseDTO accountResponseDTO = accountService.getAccountData(authentication);
+        if(accountResponseDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(accountResponseDTO);
+    }
+
     @PutMapping("/update/username")
     public ResponseEntity<String> updateUsername(@RequestBody UpdateUsernameDTO updateUsernameDTO){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

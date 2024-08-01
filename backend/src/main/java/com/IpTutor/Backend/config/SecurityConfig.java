@@ -28,6 +28,7 @@ public class SecurityConfig {
               .requestMatchers("/settings").authenticated()
               .requestMatchers("/accounts/update/username").authenticated()
               .requestMatchers("/accounts/deleteAccount").authenticated()
+              .requestMatchers("/accounts/getData").authenticated()
               .anyRequest().permitAll()
               )
               .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

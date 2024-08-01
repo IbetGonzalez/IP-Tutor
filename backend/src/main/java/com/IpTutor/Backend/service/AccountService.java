@@ -107,6 +107,16 @@ public class AccountService{
         return 0;
     }
 
+    public AccountResponseDTO getAccountData(Authentication authentication) {
+        Account account = (Account) authentication.getPrincipal();
+
+        if(account == null) {
+            return null;
+        }
+
+        return new AccountResponseDTO(account.getAccountUsername(),account.getEmail(),account.getAccountCreation());
+    }
+
     public int updateUsername(UpdateUsernameDTO updateUsernameDTO, Authentication authentication) {
         Account account = (Account) authentication.getPrincipal();
 
