@@ -60,18 +60,16 @@ public class AccountController {
     }
 
     @PutMapping("/update/username")
-    public ResponseEntity<String> updateUsername(@RequestBody UpdateUsernameDTO updateUsernameDTO, @CookieValue(value = "JwtToken", defaultValue = "") String token){
+    public ResponseEntity<String> updateUsername(@RequestBody UpdateUsernameDTO updateUsernameDTO){
 
-        switch (accountService.updateUsername(updateUsernameDTO, token)) {
+        switch (accountService.updateUsername(updateUsernameDTO)) {
             case -1:
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
             case -2:
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expired");
-            case -3:
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
-            case -4:
+            case -3:
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
-            case -5:
+            case -4:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username not valid");
             default:
                 return ResponseEntity.status(HttpStatus.OK).body("Username successfully updated");
