@@ -107,20 +107,13 @@ public class AccountService{
         return 0;
     }
 
-    public int updateUsername(UpdateUsernameDTO updateUsernameDTO) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(!authentication.isAuthenticated()) {
-            return -1;
-        }
-
+    public int updateUsername(UpdateUsernameDTO updateUsernameDTO, Authentication authentication) {
         Account account = (Account) authentication.getPrincipal();
 
         if (account == null) {
-            return -2;
-        } else if (!passwordEncoder.matches(updateUsernameDTO.password(), account.getPassword())) {
-            return -3;
+            return -1;
         } else if(checkUsernamePattern(updateUsernameDTO.username())) {
-            return -4;
+            return -2;
         }
 
         account.setUsername(updateUsernameDTO.username());
@@ -128,12 +121,18 @@ public class AccountService{
         return 0;
     }
 
-    public int deleteAccount(AccountRequestDTO accountRequestDTO) {
-        Account toDelete = accountRepository.findByEmail(accountRequestDTO.email()).orElse(null);
-        if(toDelete != null) {
-            accountRepository.delete(toDelete);
-            return 1;
+    public int deleteAccount(AccountDeleteRequestDTO deleteRequestDTO, Authentication authentication) {
+        Account toDelete = (Account) authentication.getPrincipal();
+
+        if(toDelete == null) {
+            return -1;
         }
+        if(!passwordEncoder.matches(deleteRequestDTO.password(), toDelete.getPassword()))
+        {
+            return -2;
+        }
+
+        accountRepository.delete(toDelete);
         return 0;
     }
 

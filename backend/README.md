@@ -51,9 +51,9 @@ To run in production mode:
 
 ### localhost:xxxx/accounts/update/username (Put Mapping)
 
+#### Needs an Authorization Header
 ```
     {
-        "password": "",
         "username": ""
     }
 ```
@@ -64,9 +64,11 @@ To run in production mode:
 * Successful: 200 (ok)
 
 ### localhost:xxxx/accounts/deleteAccount (Delete Mapping)
+
+#### Needs an Authorization Header
 ```
     {
-        "email": ""
+        "password": ""
     }
 ```
 
