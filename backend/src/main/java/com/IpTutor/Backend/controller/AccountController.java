@@ -1,9 +1,6 @@
 package com.IpTutor.Backend.controller;
 
-import com.IpTutor.Backend.dto.LoginRequestDTO;
-import com.IpTutor.Backend.dto.AccountRequestDTO;
-import com.IpTutor.Backend.dto.AccountResponseDTO;
-import com.IpTutor.Backend.dto.SessionResponseDTO;
+import com.IpTutor.Backend.dto.*;
 import com.IpTutor.Backend.service.AccountService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -63,12 +60,18 @@ public class AccountController {
     }
 
     @PutMapping("/update/username")
-    public ResponseEntity<String> updateUsername(@RequestBody AccountRequestDTO accountRequestDTO){
+    public ResponseEntity<String> updateUsername(@RequestBody UpdateUsernameDTO updateUsernameDTO, @CookieValue(value = "JwtToken", defaultValue = "") String token){
 
-        switch (accountService.updateUsername(accountRequestDTO)) {
+        switch (accountService.updateUsername(updateUsernameDTO, token)) {
             case -1:
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
             case -2:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Session expired");
+            case -3:
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+            case -4:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+            case -5:
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username not valid");
             default:
                 return ResponseEntity.status(HttpStatus.OK).body("Username successfully updated");

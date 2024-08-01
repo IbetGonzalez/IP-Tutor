@@ -50,9 +50,11 @@ To run in production mode:
 * Email doesn't exist (Successful): 200 (ok)
 
 ### localhost:xxxx/accounts/update/username (Put Mapping)
+
+#### *TAKES IN A JwtToken Cookie*
 ```
     {
-        "email": "",
+        "password": "",
         "username": ""
     }
 ```

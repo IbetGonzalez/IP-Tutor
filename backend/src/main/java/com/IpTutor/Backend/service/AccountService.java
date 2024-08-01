@@ -1,10 +1,7 @@
 package com.IpTutor.Backend.service;
 
 import com.IpTutor.Backend.authentication.JwtService;
-import com.IpTutor.Backend.dto.LoginRequestDTO;
-import com.IpTutor.Backend.dto.AccountRequestDTO;
-import com.IpTutor.Backend.dto.AccountResponseDTO;
-import com.IpTutor.Backend.dto.SessionResponseDTO;
+import com.IpTutor.Backend.dto.*;
 import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -107,16 +107,26 @@ public class AccountService{
         return 0;
     }
 
-    public int updateUsername(AccountRequestDTO accountRequestDTO) {
-        Account account = accountRepository.findByEmail(accountRequestDTO.email()).orElse(null);
+    public int updateUsername(UpdateUsernameDTO updateUsernameDTO, String token) {
 
-        if (account == null) {
+        if (token.equals("")) {
             return -1;
-        } else if(checkUsernamePattern(accountRequestDTO.username())) {
+        } else if(jwtService.isTokenExpired(token))
+        {
             return -2;
         }
 
-        account.setUsername(accountRequestDTO.username());
+        Account account = accountRepository.findByEmail(jwtService.extractUsername(token)).orElse(null);
+
+        if (account == null) {
+            return -3;
+        } else if (!passwordEncoder.matches(updateUsernameDTO.password(), account.getPassword())) {
+            return -4;
+        } else if(checkUsernamePattern(updateUsernameDTO.username())) {
+            return -5;
+        }
+
+        account.setUsername(updateUsernameDTO.username());
         accountRepository.save(account);
         return 0;
     }
