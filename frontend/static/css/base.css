@@ -13,21 +13,22 @@ body {
 }
 
 header {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding: 0;
+    padding-inline: 20rem;
+    position: relative;
+    display: flex;
 }
 
 .logo{
+    height: 32px;
+    padding-top: 0.5rem;
     display: flex;
-    max-width: fit-content;
     margin: auto;
     flex-wrap: wrap;
-    align-items: center;
 }
 
 .logo h1 {
     margin-left: 1rem;
-    align-self: center;
     font-size: 20px;
 }
 
@@ -67,7 +68,7 @@ footer .link svg path {
     fill: var(--text);
 }
 
-#nav-bar {
+#mobile-nav {
     position: fixed;
     bottom: 6px;
     right: 0;
@@ -120,13 +121,13 @@ footer .link svg path {
     height: 1rem;
 
 }
-.nav-selected {
+.nav-buttons .nav-selected {
     transform-style: preserve-3d;
     background-color: var(--secondary) !important;
     box-shadow: 0 0 4px rgba(0,0,0,0.9);
     animation: bounce 0.4s cubic-bezier(.47,1.64,.41,.8) forwards;;
 }
-.nav-selected::before {
+.nav-buttons .nav-selected::before {
     content: "";
     position: absolute;
     top: -10%;
@@ -329,7 +330,50 @@ footer .link svg path {
 .content .title {
     margin-left: 5%;
 }
+#desktop-nav {
+    display: none;
+    position: absolute;
+    margin-right: 7rem;
+    right: 0;
+    height: 100%;
 
+    .nav-items{
+        height: 100%;
+        display: flex;
+        gap: 8rem;
+        text-decoration: none;
+        list-style-type: none;
+    }
+}
+.nav-items li {
+    position: relative;
+    user-select: none;
+    box-sizing: border-box;
+    width: 7rem;
+    height: 100%;
+    padding-top: 0.5rem;
+    padding-inline: 1rem;
+    cursor: pointer;
+
+    &.nav-selected::after{
+        content: "";
+        position: absolute;
+        margin: auto;
+        left: 0;
+        bottom: 0;
+        height: 1px;
+        background-color: var(--text);
+        animation: underline 0.2s ease-out forwards;;
+    }
+}
+@keyframes underline {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
 /* Tablet */
 @media screen and (min-width: 600px) {
     .hero img {
@@ -341,6 +385,15 @@ footer .link svg path {
 }
 /* Small screen */
 @media screen and (min-width: 1200px) {
+    header .logo {
+        margin: unset;
+    }
+    #desktop-nav  {
+        display: inline !important;
+    }
+    #mobile-nav {
+        display: none !important;
+    }
     .card .top-gradient {
         top: -15%;
     }

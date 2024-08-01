@@ -10,14 +10,20 @@
     <body>
         <header>
             <div class="logo">
-                <img src="/images/icons/favicon.ico" />
                 <h1>IP Tutor</h1>
             </div>
+            <nav id="desktop-nav">
+                <ul class="nav-items">
+                    <li class="home-nav" hx-target=".content" hx-push-url="true" hx-get="/">Home</li>
+                    <li class="games-nav" hx-target=".content" hx-push-url="true" hx-get="/games">Games</li>
+                    <li class="settings-nav" hx-target=".content" hx-push-url="true" hx-get="/settings">Settings</li>
+                </ul>
+            </nav>
         </header>
         <main class="content" th:insert="~{${content}}"></main>
-        <nav id="nav-bar">
+        <nav id="mobile-nav">
             <div class="nav-buttons">
-                <button id="home" hx-target=".content" hx-push-url="true" hx-get="/">
+                <button id="home" class="home-nav" hx-target=".content" hx-push-url="true" hx-get="/">
                     <svg
                         class="icon"
                         version="1.1"
@@ -45,7 +51,7 @@
                         />
                     </svg>
                 </button>
-                <button id="games" hx-target=".content" hx-push-url="true" hx-get="/games">
+                <button id="games" class="games-nav" hx-target=".content" hx-push-url="true" hx-get="/games">
                     <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M7.99999 8.5C7.99999 7.94772 7.55227 7.5 6.99999 7.5C6.4477 7.5 5.99999 7.94772 5.99999 8.5V9H5.49999C4.9477 9 4.49999 9.44771 4.49999 10C4.49999 10.5523 4.9477 11 5.49999 11H5.99999V11.5C5.99999 12.0523 6.4477 12.5 6.99999 12.5C7.55227 12.5 7.99999 12.0523 7.99999 11.5V11H8.49999C9.05227 11 9.49999 10.5523 9.49999 10C9.49999 9.44771 9.05227 9 8.49999 9H7.99999V8.5Z"
@@ -70,6 +76,7 @@
                 </button>
                 <button
                     id="settings"
+                    class="settings-nav"
                     hx-on:load="checkSession()"
                     hx-target=".content"
                     hx-push-url="true"
