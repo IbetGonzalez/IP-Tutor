@@ -107,23 +107,20 @@ public class AccountService{
         return 0;
     }
 
-    public int updateUsername(UpdateUsernameDTO updateUsernameDTO, String token) {
-
-        if (token.equals("")) {
+    public int updateUsername(UpdateUsernameDTO updateUsernameDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!authentication.isAuthenticated()) {
             return -1;
-        } else if(jwtService.isTokenExpired(token))
-        {
-            return -2;
         }
 
-        Account account = accountRepository.findByEmail(jwtService.extractUsername(token)).orElse(null);
+        Account account = (Account) authentication.getPrincipal();
 
         if (account == null) {
-            return -3;
+            return -2;
         } else if (!passwordEncoder.matches(updateUsernameDTO.password(), account.getPassword())) {
-            return -4;
+            return -3;
         } else if(checkUsernamePattern(updateUsernameDTO.username())) {
-            return -5;
+            return -4;
         }
 
         account.setUsername(updateUsernameDTO.username());

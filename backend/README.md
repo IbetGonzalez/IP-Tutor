@@ -51,7 +51,6 @@ To run in production mode:
 
 ### localhost:xxxx/accounts/update/username (Put Mapping)
 
-#### *TAKES IN A JwtToken Cookie*
 ```
     {
         "password": "",
