@@ -21,12 +21,7 @@ if (getCookie("jwt_token")) {
     history.pushState(null, "", "/settings")
 }
 
-const email = new FormInput("#email-wrapper");
-const password = new FormInput("#password-wrapper");
-
-const loginForm = new Form("#login-form", [email, password]);
-
-loginForm.submitBtn.addEventListener("click", async () => {
+async function login () {
     if (!loginForm.checkReady) {
         return;
     }
@@ -48,6 +43,18 @@ loginForm.submitBtn.addEventListener("click", async () => {
         default:
             password.state = createState(InputStates.INVALID, "Incorrect passsword");
             createAlert("Incorrect password", 5000, AlertColors.WARNING);
+    }
+}
+
+const email = new FormInput("#email-wrapper");
+const password = new FormInput("#password-wrapper");
+
+const loginForm = new Form("#login-form", [email, password]);
+
+loginForm.submitBtn.addEventListener("click", login);
+loginForm.elem.addEventListener("keyup", (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+        login();
     }
 });
 

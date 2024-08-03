@@ -11,8 +11,10 @@ const scrollElement = document.querySelector('#game-cards');
 document.addEventListener("DOMContentLoaded", function () {
     updateNav();
 });
+
 document.addEventListener("htmx:afterRequest", function (evt) {
     const htmxEvt = evt as htmxEvent;
+
     if (htmxEvt.detail.failed) {
         const statusCode = htmxEvt.detail.xhr.status;
         if (statusCode === 403 || statusCode === 401) {
@@ -23,6 +25,7 @@ document.addEventListener("htmx:afterRequest", function (evt) {
     }
     updateNav();
 });
+
 document.addEventListener("htmx:beforeRequest", function (evt) {
     const htmxEvt = evt as htmxEvent;
 
@@ -57,22 +60,20 @@ function updateNav() {
     const elemId = path ? path : "home";
     const selQuery = `.${elemId}-nav`;
 
-    const currSelNavList = document.getElementsByClassName("nav-selected");
-    const selNav = document.querySelector(selQuery)
-        ? document.querySelector(selQuery)
-        : document.querySelector(`.settings-nav`);
+    const currSelNavList = document.querySelectorAll(".nav-selected");
+    currSelNavList.forEach(elem => elem.classList.remove("nav-selected"));
+
+    const selNav = document.querySelectorAll(selQuery).length > 0
+        ? document.querySelectorAll(selQuery)
+        : document.querySelectorAll(`.settings-nav`);
+
+    console.log(selQuery);
 
     if (!selNav) {
         throw new Error("No .settings-nav button");
     }
 
-    for (let i = 0; i < currSelNavList.length; i++) {
-        const currSel = currSelNavList.item(i);
-        if (!currSel) {
-            break;
-        }
-        currSel.classList.remove("nav-selected");
-    }
-    selNav.classList.add("nav-selected");
+    selNav.forEach((elem) => elem.classList.add("nav-selected"));
+
 
 }

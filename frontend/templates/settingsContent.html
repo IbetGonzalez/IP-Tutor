@@ -1,10 +1,14 @@
-<div class="w-med card center p-5 mt-5">
-    <button id="logout" class="button">logout</button>
+<div class="w-sm card center p-5 mt-5 account-info">
+    <div class="items">
+        <h3 class="row-name">Username</h3>
+        <div id="username" class="value" >Loading</div>
+        <button id="changename" class="button">Change username</button>
+
+        <h3 class="row-name">Email</h3>
+        <div id="email" class="value">Loading</div>
+        <button id="deleteAccount" class="button bg-danger">Delete Account</button>
+    </div>
+    <button id="logout" class="center button">Logout</button>
 </div>
 
-<script>
-    document.getElementById("logout").addEventListener("click",() => {
-        document.cookie = "jwt_token=; Max-Age=-9999999;";
-        window.location.reload();
-    });
-</script>
+<script defer type="module" src="/js/settings/scripts.bundle.js"></script>

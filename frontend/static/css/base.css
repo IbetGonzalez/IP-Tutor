@@ -253,6 +253,7 @@ footer .link svg path {
 }
 .card {
     position: relative;
+    color: var(--background);
     border-radius: 10px;
     min-width: 272px;
     width: 272px;
@@ -310,7 +311,7 @@ footer .link svg path {
 .card .button{
     border: none;
     background-color: var(--background);
-    color: white;
+    color: var(--text);
     position: relative;
     margin: auto;
     text-align: center;

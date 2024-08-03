@@ -209,8 +209,7 @@ const manageConfirmState = createEffect(() => {
 });
 
 const registerForm = new Form("#register-form", [email, username, password, confirmPassword]);
-
-registerForm.submitBtn.addEventListener("click", async () => {
+async function register() {
     if (!registerForm.checkReady) return;
 
     const data = new FormData(registerForm.elem);
@@ -231,7 +230,13 @@ registerForm.submitBtn.addEventListener("click", async () => {
         console.error(JSON.stringify(e));
         createAlert("Could not create account", 5000, AlertColors.WARNING);
     }
-})
+}
+registerForm.submitBtn.addEventListener("click", register);
+registerForm.elem.addEventListener("keyup", (e: KeyboardEvent) => {
+    if (e.key === "Enter") {
+        register();
+    }
+});
 
 
 
