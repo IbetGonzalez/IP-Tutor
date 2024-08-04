@@ -29,10 +29,8 @@ document.addEventListener("htmx:afterRequest", function (evt) {
 document.addEventListener("htmx:beforeRequest", function (evt) {
     const htmxEvt = evt as htmxEvent;
 
-    if (htmxEvt.detail.pathInfo.requestPath === "/settings") {
-        if (getCookie("jwt_token")){
-            htmxEvt.detail.xhr.setRequestHeader("Authorization", `Bearer ${getCookie("jwt_token")}`);
-        }
+    if (getCookie("jwt_token")){
+        htmxEvt.detail.xhr.setRequestHeader("Authorization", `Bearer ${getCookie("jwt_token")}`);
     }
 })
 

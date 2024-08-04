@@ -8,6 +8,7 @@ const jwt = getCookie("jwt_token");
 const infoRequest = new Request("accounts/getData", {
     headers: { Authorization: `Bearer ${jwt}`}
 });
+
 type accountData = {
     username: string;
     email: string;

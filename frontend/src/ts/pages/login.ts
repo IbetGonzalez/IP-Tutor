@@ -29,11 +29,6 @@ async function login () {
     const headers = [{ "Content-Type": "application/json" }]
 
     const loginData = await postRequest("/accounts/login", headers, data);
-    loginData.body.then(
-        (res) => {
-            document.cookie = makeCookie("jwt_token", res.token, res.expiresIn)
-        }
-    )
 
     switch (loginData.status) {
         case 200:
@@ -41,7 +36,7 @@ async function login () {
             history.pushState(null, "", "/")
         break;
         default:
-            createAlert("Email or password is incorrect", 5000, AlertColors.WARNING);
+            createAlert("Email or password is invalid", 5000, AlertColors.WARNING);
     }
 }
 
