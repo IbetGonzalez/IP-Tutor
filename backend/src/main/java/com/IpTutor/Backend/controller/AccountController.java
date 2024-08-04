@@ -18,6 +18,16 @@ public class AccountController {
 
     private final AccountService accountService;
 
+
+    private Cookie setUpTokenCookie(String token, long expiration) {
+        Cookie cookie = new Cookie("jwt_token", token);
+        cookie.setPath("/");
+        //Token expiration is in milliseconds while cookie expatriation is in seconds
+        cookie.setMaxAge((int) (expiration/60000));
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        return cookie;
+    }
     @PostMapping("/create")
     public ResponseEntity<SessionResponseDTO> createAccount(@RequestBody AccountRequestDTO accountRequestDTO, HttpServletResponse response) {
 
@@ -27,23 +37,23 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        response.addCookie(new Cookie("JwtToken", results.token()));
+        response.addCookie(setUpTokenCookie(results.token(), results.expiresIn()));
         return ResponseEntity.status(HttpStatus.CREATED).body(results);
     }
 
     @PostMapping("/login")
     public ResponseEntity<SessionResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
 
-        SessionResponseDTO result = accountService.login(loginRequestDTO);
+        SessionResponseDTO results = accountService.login(loginRequestDTO);
 
-        if(result == null) {
+        if(results == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } else if(result.token() == null && result.expiresIn() == -1) {
+        } else if(results.token() == null && results.expiresIn() == -1) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        response.addCookie(new Cookie("JwtToken", result.token()));
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        response.addCookie(setUpTokenCookie(results.token(), results.expiresIn()));
+        return ResponseEntity.status(HttpStatus.OK).body(results);
     }
 
     @PostMapping("/checkEmail")
