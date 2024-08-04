@@ -41,8 +41,7 @@ async function login () {
             history.pushState(null, "", "/")
         break;
         default:
-            password.state = createState(InputStates.INVALID, "Incorrect passsword");
-            createAlert("Incorrect password", 5000, AlertColors.WARNING);
+            createAlert("Email or password is incorrect", 5000, AlertColors.WARNING);
     }
 }
 
@@ -81,12 +80,11 @@ const validateInput = debounce(
 const managEmailInput = createEffect(() => {
     const userInput = email.value;
 
-    email.state = createState(InputStates.CHECKING, "");
     if (userInput.length < 1) {
         email.state = createState(InputStates.EMPTY);
         return;
     }
-    validateInput(userInput);
+    email.state = createState(InputStates.VALID);
 });
 /* 
 *   manageEmailState is run when the states is updated
@@ -100,15 +98,6 @@ const manageEmailState = createEffect(() => {
 
     msg.setMsg(state.msg);
     switch (state.value) {
-        case InputStates.EMPTY:
-            indicator.setState(IndicatorStates.HIDDEN);
-        break;
-        case InputStates.CHECKING:
-            indicator.setState(IndicatorStates.PROGRESS);
-        break;
-        case InputStates.VALID:
-            indicator.setState(IndicatorStates.ALLOW);
-        break;
         case InputStates.INVALID:
             indicator.setState(IndicatorStates.DENY);
         break;
