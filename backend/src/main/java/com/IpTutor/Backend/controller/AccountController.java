@@ -69,20 +69,10 @@ public class AccountController {
         }
     }
 
-    @GetMapping("/getData")
-    public ResponseEntity<AccountResponseDTO> getAccountData() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if(!authentication.isAuthenticated()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-
-        AccountResponseDTO accountResponseDTO = accountService.getAccountData(authentication);
-        if(accountResponseDTO == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        return ResponseEntity.status(HttpStatus.OK).body(accountResponseDTO);
+    @PutMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        response.addCookie(setUpTokenCookie(null, 0));
+        return ResponseEntity.status(HttpStatus.OK).body("Successfully logged out");
     }
 
     @PutMapping("/update/username")
@@ -101,6 +91,22 @@ public class AccountController {
             default:
                 return ResponseEntity.status(HttpStatus.OK).body("Username successfully updated");
         }
+    }
+
+    @GetMapping("/getData")
+    public ResponseEntity<AccountResponseDTO> getAccountData() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if(!authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        AccountResponseDTO accountResponseDTO = accountService.getAccountData(authentication);
+        if(accountResponseDTO == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(accountResponseDTO);
     }
 
     @DeleteMapping("/deleteAccount")
