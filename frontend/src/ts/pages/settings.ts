@@ -51,6 +51,9 @@ document.querySelector("#deleteAccount")?.addEventListener("click", deleteAccoun
 const logout = queryElement("#logout");
 
 logout.addEventListener("click", () => {
-    document.cookie = "jwt_token=; Max-Age=-9999999;";
-    window.location.reload();
+    htmx.ajax("get", "/logout", {
+        target: ".content",
+        headers: { "Authorization": `Bearer ${getCookie("jwt_token")}`}
+    });
+    history.pushState(null, "", "/")
 })
