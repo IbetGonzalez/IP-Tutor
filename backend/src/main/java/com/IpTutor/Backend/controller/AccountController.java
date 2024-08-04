@@ -47,9 +47,7 @@ public class AccountController {
         SessionResponseDTO results = accountService.login(loginRequestDTO);
 
         if(results == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
-        } else if(results.token() == null && results.expiresIn() == -1) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect email or password");
         }
 
         response.addCookie(setUpTokenCookie(results.token(), results.expiresIn()));

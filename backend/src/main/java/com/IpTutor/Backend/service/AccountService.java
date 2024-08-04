@@ -83,10 +83,8 @@ public class AccountService{
 
         Account account = accountRepository.findByEmail(loginRequestDTO.email()).orElse(null);
 
-        if(account == null) {
+        if(account == null || !passwordEncoder.matches(loginRequestDTO.password(), account.getPassword())) {
             return null;
-        } else if(!passwordEncoder.matches(loginRequestDTO.password(), account.getPassword())) {
-            return new SessionResponseDTO(null,-1);
         }
 
         String jwtToken = jwtService.generateToken(account);
