@@ -327,6 +327,33 @@ footer .link svg path {
         background-color: #515151 !important;
     }
 }
+.modal {
+    position: absolute;
+    display: grid;
+    width: 100svw;
+    height: 100svh;
+    top: 0;
+    left: 0;
+
+    background-color: rgba(0,0,0,0.7);
+    .card {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 2rem 2rem;
+        align-items: center;
+        min-width: 35rem;
+        gap: 2rem;
+        padding: 4rem;
+        place-self: center;
+
+        .wrapper {
+            margin-top: 1rem;
+            grid-column: span 2;
+            position: relative;
+        }
+    }
+}
 
 .content .title {
     margin-left: 5%;

@@ -52,8 +52,9 @@ const password = new FormInput("#password-wrapper");
 const loginForm = new Form("#login-form", [email, password]);
 
 loginForm.submitBtn.addEventListener("click", login);
-loginForm.elem.addEventListener("keyup", (e: KeyboardEvent) => {
+loginForm.elem.addEventListener("keydown", (e: KeyboardEvent) => {
     if (e.key === "Enter") {
+        e.preventDefault();
         login();
     }
 });

@@ -67,8 +67,6 @@ function updateNav() {
         ? document.querySelectorAll(selQuery)
         : document.querySelectorAll(`.settings-nav`);
 
-    console.log(selQuery);
-
     if (!selNav) {
         throw new Error("No .settings-nav button");
     }

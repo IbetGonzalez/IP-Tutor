@@ -43,11 +43,11 @@
     color: var(--text) !important;
 }
 .bg-success {
-    background-color: var(--success);
+    background-color: var(--success) !important;
     color: var(--text);
 }
 .bg-secondary {
-    background-color: var(--secondary);
+    background-color: var(--secondary) !important;
     color: var(--text);
 }
 .alert-box {

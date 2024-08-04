@@ -232,8 +232,9 @@ async function register() {
     }
 }
 registerForm.submitBtn.addEventListener("click", register);
-registerForm.elem.addEventListener("keyup", (e: KeyboardEvent) => {
+registerForm.elem.addEventListener("keydown", (e: KeyboardEvent) => {
     if (e.key === "Enter") {
+        e.preventDefault();
         register();
     }
 });
