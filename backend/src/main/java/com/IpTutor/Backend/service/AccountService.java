@@ -83,16 +83,28 @@ public class AccountService{
 
         Account account = accountRepository.findByEmail(loginRequestDTO.email()).orElse(null);
 
-        if(account == null) {
+        if(account == null || !passwordEncoder.matches(loginRequestDTO.password(), account.getPassword())) {
             return null;
-        } else if(!passwordEncoder.matches(loginRequestDTO.password(), account.getPassword())) {
-            return new SessionResponseDTO(null,-1);
         }
 
         String jwtToken = jwtService.generateToken(account);
 
         log.info("Successfully logged in");
         return new SessionResponseDTO(jwtToken, jwtService.getExpirationTime());
+    }
+
+    public int updateUsername(UpdateUsernameDTO updateUsernameDTO, Authentication authentication) {
+        Account account = (Account) authentication.getPrincipal();
+
+        if (account == null) {
+            return -1;
+        } else if(checkUsernamePattern(updateUsernameDTO.username())) {
+            return -2;
+        }
+
+        account.setUsername(updateUsernameDTO.username());
+        accountRepository.save(account);
+        return 0;
     }
 
     public int checkEmail(AccountRequestDTO accountRequestDTO) {
@@ -115,20 +127,6 @@ public class AccountService{
         }
 
         return new AccountResponseDTO(account.getAccountUsername(),account.getEmail(),account.getAccountCreation());
-    }
-
-    public int updateUsername(UpdateUsernameDTO updateUsernameDTO, Authentication authentication) {
-        Account account = (Account) authentication.getPrincipal();
-
-        if (account == null) {
-            return -1;
-        } else if(checkUsernamePattern(updateUsernameDTO.username())) {
-            return -2;
-        }
-
-        account.setUsername(updateUsernameDTO.username());
-        accountRepository.save(account);
-        return 0;
     }
 
     public int deleteAccount(AccountDeleteRequestDTO deleteRequestDTO, Authentication authentication) {
