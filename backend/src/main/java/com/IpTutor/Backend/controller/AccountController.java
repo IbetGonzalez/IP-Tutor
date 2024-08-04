@@ -29,31 +29,31 @@ public class AccountController {
         return cookie;
     }
     @PostMapping("/create")
-    public ResponseEntity<SessionResponseDTO> createAccount(@RequestBody AccountRequestDTO accountRequestDTO, HttpServletResponse response) {
+    public ResponseEntity<String> createAccount(@RequestBody AccountRequestDTO accountRequestDTO, HttpServletResponse response) {
 
        SessionResponseDTO results = accountService.createAccount(accountRequestDTO);
 
         if(results == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("At least one request is invalid");
         }
 
         response.addCookie(setUpTokenCookie(results.token(), results.expiresIn()));
-        return ResponseEntity.status(HttpStatus.CREATED).body(results);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Account successfully created");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<SessionResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody LoginRequestDTO loginRequestDTO, HttpServletResponse response) {
 
         SessionResponseDTO results = accountService.login(loginRequestDTO);
 
         if(results == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
         } else if(results.token() == null && results.expiresIn() == -1) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
         }
 
         response.addCookie(setUpTokenCookie(results.token(), results.expiresIn()));
-        return ResponseEntity.status(HttpStatus.OK).body(results);
+        return ResponseEntity.status(HttpStatus.OK).body("Login successful");
     }
 
     @PostMapping("/checkEmail")
