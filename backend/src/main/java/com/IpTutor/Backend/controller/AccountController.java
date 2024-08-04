@@ -25,8 +25,12 @@ public class AccountController {
             return false;
         }
 
-        response.addCookie(cookieService.deleteJwtToken().jwt_token());
-        return true;
+    private Cookie setUpTokenCookie(String token, long expiration) {
+        Cookie cookie = new Cookie("jwt_token", token);
+        cookie.setPath("/");
+        //Token expiration is in milliseconds while cookie expatriation is in seconds
+        cookie.setMaxAge((int) (expiration/60000));
+        return cookie;
     }
 
     @PostMapping("/create")
