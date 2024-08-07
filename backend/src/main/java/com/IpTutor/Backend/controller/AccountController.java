@@ -2,7 +2,8 @@ package com.IpTutor.Backend.controller;
 
 import com.IpTutor.Backend.dto.*;
 import com.IpTutor.Backend.service.AccountService;
-import jakarta.servlet.http.Cookie;
+import com.IpTutor.Backend.service.CookieService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,17 +18,17 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 
     private final AccountService accountService;
+    private final CookieService cookieService;
 
+    private boolean authenticationIsInvalid(HttpServletResponse response) {
+        if(SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+            return false;
+        }
 
-    private Cookie setUpTokenCookie(String token, long expiration) {
-        Cookie cookie = new Cookie("jwt_token", token);
-        cookie.setPath("/");
-        //Token expiration is in milliseconds while cookie expatriation is in seconds
-        cookie.setMaxAge((int) (expiration/60000));
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        return cookie;
+        response.addCookie(cookieService.deleteJwtToken().jwt_token());
+        return true;
     }
+
     @PostMapping("/create")
     public ResponseEntity<String> createAccount(@RequestBody AccountRequestDTO accountRequestDTO, HttpServletResponse response) {
 
@@ -37,7 +38,7 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("At least one request is invalid");
         }
 
-        response.addCookie(setUpTokenCookie(results.token(), results.expiresIn()));
+        response.addCookie(results.jwt_token());
         return ResponseEntity.status(HttpStatus.CREATED).body("Account successfully created");
     }
 
@@ -50,7 +51,7 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect email or password");
         }
 
-        response.addCookie(setUpTokenCookie(results.token(), results.expiresIn()));
+        response.addCookie(results.jwt_token());
         return ResponseEntity.status(HttpStatus.OK).body("Login successful");
     }
 
@@ -71,19 +72,18 @@ public class AccountController {
 
     @PutMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
-        response.addCookie(setUpTokenCookie(null, 0));
+        response.addCookie(cookieService.deleteJwtToken().jwt_token());
         return ResponseEntity.status(HttpStatus.OK).body("Successfully logged out");
     }
 
     @PutMapping("/update/username")
-    public ResponseEntity<String> updateUsername(@RequestBody UpdateUsernameDTO updateUsernameDTO){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<String> updateUsername(@RequestBody UpdateUsernameDTO updateUsernameDTO, HttpServletRequest request, HttpServletResponse response){
 
-        if(!authentication.isAuthenticated()) {
+        if(authenticationIsInvalid(response)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
 
-        switch (accountService.updateUsername(updateUsernameDTO, authentication)) {
+        switch (accountService.updateUsername(updateUsernameDTO)) {
             case -1:
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
             case -2:
@@ -94,14 +94,13 @@ public class AccountController {
     }
 
     @GetMapping("/getData")
-    public ResponseEntity<AccountResponseDTO> getAccountData() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<AccountResponseDTO> getAccountData(HttpServletRequest request, HttpServletResponse response) {
 
-        if(!authentication.isAuthenticated()) {
+        if(authenticationIsInvalid(response)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
-        AccountResponseDTO accountResponseDTO = accountService.getAccountData(authentication);
+        AccountResponseDTO accountResponseDTO = accountService.getAccountData();
         if(accountResponseDTO == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -110,19 +109,20 @@ public class AccountController {
     }
 
     @DeleteMapping("/deleteAccount")
-    public ResponseEntity<String> deleteAccount(@RequestBody AccountDeleteRequestDTO deleteRequestDTO) {
+    public ResponseEntity<String> deleteAccount(@RequestBody AccountDeleteRequestDTO deleteRequestDTO, HttpServletResponse response) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if(!authentication.isAuthenticated()) {
+        if(authenticationIsInvalid(response)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
         }
 
-        switch(accountService.deleteAccount(deleteRequestDTO, authentication)) {
+        switch(accountService.deleteAccount(deleteRequestDTO)) {
             case -1:
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
             case -2:
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid password");
             default:
+                response.addCookie(cookieService.deleteJwtToken().jwt_token());
                 return ResponseEntity.status(HttpStatus.OK).body("Account successfully deleted");
         }
     }

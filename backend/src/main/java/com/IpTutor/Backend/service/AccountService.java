@@ -4,12 +4,13 @@ import com.IpTutor.Backend.authentication.JwtService;
 import com.IpTutor.Backend.dto.*;
 import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,6 +28,8 @@ public class AccountService{
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+
+    private final CookieService cookieService;
 
     private boolean checkEmailPattern(String email) {
         Pattern validEmail = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
@@ -46,6 +49,9 @@ public class AccountService{
         return !matcher.matches();
     }
 
+    private Account getAccount() {
+        return (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
     public SessionResponseDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
         if(accountRepository.findByEmail(accountRequestDTO.email()).isPresent()
@@ -63,13 +69,13 @@ public class AccountService{
 
         account.setAccountCreation(LocalDate.now());
         account.setId(new ObjectId());
-
         accountRepository.save(account);
 
         String jwtToken = jwtService.generateToken(account);
+        Cookie cookie = cookieService.setUpTokenCookie(jwtToken, jwtService.getExpirationTime());
 
         log.info("Account successfully created");
-        return new SessionResponseDTO(jwtToken, jwtService.getExpirationTime());
+        return new SessionResponseDTO(cookie);
     }
 
     public SessionResponseDTO login(LoginRequestDTO loginRequestDTO) {
@@ -88,13 +94,25 @@ public class AccountService{
         }
 
         String jwtToken = jwtService.generateToken(account);
+        Cookie cookie = cookieService.setUpTokenCookie(jwtToken, jwtService.getExpirationTime());
 
         log.info("Successfully logged in");
-        return new SessionResponseDTO(jwtToken, jwtService.getExpirationTime());
+        return new SessionResponseDTO(cookie);
     }
 
-    public int updateUsername(UpdateUsernameDTO updateUsernameDTO, Authentication authentication) {
-        Account account = (Account) authentication.getPrincipal();
+    public int checkEmail(AccountRequestDTO accountRequestDTO) {
+        if(accountRepository.findByEmail(accountRequestDTO.email()).isPresent()) {
+            return -1;
+        }
+        if(checkEmailPattern(accountRequestDTO.email())) {
+            return -2;
+        }
+
+        return 0;
+    }
+
+    public int updateUsername(UpdateUsernameDTO updateUsernameDTO) {
+        Account account = getAccount();
 
         if (account == null) {
             return -1;
@@ -107,20 +125,8 @@ public class AccountService{
         return 0;
     }
 
-    public int checkEmail(AccountRequestDTO accountRequestDTO) {
-
-        if(accountRepository.findByEmail(accountRequestDTO.email()).isPresent()) {
-            return -1;
-        }
-        if(checkEmailPattern(accountRequestDTO.email())) {
-            return -2;
-        }
-
-        return 0;
-    }
-
-    public AccountResponseDTO getAccountData(Authentication authentication) {
-        Account account = (Account) authentication.getPrincipal();
+    public AccountResponseDTO getAccountData() {
+        Account account = getAccount();
 
         if(account == null) {
             return null;
@@ -129,8 +135,8 @@ public class AccountService{
         return new AccountResponseDTO(account.getAccountUsername(),account.getEmail(),account.getAccountCreation());
     }
 
-    public int deleteAccount(AccountDeleteRequestDTO deleteRequestDTO, Authentication authentication) {
-        Account toDelete = (Account) authentication.getPrincipal();
+    public int deleteAccount(AccountDeleteRequestDTO deleteRequestDTO) {
+        Account toDelete = getAccount();
 
         if(toDelete == null) {
             return -1;
