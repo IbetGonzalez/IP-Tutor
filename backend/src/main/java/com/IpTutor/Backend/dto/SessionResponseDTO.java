@@ -1,4 +1,6 @@
 package com.IpTutor.Backend.dto;
 
-public record SessionResponseDTO(String token, long expiresIn) {
+import jakarta.servlet.http.Cookie;
+
+public record SessionResponseDTO(Cookie jwt_token) {
 }

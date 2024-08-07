@@ -22,7 +22,7 @@ To run in production mode:
 #### Returns Http Status:
 * Unsuccessful: 400 (bad request)
 * Successful: 201 (created)
-  * Json with account username, email, and creation date
+  * Cookie named jwt_token
 
 ### localhost:xxxx/accounts/login (Get Mapping)
 ```
@@ -35,7 +35,7 @@ To run in production mode:
 * Account not found: 404 (not found)
 * Incorrect password: 401 (unauthorized)
 * Successful: 200 (ok)
-  * New token and its expiration time
+    * Cookie named jwt_token
 
 ### localhost:xxxx/accounts/checkEmail (Get Mapping)
 ```
