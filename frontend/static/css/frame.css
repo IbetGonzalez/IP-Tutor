@@ -1,3 +1,6 @@
+.w-xsm {
+    width: 30%;
+}
 .w-sm {
     width: 50%;
 }
@@ -343,7 +346,7 @@
     .lg-mt-5{
         margin-top: 5%;
     }
-    .sm-w-sm {
-        width: 50%;
+    .lg-w-sm {
+        width: 30%;
     }
 }
