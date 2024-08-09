@@ -143,143 +143,94 @@ class AccountControllerIntegrationTests {
 
 	@Test
 	public void register_fail_password() throws Exception {
-		printTestInfo("Test 1 - no upperCase, noNumbers ,noSpecialChar");
-		String password = "password";
-		basicTest(setUpRegister(accountEmail,password,accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				accountEmail);
+		String [][] test = {
+				{"Test 1 - no upperCase, noNumbers ,noSpecialChar",
+						"password"},
+				{"Test 2 - no upperCase, noSpecialChar",
+						"password123"},
+				{"Test 3 - no upperCase",
+						"password!23"},
+				{"Test 4 - no upperCase, noNumbers",
+						"password!"},
+				{"Test 5 - noNumbers",
+						"Password!"},
+				{"Test 6 - noNumbers ,noSpecialChar",
+						"Password"},
+				{"Test 7 - noSpecialChar",
+						"Password123"},
+		};
 
-		printTestInfo("Test 2 - no upperCase, noSpecialChar");
-		password = "password123";
-		basicTest(setUpRegister(accountEmail,password,accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				accountEmail);
-
-		printTestInfo("Test 3 - no upperCase");
-		password = "password!23";
-		basicTest(setUpRegister(accountEmail,password,accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				accountEmail);
-
-		printTestInfo("Test 4 - no upperCase, noNumbers");
-		password = "password!";
-		basicTest(setUpRegister(accountEmail,password,accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				accountEmail);
-
-		printTestInfo("Test 5 - noNumbers");
-		password = "Password!";
-		basicTest(setUpRegister(accountEmail,password,accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				accountEmail);
-
-		printTestInfo("Test 6 - noNumbers ,noSpecialChar");
-		password = "Password";
-		basicTest(setUpRegister(accountEmail,password,accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				accountEmail);
-
-		printTestInfo("Test 7 - noSpecialChar");
-		password = "Password123";
-		basicTest(setUpRegister(accountEmail,password,accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				accountEmail);
+		for (String[] info : test) {
+			printTestInfo(info[0]);
+			basicTest(setUpRegister(accountEmail, info[1], accountUsername),
+					"/accounts/create",
+					status().isBadRequest(),
+					"At least one request is invalid",
+					accountEmail);
+		}
 	}
 
 	@Test
 	void register_fail_email() throws Exception {
-		printTestInfo("Test 1 - Invalid -> SpecialChars");
-		String email = "$test@email.org";
-		basicTest(setUpRegister(email, accountPassword, accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				email);
+		String [][] test = {
+				{"Test 1 - Invalid -> SpecialChars",
+						"$test@email.org"},
+				{"Test 2 - Invalid -> no \"@\"",
+						"testemail.org"},
+				{"Test 3 - Invalid -> no \".\"",
+						"test@emailorg"},
+				{"Test 4 - Invalid -> domain after \".\" is too short",
+						"test@email.o"}
+		};
 
-		printTestInfo("Test 2 - Invalid -> no \"@\"");
-		email = "testemail.org";
-		basicTest(setUpRegister(email, accountPassword, accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				email);
-
-		printTestInfo("Test 3 - Invalid -> no \".\"");
-		email = "test@emailorg";
-		basicTest(setUpRegister(email, accountPassword, accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				email);
-
-		printTestInfo("Test 4 - Invalid -> domain after \".\" is too short");
-		email = "test@email.o";
-		basicTest(setUpRegister(email, accountPassword, accountUsername),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				email);
+		for (String[] info : test) {
+			printTestInfo(info[0]);
+			basicTest(setUpRegister(info[1], accountPassword, accountUsername),
+					"/accounts/create",
+					status().isBadRequest(),
+					"At least one request is invalid",
+					info[1]);
+		}
 	}
+
 	@Test
 	void register_success_username() throws Exception {
-		//Test 1
-		printTestInfo("Test 1 - Starts with a special character");
-		String username = "_Test_";
-		basicTest(setUpRegister(accountEmail, accountPassword, username),
-				"/accounts/create",
-				status().isCreated(),
-				"Account successfully created",
-				accountEmail);
+		String [][] test = {
+				{"Test 1 - Starts with a special character",
+						"_Test_"},
+				{"Test 2 - minimum length (3 chars)",
+						"Min"},
+				{"Test 3 - Maximum length (16 chars)",
+						"Maximum123456789"}
+		};
 
-		//Test 2
-		printTestInfo("Test 2 - minimum length (3 chars)");
-		username = "Min";
-		basicTest(setUpRegister(accountEmail, accountPassword, username),
-				"/accounts/create",
-				status().isCreated(),
-				"Account successfully created",
-				accountEmail);
+		for (String[] info : test) {
+			printTestInfo(info[0]);
+			basicTest(setUpRegister(accountEmail, accountPassword, info[1]),
+					"/accounts/create",
+					status().isCreated(),
+					"Account successfully created",
+					accountEmail);
+		}
 
-		//Test 3
-		printTestInfo("Test 3 - Maximum length (16 chars)");
-		username = "Maximum123456789";
-		basicTest(setUpRegister(accountEmail, accountPassword, username),
-				"/accounts/create",
-				status().isCreated(),
-				"Account successfully created",
-				accountEmail);
 	}
 	@Test
 	void register_fail_username() throws Exception {
-		printTestInfo("Test 1 - Invalid -> SpecialChars");
-		String username = "*username*";
-		basicTest(setUpRegister(accountEmail, accountPassword, username),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				accountEmail);
+		String [][] test = {
+				{"Test 1 - Invalid -> SpecialChars",
+						"*username*"},
+				{"Test 2 - noLetters",
+						"#$%^&*"}
+		};
 
-		printTestInfo("Test 2 - noLetters");
-		username = "#$%^&*";
-		basicTest(setUpRegister(accountEmail, accountPassword, username),
-				"/accounts/create",
-				status().isBadRequest(),
-				"At least one request is invalid",
-				accountEmail);
+		for (String[] info : test) {
+			printTestInfo(info[0]);
+			basicTest(setUpRegister(accountEmail, accountPassword, info[1]),
+					"/accounts/create",
+					status().isBadRequest(),
+					"At least one request is invalid",
+					accountEmail);
+		}
 	}
 
 }
