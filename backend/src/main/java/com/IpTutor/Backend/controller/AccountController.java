@@ -126,9 +126,4 @@ public class AccountController {
                 return ResponseEntity.status(HttpStatus.OK).body("Account successfully deleted");
         }
     }
-
-    @GetMapping("/test")
-    public String test() {
-        return "Hello_world";
-    }
 }

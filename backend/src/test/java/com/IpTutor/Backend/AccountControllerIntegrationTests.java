@@ -1,5 +1,6 @@
 package com.IpTutor.Backend;
 
+import com.IpTutor.Backend.dto.AccountDeleteRequestDTO;
 import com.IpTutor.Backend.dto.AccountRequestDTO;
 import com.IpTutor.Backend.dto.LoginRequestDTO;
 import com.IpTutor.Backend.dto.UpdateUsernameDTO;
@@ -24,6 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.anonymous;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -41,6 +43,40 @@ class AccountControllerIntegrationTests {
 	private static final String accountEmail = "violinsrock@gmail.com";
 	private static final String accountPassword = "Password!23";
 	private static final String accountUsername = "theMusician";
+	private static final String[][] invalidEmails =  {
+			{"Test 1 - SpecialChars",
+					"$test@email.org"},
+			{"Test 2 - no \"@\"",
+					"testemail.org"},
+			{"Test 3 - no \".\"",
+					"test@emailorg"},
+			{"Test 4 - domain after \".\" is too short",
+					"test@email.o"},
+			{"Test 5 - has a space",
+					"test @gmail.com"},
+			{"Test 4 - domain after \".\" is too long",
+					"test@email.tooolong"}
+	};
+    private static final String [][] invalidPasswords = {
+            {"Test 1 - no upperCase, noNumbers ,noSpecialChar",
+                    "password"},
+            {"Test 2 - no upperCase, noSpecialChar",
+                    "password123"},
+            {"Test 3 - no upperCase",
+                    "password!23"},
+            {"Test 4 - no upperCase, noNumbers",
+                    "password!"},
+            {"Test 5 - noNumbers",
+                    "Password!"},
+            {"Test 6 - noNumbers ,noSpecialChar",
+                    "Password"},
+            {"Test 7 - noSpecialChar",
+                    "Password123"},
+            {"Test 8 - less than min length",
+                    "2Sh0rt!"},
+            {"Test 9 - has a space",
+                    "pass word"}
+    };
 	private static final String[][] invalidUsernames = {
 			{"Test 1 - SpecialChars",
 					"*username*"},
@@ -55,27 +91,23 @@ class AccountControllerIntegrationTests {
 			{"Test 6 - has a space",
 					"user name"}
 	};
-	private static final String[][] invalidEmails =  {
-			{"Test 1 - SpecialChars",
-					"$test@email.org"},
-			{"Test 2 - no \"@\"",
-					"testemail.org"},
-			{"Test 3 - no \".\"",
-					"test@emailorg"},
-			{"Test 4 - domain after \".\" is too short",
-					"test@email.o"},
-			{"Test 5 - has a space",
-					"test @gmail.com"}
-	};
-
-	//TODO: Ending and starting will all special chars seems to be invalid
+    private static final String[][] validEmails = {
+            {"Test 1 - has a dot in the middle of the email before the \"@\"",
+                    "test.this@email.com"},
+			{"Test 2 - has numbers in it before the \"@\"",
+					"email123@test.org"},
+			{"Test 3 - has numbers in it after the \"@\"",
+					"email@test123.org"},
+			{"Test 4 - short email",
+					"a@a.com"}
+    };
 	private static final String[][] validPasswords = {
 			{"Test 1 - starts with a number",
 					"1TestPassword!"},
 			{"Test 2 - starts with a special character",
 					"!TestPassword1"},
 			{"Test 3 - starts with all special characters",
-					"!@#$%^&-+=()1Test"},
+					"!@#$%^&-+=()Test1"},
 			{"Test 4 - starts with a lowercase",
 					"testPassword1!"},
 			{"Test 5 - ends with all special characters",
@@ -89,7 +121,11 @@ class AccountControllerIntegrationTests {
 			{"Test 3 - Maximum length (16 chars)",
 					"Maximum123456789"},
 			{"Test 4 - Starts with a number",
-					"1User"}
+					"1User"},
+			{"Test 5 - Starts with a series of numbers",
+					"123456User"},
+			{"Test 6 - Starts with a series of special characters",
+					"_@!&-User"}
 	};
 
 	private Account setUpAccount() {
@@ -109,7 +145,7 @@ class AccountControllerIntegrationTests {
 	}
 
 	private void deleteAccount(String email) {
-		accountRepository.findByEmail("violinsrock@gmail.com").ifPresent(account -> accountRepository.delete(account));
+		accountRepository.findByEmail(email).ifPresent(account -> accountRepository.delete(account));
 	}
 
 	private LoginRequestDTO setUpLogin(String email, String password) {
@@ -122,6 +158,10 @@ class AccountControllerIntegrationTests {
 
 	private UpdateUsernameDTO setUpUpdateUsername(String username) {
 		return new UpdateUsernameDTO(username);
+	}
+
+	private AccountDeleteRequestDTO setUpDeleteAccount(String password) {
+		return new AccountDeleteRequestDTO(password);
 	}
 
 	private void printTestInfo(String testInfo) {
@@ -143,6 +183,7 @@ class AccountControllerIntegrationTests {
 				.andExpect(status)
 				.andExpect(content().string(result));
 	}
+
 	@BeforeEach
 	public void setup() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).apply(springSecurity()).build();
@@ -174,7 +215,11 @@ class AccountControllerIntegrationTests {
 
 	@Test
 	public void login_fail_email() throws Exception {
-		String json = gson.toJson(setUpLogin("invalidemail@ohno.org", accountPassword));
+        //Makes sure that the account does not exist
+        setUpAccount();
+        deleteAccount(accountEmail);
+
+		String json = gson.toJson(setUpLogin(accountEmail, accountPassword));
 		mockMvc.perform(post("/accounts/login").contentType(MediaType.APPLICATION_JSON).content(json))
 				.andExpect(status().isUnauthorized())
 				.andExpect(jsonPath("$.description").value("The username or password is incorrect"));
@@ -198,9 +243,20 @@ class AccountControllerIntegrationTests {
 				accountEmail);
 	}
 
+    @Test
+    public void register_success_email() throws Exception {
+        for (String[] info : validEmails) {
+            printTestInfo(info[0]);
+            basicPostTest(setUpRegister(info[1], accountPassword, accountUsername),
+                    "/accounts/create",
+                    status().isCreated(),
+                    "Account successfully created",
+                    info[1]);
+        }
+
+    }
 	@Test
 	void register_success_username() throws Exception {
-
 		for (String[] info : validUsernames) {
 			printTestInfo(info[0]);
 			basicPostTest(setUpRegister(accountEmail, accountPassword, info[1]),
@@ -216,7 +272,7 @@ class AccountControllerIntegrationTests {
 	void register_success_password() throws Exception {
 		for (String[] info : validPasswords) {
 			printTestInfo(info[0]);
-			basicPostTest(setUpRegister(accountEmail, accountPassword, info[1]),
+			basicPostTest(setUpRegister(accountEmail, info[1], accountUsername),
 					"/accounts/create",
 					status().isCreated(),
 					"Account successfully created",
@@ -226,28 +282,7 @@ class AccountControllerIntegrationTests {
 
 	@Test
 	public void register_fail_password() throws Exception {
-		String [][] test = {
-				{"Test 1 - no upperCase, noNumbers ,noSpecialChar",
-						"password"},
-				{"Test 2 - no upperCase, noSpecialChar",
-						"password123"},
-				{"Test 3 - no upperCase",
-						"password!23"},
-				{"Test 4 - no upperCase, noNumbers",
-						"password!"},
-				{"Test 5 - noNumbers",
-						"Password!"},
-				{"Test 6 - noNumbers ,noSpecialChar",
-						"Password"},
-				{"Test 7 - noSpecialChar",
-						"Password123"},
-				{"Test 8 - less than min length",
-						"2Sh0rt!"},
-				{"Test 9 - has a space",
-						"pass word"}
-		};
-
-		for (String[] info : test) {
+		for (String[] info : invalidPasswords) {
 			printTestInfo(info[0]);
 			basicPostTest(setUpRegister(accountEmail, info[1], accountUsername),
 					"/accounts/create",
@@ -282,6 +317,41 @@ class AccountControllerIntegrationTests {
 	}
 
 	@Test
+	void checkEmail_success() throws Exception {
+		for (String[] info : validEmails) {
+			printTestInfo(info[0]);
+			basicPostTest(setUpRegister(info[1], accountPassword, accountUsername),
+					"/accounts/checkEmail",
+					status().isOk(),
+					"Email format is valid and not associated with an account",
+					info[1]);
+		}
+	}
+
+	@Test
+	void checkEmail_fail_invalid() throws Exception {
+		for (String[] info : invalidEmails) {
+			printTestInfo(info[0]);
+			basicPostTest(setUpRegister(info[1], accountPassword, accountUsername),
+					"/accounts/checkEmail",
+					status().isBadRequest(),
+					"Email format is invalid",
+					info[1]);
+		}
+	}
+
+	@Test
+	void checkEmail_fail_conflict() throws Exception {
+		printTestInfo("Account with the email exists");
+		setUpAccount();
+		basicPostTest(setUpRegister(accountEmail, accountPassword, accountUsername),
+				"/accounts/checkEmail",
+				status().isConflict(),
+				"Email already associated with an account",
+				accountEmail);
+	}
+
+	@Test
 	void updateUsername_success() throws Exception {
 		String username = "newUsername";
 
@@ -312,4 +382,46 @@ class AccountControllerIntegrationTests {
 		}
 	}
 
+	@Test
+	void getData_success() throws Exception {
+		mockMvc.perform(get("/accounts/getData").with(user(setUpAccount())))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.username").value(accountUsername))
+				.andExpect(jsonPath("$.email").value(accountEmail))
+				.andExpect(jsonPath("$.accountCreation").isNotEmpty());
+	}
+
+	@Test
+	void deleteAccount_success() throws Exception {
+		String json = gson.toJson(setUpDeleteAccount(accountPassword));
+		mockMvc.perform(delete("/accounts/deleteAccount").with(user(setUpAccount()))
+				.contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isOk())
+				.andExpect(content().string("Account successfully deleted"));
+
+		Account account = (Account) accountRepository.findByEmail(accountEmail).orElse(null);
+		assertNull(account);
+	}
+
+	@Test
+	void deleteAccount_fail_invalidPassword() throws Exception {
+		String json = gson.toJson(setUpDeleteAccount("notPassword"));
+		mockMvc.perform(delete("/accounts/deleteAccount").with(user(setUpAccount()))
+						.contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isUnauthorized())
+				.andExpect(content().string("Invalid password"));
+
+		Account account = (Account) accountRepository.findByEmail(accountEmail).orElse(null);
+		assertNotNull(account);
+	}
+
+	@Test
+	void deleteAccount_fail_notAuthorized_accountDoesNotExists() throws Exception {
+
+		String json = gson.toJson(setUpDeleteAccount(accountPassword));
+		mockMvc.perform(delete("/accounts/deleteAccount").with(anonymous())
+						.contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isFound());
+
+	}
 }
