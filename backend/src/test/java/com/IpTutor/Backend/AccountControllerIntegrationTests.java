@@ -16,6 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.StatusResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -72,6 +74,18 @@ class AccountControllerIntegrationTests {
 		return new AccountRequestDTO(username, email, password);
 	}
 
+	private void printTestInfo(String testInfo) {
+		System.out.println("\n---- " + testInfo + " ----");
+	}
+
+	private void basicTest(Object jsonObj, String path, ResultMatcher status, String result, String email) throws Exception{
+		String json = gson.toJson(jsonObj);
+		mockMvc.perform(post(path).contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status)
+				.andExpect(content().string(result));
+		deleteAccount(email);
+	}
+
 	@BeforeEach
 	public void setup() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).apply(springSecurity()).build();
@@ -120,115 +134,152 @@ class AccountControllerIntegrationTests {
 
 	@Test
 	public void register_success() throws Exception {
-		String json = gson.toJson(setUpRegister(accountEmail, accountPassword, accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isCreated())
-				.andExpect(content().string("Account successfully created"));
+		basicTest(setUpRegister(accountEmail,accountPassword,accountUsername),
+				"/accounts/create",
+				status().isCreated(),
+				"Account successfully created",
+				accountEmail);
 	}
 
 	@Test
 	public void register_fail_password() throws Exception {
-		//Test 1 - no upperCase, noNumbers ,noSpecialChar
-		String json = gson.toJson(setUpRegister(accountEmail, "password", accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(accountEmail);
+		printTestInfo("Test 1 - no upperCase, noNumbers ,noSpecialChar");
+		String password = "password";
+		basicTest(setUpRegister(accountEmail,password,accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				accountEmail);
 
-		//Test 2 - no upperCase, noSpecialChar
-		json = gson.toJson(setUpRegister(accountEmail, "password123", accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(accountEmail);
+		printTestInfo("Test 2 - no upperCase, noSpecialChar");
+		password = "password123";
+		basicTest(setUpRegister(accountEmail,password,accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				accountEmail);
 
-		//Test 3 - no upperCase
-		json = gson.toJson(setUpRegister(accountEmail, "password!23", accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(accountEmail);
+		printTestInfo("Test 3 - no upperCase");
+		password = "password!23";
+		basicTest(setUpRegister(accountEmail,password,accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				accountEmail);
 
-		//Test 4 - no upperCase, noNumbers
-		json = gson.toJson(setUpRegister(accountEmail, "password!", accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(accountEmail);
+		printTestInfo("Test 4 - no upperCase, noNumbers");
+		password = "password!";
+		basicTest(setUpRegister(accountEmail,password,accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				accountEmail);
 
-		//Test 5 - noNumbers
-		json = gson.toJson(setUpRegister(accountEmail, "Password!", accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(accountEmail);
+		printTestInfo("Test 5 - noNumbers");
+		password = "Password!";
+		basicTest(setUpRegister(accountEmail,password,accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				accountEmail);
 
-		//Test 6 - noNumbers ,noSpecialChar
-		json = gson.toJson(setUpRegister(accountEmail, "Password", accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(accountEmail);
+		printTestInfo("Test 6 - noNumbers ,noSpecialChar");
+		password = "Password";
+		basicTest(setUpRegister(accountEmail,password,accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				accountEmail);
 
-		//Test 6 - noSpecialChar
-		json = gson.toJson(setUpRegister(accountEmail, "Password123", accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
+		printTestInfo("Test 7 - noSpecialChar");
+		password = "Password123";
+		basicTest(setUpRegister(accountEmail,password,accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				accountEmail);
 	}
 
 	@Test
 	void register_fail_email() throws Exception {
-		//Test 1 - Invalid -> SpecialChars
+		printTestInfo("Test 1 - Invalid -> SpecialChars");
 		String email = "$test@email.org";
-		String json = gson.toJson(setUpRegister(email, accountPassword, accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(email);
+		basicTest(setUpRegister(email, accountPassword, accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				email);
 
-		//Test 2 - Invalid -> no "@"
+		printTestInfo("Test 2 - Invalid -> no \"@\"");
 		email = "testemail.org";
-		json = gson.toJson(setUpRegister(email, accountPassword, accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(email);
+		basicTest(setUpRegister(email, accountPassword, accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				email);
 
-		//Test 3 - Invalid -> no "."
+		printTestInfo("Test 3 - Invalid -> no \".\"");
 		email = "test@emailorg";
-		json = gson.toJson(setUpRegister(email, accountPassword, accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(email);
+		basicTest(setUpRegister(email, accountPassword, accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				email);
 
-		//Test 4 - Invalid -> domain after "." is too short
+		printTestInfo("Test 4 - Invalid -> domain after \".\" is too short");
 		email = "test@email.o";
-		json = gson.toJson(setUpRegister(email, accountPassword, accountUsername));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(email);
+		basicTest(setUpRegister(email, accountPassword, accountUsername),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				email);
 	}
+	@Test
+	void register_success_username() throws Exception {
+		//Test 1
+		printTestInfo("Test 1 - Starts with a special character");
+		String username = "_Test_";
+		basicTest(setUpRegister(accountEmail, accountPassword, username),
+				"/accounts/create",
+				status().isCreated(),
+				"Account successfully created",
+				accountEmail);
 
+		//Test 2
+		printTestInfo("Test 2 - minimum length (3 chars)");
+		username = "Min";
+		basicTest(setUpRegister(accountEmail, accountPassword, username),
+				"/accounts/create",
+				status().isCreated(),
+				"Account successfully created",
+				accountEmail);
+
+		//Test 3
+		printTestInfo("Test 3 - Maximum length (16 chars)");
+		username = "Maximum123456789";
+		basicTest(setUpRegister(accountEmail, accountPassword, username),
+				"/accounts/create",
+				status().isCreated(),
+				"Account successfully created",
+				accountEmail);
+	}
 	@Test
 	void register_fail_username() throws Exception {
-		//Test 1 - Invalid -> SpecialChars
+		printTestInfo("Test 1 - Invalid -> SpecialChars");
 		String username = "*username*";
-		String json = gson.toJson(setUpRegister(accountEmail, accountPassword, username));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(accountEmail);
+		basicTest(setUpRegister(accountEmail, accountPassword, username),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				accountEmail);
 
-		//Test 2 - noLetters
+		printTestInfo("Test 2 - noLetters");
 		username = "#$%^&*";
-		json = gson.toJson(setUpRegister(accountEmail, accountPassword, username));
-		mockMvc.perform(post("/accounts/create").contentType(MediaType.APPLICATION_JSON).content(json))
-				.andExpect(status().isBadRequest())
-				.andExpect(content().string("At least one request is invalid"));
-		deleteAccount(accountEmail);
+		basicTest(setUpRegister(accountEmail, accountPassword, username),
+				"/accounts/create",
+				status().isBadRequest(),
+				"At least one request is invalid",
+				accountEmail);
 	}
 
 }
