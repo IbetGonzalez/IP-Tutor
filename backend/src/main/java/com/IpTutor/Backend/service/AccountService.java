@@ -38,9 +38,9 @@ public class AccountService{
     }
 
     private boolean checkUsernamePattern(String username) {
-        Pattern validEmail = Pattern.compile("^[A-Za-z0-9_@!&-]+$");
-        Matcher matcher = validEmail.matcher(username);
-        return !matcher.matches();
+        Pattern validUsername = Pattern.compile("(?=(?:.*[a-zA-Z]){1,})(?=(?:.*[_@!&-]){0,})(?=(?:.*[0-9]){0,})^[a-zA-Z0-9_@!&-]*$");
+        Matcher matcher = validUsername.matcher(username);
+        return !(matcher.matches() & username.length() >= 3 & username.length() <= 16);
     }
 
     private boolean checkPasswordPattern(String password) {

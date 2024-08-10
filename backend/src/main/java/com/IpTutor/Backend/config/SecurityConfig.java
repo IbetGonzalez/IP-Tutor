@@ -31,6 +31,7 @@ public class SecurityConfig {
                       .requestMatchers("/accounts/login").permitAll()
                       .requestMatchers("/accounts/create").permitAll()
                       .requestMatchers("/accounts/checkEmail").permitAll()
+                      .requestMatchers("/accounts/test").permitAll()
                       .requestMatchers("/games").permitAll()
                       .requestMatchers("/games/*").permitAll()
                       .requestMatchers("/js/**").permitAll()
