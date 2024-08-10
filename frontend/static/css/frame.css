@@ -4,13 +4,13 @@
 .w-sm {
     width: 50%;
 }
-.w-med{
+.w-med {
     width: 75%;
 }
-.w-lg{
+.w-lg {
     width: 90%;
 }
-.w-xlg{
+.w-xlg {
     width: 100%;
 }
 .center {
@@ -19,16 +19,16 @@
 .text-center {
     text-align: center;
 }
-.mt-5{
+.mt-5 {
     margin-top: 5%;
 }
 .mt-25 {
     margin-top: 25%;
 }
-.mt-50{
+.mt-50 {
     margin-top: 50%;
 }
-.mt-75{
+.mt-75 {
     margin-top: 75%;
 }
 .pb-10 {
@@ -65,10 +65,10 @@
     padding: 7px 0;
     display: flex;
     flex-wrap: wrap;
-} 
-.form-input .text-input{
+}
+.form-input .text-input {
     flex-basis: 100%;
-    padding-bottom: 6px;  
+    padding-bottom: 6px;
     font-family: inherit;
     width: 100%;
     border: 0;
@@ -82,12 +82,11 @@
     &::placeholder {
         color: transparent;
     }
-    &:placeholder-shown ~ .text-input-label{
+    &:placeholder-shown ~ .text-input-label {
         font-size: 1.3rem;
         cursor: text;
         top: 12px;
     }
-
 }
 
 .form-input .err-message {
@@ -97,10 +96,10 @@
 }
 .indicator {
     position: absolute;
-    right: 0; 
+    right: 0;
     height: 30px;
 }
-.indicator .cross{
+.indicator .cross {
     opacity: 0;
     stroke: #ff0000;
     stroke-width: 6;
@@ -129,10 +128,10 @@
     stroke-dashoffset: 1000;
     animation: spin 3s linear infinite;
 }
-.indicator .progress #tick{
+.indicator .progress #tick {
     display: none;
 }
-.indicator .progress .cross{
+.indicator .progress .cross {
     display: none;
 }
 
@@ -146,7 +145,7 @@
     stroke-dashoffset: 1000;
     animation: draw 3s ease-out forwards;
 }
-.indicator .allow .cross{
+.indicator .allow .cross {
     display: none;
 }
 
@@ -154,7 +153,7 @@
     stroke-dashoffset: 66;
     stroke: #ff0000;
 }
-.indicator .deny .cross{
+.indicator .deny .cross {
     opacity: 1;
     stroke-dasharray: 1000;
     stroke-dashoffset: 1000;
@@ -164,46 +163,46 @@
 .indicator #cross #line-one {
     animation-delay: 250ms;
 }
-.indicator .deny #tick{
+.indicator .deny #tick {
     display: none;
 }
-.form-input:has(.indicator .deny) .text-input{
+.form-input:has(.indicator .deny) .text-input {
     border-width: 3px;
     border-image: linear-gradient(to right, #aa0534, #ff0000);
     border-image-slice: 1;
 }
-.form-input:has(.indicator .deny) .text-input-label{
+.form-input:has(.indicator .deny) .text-input-label {
     color: #aa0534;
 }
 
 @keyframes draw {
-  to {
-    stroke-dashoffset: 0;
-  }
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 @keyframes spin {
-  0% { 
-    transform: rotate(0deg);
-    stroke-dashoffset: 66;
-  } 
-  50% {
-    transform: rotate(540deg);
-    stroke-dashoffset: 314;
-  } 
-  100% {
-    transform: rotate(1080deg);
-    stroke-dashoffset: 66;
-  }
+    0% {
+        transform: rotate(0deg);
+        stroke-dashoffset: 66;
+    }
+    50% {
+        transform: rotate(540deg);
+        stroke-dashoffset: 314;
+    }
+    100% {
+        transform: rotate(1080deg);
+        stroke-dashoffset: 66;
+    }
 }
 
 .form-input .text-input-label {
     position: absolute;
-    pointer-events:none;
+    pointer-events: none;
     top: -12px;
     display: block;
     transition: 0.2s;
     font-size: 1rem;
-    color: var(--background);;
+    color: var(--background);
 }
 .text-input:focus ~ .text-input-label {
     position: absolute;
@@ -212,13 +211,15 @@
     transition: 0.2s;
     color: var(--gradient2);
     font-size: 1rem;
-    font-weight:700;    
+    font-weight: 700;
 }
 .form-input .checklist {
     list-style-type: none;
     overflow: hidden;
     text-align: left;
-    transition: height 100ms ease-out, margin-top 100ms ease-out;
+    transition:
+        height 100ms ease-out,
+        margin-top 100ms ease-out;
     padding-left: 5%;
     height: 0;
 }
@@ -245,7 +246,7 @@
     }
 }
 .form-input .checklist li.checked::before {
-    content:"✓";
+    content: "✓";
     background-color: var(--success);
 }
 .text-input:focus ~ .checklist {
@@ -255,7 +256,7 @@
 .text-input:focus {
     font-weight: 700;
     border-width: 3px;
-    border-image: linear-gradient(to right, var(--gradient2),var(--secondary));
+    border-image: linear-gradient(to right, var(--gradient2), var(--secondary));
     border-image-slice: 1;
 }
 .link-text {
@@ -279,7 +280,9 @@
     margin: 0;
     padding: 0;
     overflow: hidden;
-    transition: height 100ms ease-out, margin-top 100ms ease-out;
+    transition:
+        height 100ms ease-out,
+        margin-top 100ms ease-out;
 }
 
 #password-field ~ .strength .bar {
@@ -289,22 +292,25 @@
     width: 25%;
 }
 
-#password-field ~ .strength-1{
+#password-field ~ .strength-1 {
     #bar-1 {
         background-color: var(--danger);
     }
 }
-#password-field ~ .strength-2{
-    #bar-1, #bar-2 {
+#password-field ~ .strength-2 {
+    #bar-1,
+    #bar-2 {
         background-color: var(--warning);
     }
 }
-#password-field ~ .strength-3{
-    #bar-1, #bar-2, #bar-3 {
+#password-field ~ .strength-3 {
+    #bar-1,
+    #bar-2,
+    #bar-3 {
         background-color: var(--caution);
     }
 }
-#password-field ~ .strength-4{
+#password-field ~ .strength-4 {
     .bar {
         background-color: var(--success);
     }
@@ -332,7 +338,7 @@
     .value {
         font-size: 1.125rem;
     }
-    
+
     .button {
         min-height: 3rem;
         margin: 0;
@@ -341,9 +347,8 @@
     }
 }
 
-
-@media screen and (min-width: 1100px){
-    .lg-mt-5{
+@media screen and (min-width: 1100px) {
+    .lg-mt-5 {
         margin-top: 5%;
     }
     .lg-w-sm {

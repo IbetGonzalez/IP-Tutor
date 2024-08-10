@@ -19,7 +19,7 @@ header {
     display: flex;
 }
 
-.logo{
+.logo {
     height: 32px;
     padding-top: 0.5rem;
     display: flex;
@@ -35,7 +35,7 @@ header {
 .logo img {
     border-radius: 4px;
     height: 32px;
-    width: 32px; 
+    width: 32px;
 }
 
 footer {
@@ -46,9 +46,9 @@ footer {
     max-width: 100svw;
     min-height: 5rem;
     margin-top: auto;
-    margin-bottom: 2rem
+    margin-bottom: 2rem;
 }
-footer .heading{ 
+footer .heading {
     font-size: 1.5rem;
     font-weight: 500;
 }
@@ -59,10 +59,9 @@ footer .link {
     text-decoration: none;
     color: var(--text);
 }
-footer .link svg{
+footer .link svg {
     height: 1rem;
     width: 1rem;
-
 }
 footer .link svg path {
     fill: var(--text);
@@ -75,7 +74,7 @@ footer .link svg path {
     z-index: 1000;
     display: flex;
     text-align: center;
-    box-shadow: 0 0 8px rgba(0,0,0,0.9);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
     box-sizing: border-box;
     border-radius: 20px;
     background-color: var(--primary);
@@ -117,28 +116,27 @@ footer .link svg path {
     transform: rotateY(180deg);
     transition: transform 200ms ease;
 }
-.nav-buttons #hide-button svg{
+.nav-buttons #hide-button svg {
     height: 1rem;
-
 }
 .nav-buttons .nav-selected {
     transform-style: preserve-3d;
     background-color: var(--secondary) !important;
-    box-shadow: 0 0 4px rgba(0,0,0,0.9);
-    animation: bounce 0.4s cubic-bezier(.47,1.64,.41,.8) forwards;;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
+    animation: bounce 0.4s cubic-bezier(0.47, 1.64, 0.41, 0.8) forwards;
 }
 .nav-buttons .nav-selected::before {
     content: "";
     position: absolute;
     top: -10%;
     background: transparent;
-    box-shadow: 0 -4px 8px rgba(0,0,0,0.8);
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.8);
     border-radius: 100%;
     z-index: -1;
     height: 100%;
     width: 100%;
     border: 5px solid var(--background) !important;
-    transform: translateZ(-5px)
+    transform: translateZ(-5px);
 }
 .nav-selected .icon path {
     fill: url("#sel-grad") !important;
@@ -161,7 +159,7 @@ footer .link svg path {
 .minimized #hide-button {
     transform: rotateY(0deg);
 }
-.minimized button:not(#hide-button){
+.minimized button:not(#hide-button) {
     display: none;
 }
 
@@ -185,7 +183,7 @@ footer .link svg path {
     padding-left: 2rem;
     font-size: 24px;
 }
-.hero img { 
+.hero img {
     z-index: -2;
     position: absolute;
     width: 100%;
@@ -209,13 +207,13 @@ footer .link svg path {
     background: linear-gradient(black 50%, transparent 100%);
     opacity: 0.5;
 }
-.hero #top-gradient{
+.hero #top-gradient {
     z-index: -6;
     display: block;
     position: absolute;
     top: 0;
     left: 0;
-    box-shadow: 0 0 10px rgba(0,0,0, 0.8);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
     width: 100%;
     height: 35svh;
     background: linear-gradient(to top right, #5a22c290 30%, #a40e4c80);
@@ -223,10 +221,10 @@ footer .link svg path {
     padding: 1rem;
 }
 
-.hero #bottom-gradient{
+.hero #bottom-gradient {
     position: relative;
     z-index: -5;
-    margin-left:-5%;
+    margin-left: -5%;
     width: 120%;
     height: 25svh;
     transform: rotateZ(6deg);
@@ -245,10 +243,10 @@ footer .link svg path {
     overflow-x: scroll;
     scrollbar-width: none;
 }
-.games .card:first-child{
+.games .card:first-child {
     margin-left: auto;
 }
-.games .card:last-child{
+.games .card:last-child {
     margin-right: auto;
 }
 .card {
@@ -257,8 +255,8 @@ footer .link svg path {
     border-radius: 10px;
     min-width: 272px;
     width: 272px;
-    background-color: #FAF9F6;
-    box-shadow: 5px 5px 10px rgba(0,0,0,0.8);
+    background-color: #faf9f6;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
     overflow: hidden;
 }
 .card .card-content {
@@ -274,12 +272,12 @@ footer .link svg path {
     transform: translateX(-50%);
     height: 80px;
     width: 80px;
-    border-radius: 50%;;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.8);
+    border-radius: 50%;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
     background-color: white;
     z-index: 5;
 }
-.card .icon #icon-svg{
+.card .icon #icon-svg {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -295,7 +293,7 @@ footer .link svg path {
     width: 150%;
     height: 128px;
     transform: rotateZ(-5deg);
-    box-shadow: -4px -4px 20px inset rgba(0,0,0,0.4);
+    box-shadow: -4px -4px 20px inset rgba(0, 0, 0, 0.4);
     background: linear-gradient(to right, var(--gradient1), var(--gradient2));
 }
 .card .header {
@@ -308,12 +306,13 @@ footer .link svg path {
 .card .desc {
     height: 5rem;
 }
-.card .button{
+.card .button {
     border: none;
     background-color: var(--background);
     color: var(--text);
     position: relative;
     margin: auto;
+    margin-bottom: 1rem;
     text-align: center;
     width: 8rem;
     font-family: inherit;
@@ -335,7 +334,7 @@ footer .link svg path {
     top: 0;
     left: 0;
 
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0, 0, 0, 0.7);
     .card {
         box-sizing: border-box;
         display: grid;
@@ -365,7 +364,7 @@ footer .link svg path {
     right: 0;
     height: 100%;
 
-    .nav-items{
+    .nav-items {
         height: 100%;
         display: flex;
         gap: 8rem;
@@ -383,7 +382,7 @@ footer .link svg path {
     padding-inline: 1rem;
     cursor: pointer;
 
-    &.nav-selected::after{
+    &.nav-selected::after {
         content: "";
         position: absolute;
         margin: auto;
@@ -391,7 +390,7 @@ footer .link svg path {
         bottom: 0;
         height: 1px;
         background-color: var(--text);
-        animation: underline 0.2s ease-out forwards;;
+        animation: underline 0.2s ease-out forwards;
     }
 }
 @keyframes underline {
@@ -408,7 +407,7 @@ footer .link svg path {
         width: 100%;
         max-width: none;
         top: 50%;
-        transform: translate(-50% ,-55%);
+        transform: translate(-50%, -55%);
     }
 }
 /* Small screen */
@@ -416,7 +415,7 @@ footer .link svg path {
     header .logo {
         margin: unset;
     }
-    #desktop-nav  {
+    #desktop-nav {
         display: inline !important;
     }
     #mobile-nav {
