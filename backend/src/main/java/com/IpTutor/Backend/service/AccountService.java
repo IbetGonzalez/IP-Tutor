@@ -111,6 +111,38 @@ public class AccountService{
         return 0;
     }
 
+    public int updateEmail(UpdateEmailDTO updateEmailDTO) {
+        Account account = getAccount();
+
+        if(account == null) {
+            return -1;
+        } else if(!passwordEncoder.matches(updateEmailDTO.password(), account.getPassword())) {
+            return -2;
+        } else if(checkEmailPattern(updateEmailDTO.newEmail())) {
+            return -3;
+        }
+
+        account.setEmail(updateEmailDTO.newEmail());
+        accountRepository.save(account);
+        return 0;
+    }
+
+    public int updatePassword(UpdatePasswordDTO updatePasswordDTO) {
+        Account account = getAccount();
+
+        if(account == null) {
+            return -1;
+        } else if(!passwordEncoder.matches(updatePasswordDTO.password(), account.getPassword())) {
+            return -2;
+        } else if(checkPasswordPattern(updatePasswordDTO.newPassword())) {
+            return -3;
+        }
+
+        account.setPassword(passwordEncoder.encode(updatePasswordDTO.newPassword()));
+        accountRepository.save(account);
+        return 0;
+    }
+
     public int updateUsername(UpdateUsernameDTO updateUsernameDTO) {
         Account account = getAccount();
 

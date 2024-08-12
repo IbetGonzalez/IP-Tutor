@@ -1,9 +1,6 @@
 package com.IpTutor.Backend;
 
-import com.IpTutor.Backend.dto.AccountDeleteRequestDTO;
-import com.IpTutor.Backend.dto.AccountRequestDTO;
-import com.IpTutor.Backend.dto.LoginRequestDTO;
-import com.IpTutor.Backend.dto.UpdateUsernameDTO;
+import com.IpTutor.Backend.dto.*;
 import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.repository.AccountRepository;
 import com.google.gson.Gson;
@@ -351,6 +348,103 @@ class AccountControllerIntegrationTests {
 				accountEmail);
 	}
 
+	private UpdateEmailDTO setUpUpdateEmail(String newEmail, String password) {
+		return new UpdateEmailDTO(newEmail, password);
+	}
+
+	private UpdatePasswordDTO setUpUpdatePassword(String newPassword, String password) {
+		return new UpdatePasswordDTO(newPassword, password);
+	}
+
+	@Test
+	void updateEmail_successful() throws Exception {
+		String email = "newEmail@here.org";
+
+		authorizedPutTest(setUpUpdateEmail(email, accountPassword),
+				"/accounts/update/email",
+				status().isOk(),
+				"Email successfully updated");
+
+		Account account = (Account) accountRepository.findByEmail(email).orElse(null);
+		assertNotNull(account);
+		assertEquals(account.getEmail(), email);
+
+		deleteAccount(email);
+	}
+
+	@Test
+	void updateEmail_fail_password() throws Exception {
+		String email = "newEmail@here.org";
+
+		authorizedPutTest(setUpUpdateEmail(email, "notAccountPassword"),
+				"/accounts/update/email",
+				status().isUnauthorized(),
+				"Incorrect password");
+
+		Account account = (Account) accountRepository.findByEmail(accountEmail).orElse(null);
+		assertNotNull(account);
+		assertNotEquals(account.getEmail(), email);
+	}
+
+	@Test
+	void updateEmail_fail_emails() throws Exception {
+		for (String[] info : invalidEmails) {
+			printTestInfo(info[0]);
+			authorizedPutTest(setUpUpdateEmail(info[1], accountPassword),
+					"/accounts/update/email",
+					status().isBadRequest(),
+					"Email not valid");
+
+			Account account = (Account) accountRepository.findByEmail(accountEmail).orElse(null);
+			assertNotNull(account);
+			assertNotEquals(account.getEmail(), info[1]);
+
+			deleteAccount(info[1]);
+		}
+	}
+
+	@Test
+	void updatePassword_successful() throws Exception {
+		String newPassword = "NewPassword1!";
+
+		authorizedPutTest(setUpUpdatePassword(newPassword, accountPassword),
+				"/accounts/update/password",
+				status().isOk(),
+				"Password successfully updated");
+
+		Account account = accountRepository.findByEmail(accountEmail).orElse(null);
+		assertNotNull(account);
+		assertTrue(passwordEncoder.matches(newPassword, account.getPassword()));
+	}
+
+	@Test
+	void updatePassword_fail_accountPassword() throws Exception {
+		String newPassword = "NewPassword1!";
+
+		authorizedPutTest(setUpUpdatePassword(newPassword, "notAccountPassword"),
+				"/accounts/update/password",
+				status().isUnauthorized(),
+				"Incorrect password");
+
+		Account account = accountRepository.findByEmail(accountEmail).orElse(null);
+		assertNotNull(account);
+		assertFalse(passwordEncoder.matches(newPassword, account.getPassword()));
+	}
+
+	@Test
+	void updatePassword_fail_invalidPasswords() throws Exception {
+		for (String[] info : invalidPasswords) {
+			authorizedPutTest(setUpUpdatePassword(info[1], accountPassword),
+					"/accounts/update/password",
+					status().isBadRequest(),
+					"Password is not valid");
+
+			Account account = accountRepository.findByEmail(accountEmail).orElse(null);
+			assertNotNull(account);
+			assertFalse(passwordEncoder.matches(info[1], account.getPassword()));
+		}
+	}
+
 	@Test
 	void updateUsername_success() throws Exception {
 		String username = "newUsername";
@@ -361,7 +455,6 @@ class AccountControllerIntegrationTests {
 				"Username successfully updated");
 
 		Account account = (Account) accountRepository.findByEmail(accountEmail).orElse(null);
-
 		assertNotNull(account);
 		assertEquals(account.getAccountUsername(), username);
 	}

@@ -49,6 +49,36 @@ To run in production mode:
 * Invalid email format: 400 (bad request)
 * Email doesn't exist (Successful): 200 (ok)
 
+### localhost:xxxx/accounts/update/email (Put Mapping)
+
+#### Needs an Authorization Header
+```
+    {
+        "newEmail": "",
+        "password": ""
+    }
+```
+
+#### Returns Http Status:
+* Account not found: 404 (not found)
+* Invalid email format: 400 (bad request)
+* Successful: 200 (ok)
+
+### localhost:xxxx/accounts/update/password (Put Mapping)
+
+#### Needs an Authorization Header
+```
+    {
+        "newPassword": "",
+        "password": ""
+    }
+```
+
+#### Returns Http Status:
+* Account not found: 404 (not found)
+* Invalid password format: 400 (bad request)
+* Successful: 200 (ok)
+
 ### localhost:xxxx/accounts/update/username (Put Mapping)
 
 #### Needs an Authorization Header
