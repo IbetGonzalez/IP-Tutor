@@ -76,6 +76,34 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body("Successfully logged out");
     }
 
+    @PutMapping("/update/email")
+    private ResponseEntity<String> updateEmail(@RequestBody UpdateEmailDTO updateEmailDTO) {
+        switch (accountService.updateEmail(updateEmailDTO)) {
+            case -1:
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+            case -2:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+            case -3:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email not valid");
+            default:
+                return ResponseEntity.status(HttpStatus.OK).body("Email successfully updated");
+        }
+    }
+
+    @PutMapping("/update/password")
+    private ResponseEntity<String> updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+        switch (accountService.updatePassword(updatePasswordDTO)) {
+            case -1:
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account not found");
+            case -2:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect password");
+            case -3:
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Password is not valid");
+            default:
+                return ResponseEntity.status(HttpStatus.OK).body("Password successfully updated");
+        }
+    }
+
     @PutMapping("/update/username")
     public ResponseEntity<String> updateUsername(@RequestBody UpdateUsernameDTO updateUsernameDTO, HttpServletRequest request, HttpServletResponse response){
 
