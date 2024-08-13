@@ -58,6 +58,7 @@ function updateNav() {
     const selQuery = `.${elemId}-nav`;
 
     const currSelNavList = document.querySelectorAll(".nav-selected");
+
     currSelNavList.forEach(elem => elem.classList.remove("nav-selected"));
 
     const selNav = document.querySelectorAll(selQuery).length > 0

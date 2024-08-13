@@ -14,7 +14,7 @@ body {
 
 header {
     padding: 0;
-    padding-inline: 20rem;
+    padding-inline: max(5rem, 10%);
     position: relative;
     display: flex;
 }
@@ -290,10 +290,9 @@ footer .link svg path {
 .card .top-gradient {
     position: absolute;
     left: -10%;
-    top: -7%;
+    top: -5%;
     width: 150%;
-    height: 128px;
-    transform: rotateZ(-5deg);
+    height: 112px;
     box-shadow: -4px -4px 20px inset rgba(0, 0, 0, 0.4);
     background: linear-gradient(to right, var(--gradient1), var(--gradient2));
 }
@@ -404,34 +403,39 @@ footer .link svg path {
 
 .account-info {
     display: flex;
-    flex-direction: column;
-}
-.account-info .button {
-    justify-self: center;
-    margin-top: 5%;
-}
-.account-info .items {
-    display: grid;
-    gap: 1rem;
-    justify-content: center;
-    text-align: start;
-    grid-template-columns: 1fr 3fr 1fr;
-    align-items: center;
-    padding-top: 4px;
-    padding-bottom: 4px;
-    border-bottom: 2px solid var(--background);
-    .row-name::after {
-        content: ":";
-    }
-    .value {
-        font-size: 1.125rem;
-    }
+    padding: 2rem;
+    padding-inline: max(3rem, 5%);
 
+    flex-direction: column;
+    .buttons {
+        justify-self: end;
+    }
     .button {
-        min-height: 3rem;
-        margin: 0;
-        font-size: 1rem;
-        background-color: var(--primary);
+        justify-self: center;
+        margin-top: 5%;
+    }
+    .items {
+        margin-top: max(7rem, 15%);
+        display: grid;
+        gap: 1rem;
+        justify-content: center;
+        text-align: start;
+        grid-template-columns: 1fr 4fr;
+        align-items: center;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        .row-name::after {
+            content: ":";
+        }
+        .value {
+            font-size: 1.125rem;
+        }
+
+        .button {
+            min-height: 3rem;
+            margin: 0;
+            font-size: 1rem;
+        }
     }
 }
 @keyframes underline {
@@ -463,6 +467,7 @@ footer .link svg path {
         display: none !important;
     }
     .card .top-gradient {
-        top: -15%;
+        height: max(128px, 15%);
+        top: -5%;
     }
 }

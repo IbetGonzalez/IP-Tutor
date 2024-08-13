@@ -5,7 +5,7 @@ import { AlertColors, createAlert } from "@util/util";
 
 export const changeUsernameModal = (callback = () => {}) => {
     const modal: HTMLElement = document.createElement('div');
-
+    let isOpen = false;
     modal.classList.add("modal");
     modal.innerHTML = `
     <form class="card" id="change-username-form">
@@ -39,8 +39,13 @@ export const changeUsernameModal = (callback = () => {}) => {
     `;
 
     const showModal= () => {
-        alert("Clicked");
+        if (isOpen) {
+            console.warn("Modal is already open");
+            return;
+        }
         document.body.appendChild(modal);
+        isOpen = true;
+
 
         const escape = (e: KeyboardEvent) => {
             if (e.key === "Escape") { 
@@ -49,6 +54,7 @@ export const changeUsernameModal = (callback = () => {}) => {
         }
 
         const cleanup = () => {
+            isOpen = false;
             document.removeEventListener("keydown", escape);
             document.body.removeChild(modal);
         }
