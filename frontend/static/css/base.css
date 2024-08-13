@@ -250,6 +250,7 @@ footer .link svg path {
     margin-right: auto;
 }
 .card {
+    box-sizing: border-box;
     position: relative;
     color: var(--background);
     border-radius: 10px;
@@ -306,17 +307,23 @@ footer .link svg path {
 .card .desc {
     height: 5rem;
 }
+.card .buttons {
+    display: flex;
+    gap: 1rem;
+}
 .card .button {
+    display: flex;
     border: none;
     background-color: var(--background);
     color: var(--text);
     position: relative;
     margin: auto;
-    margin-bottom: 1rem;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
     width: 8rem;
+    height: 3.5rem;
     font-family: inherit;
-    font-size: 28px;
+    font-size: 1.125rem;
     font-weight: 600;
     &:hover {
         cursor: pointer;
@@ -372,6 +379,7 @@ footer .link svg path {
         list-style-type: none;
     }
 }
+
 .nav-items li {
     position: relative;
     user-select: none;
@@ -391,6 +399,39 @@ footer .link svg path {
         height: 1px;
         background-color: var(--text);
         animation: underline 0.2s ease-out forwards;
+    }
+}
+
+.account-info {
+    display: flex;
+    flex-direction: column;
+}
+.account-info .button {
+    justify-self: center;
+    margin-top: 5%;
+}
+.account-info .items {
+    display: grid;
+    gap: 1rem;
+    justify-content: center;
+    text-align: start;
+    grid-template-columns: 1fr 3fr 1fr;
+    align-items: center;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--background);
+    .row-name::after {
+        content: ":";
+    }
+    .value {
+        font-size: 1.125rem;
+    }
+
+    .button {
+        min-height: 3rem;
+        margin: 0;
+        font-size: 1rem;
+        background-color: var(--primary);
     }
 }
 @keyframes underline {

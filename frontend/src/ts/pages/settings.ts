@@ -30,10 +30,10 @@ const fetchAccountInfo = () => {
 }
 
 fetchAccountInfo();
+
 document.addEventListener("htmx:afterRequest", () => {
     if (document.querySelector(".account-info")) fetchAccountInfo();
 });
-
 
 const updateSettings = new Effect(() => {
     const data: accountData = accountInfo.value;
@@ -51,7 +51,7 @@ document.querySelector("#deleteAccount")?.addEventListener("click", deleteAccoun
 const logout = queryElement("#logout");
 
 logout.addEventListener("click", () => {
-    htmx.ajax("get", "/logout", {
+    htmx.ajax("put", "/logout", {
         target: ".content",
         headers: { "Authorization": `Bearer ${getCookie("jwt_token")}`}
     });

@@ -6,8 +6,6 @@ type htmxEvent = {
     detail: HtmxResponseInfo;
 } & Event;
 
-const scrollElement = document.querySelector('#game-cards');
-
 document.addEventListener("DOMContentLoaded", function () {
     updateNav();
 });
@@ -71,6 +69,4 @@ function updateNav() {
     }
 
     selNav.forEach((elem) => elem.classList.add("nav-selected"));
-
-
 }

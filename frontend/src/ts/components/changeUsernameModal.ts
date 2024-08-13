@@ -39,6 +39,7 @@ export const changeUsernameModal = (callback = () => {}) => {
     `;
 
     const showModal= () => {
+        alert("Clicked");
         document.body.appendChild(modal);
 
         const escape = (e: KeyboardEvent) => {

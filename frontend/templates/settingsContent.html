@@ -1,13 +1,24 @@
-<div class="w-sm card center p-5 mt-5 account-info">
-    <div class="items">
+<div class="w-lg lg-w-med card center p-2 mt-5 account-info"
+    style="--gradient1: var(--secondary); --gradient2: #0b6e4f"
+    >
+    <div class="top-gradient"
+        style="transform: rotate(-2deg)"></div>
+    <div class="items mt-10">
         <h3 class="row-name">Username</h3>
         <div id="username" class="value">Loading</div>
-        <button id="changename" class="button">Change username</button>
+        <button id="changename" class="button">Change Username</button>
 
         <h3 class="row-name">Email</h3>
         <div id="email" class="value">Loading</div>
-        <button id="deleteAccount" class="button bg-danger">Delete Account</button>
+        <button id="changeemail" class="button">Change Email</button>
+
+        <h3 class="row-name">Password</h3>
+        <input id="password-field" name ="password" type="password" class="form-input value" placeholder="New password">
+        <button id="changepassword" class="button">Change Password</button>
     </div>
-    <button id="logout" class="center button">Logout</button>
+    <div class="buttons center">
+        <button id="deleteAccount" class="button bg-danger">Delete Account</button>
+        <button id="logout" class="center button">Logout</button>
+    </div>
 </div>
 <script defer type="module" src="/js/settings/scripts.bundle.js"></script>
