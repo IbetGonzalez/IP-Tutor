@@ -20,9 +20,9 @@ header {
 }
 
 .logo {
-    height: 32px;
-    padding-top: 0.5rem;
+    height: 64px;
     display: flex;
+    align-items: center;
     margin: auto;
     flex-wrap: wrap;
 }
@@ -33,9 +33,8 @@ header {
 }
 
 .logo img {
-    border-radius: 4px;
-    height: 32px;
-    width: 32px;
+    height: 64px;
+    width: 64px;
 }
 
 footer {
@@ -380,6 +379,8 @@ footer .link svg path {
 }
 
 .nav-items li {
+    display: flex;
+    align-items: center;
     position: relative;
     user-select: none;
     box-sizing: border-box;

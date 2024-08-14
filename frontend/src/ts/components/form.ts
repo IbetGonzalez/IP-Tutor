@@ -69,9 +69,12 @@ export class FormInput {
 
         this.m_input.value = this.m_inputElem.value;
 
-        this.m_inputElem.addEventListener('input', () => {
-            this.m_input.value = this.m_inputElem.value;
-        })
+        document.addEventListener('input', (e) => {
+            let targetElem = <HTMLElement> e.target;
+            if (targetElem.id === this.m_inputElem.id) {
+                this.m_input.value = this.m_inputElem.value;
+            }
+        });
     }
 
     set state(state: State) {

@@ -45,11 +45,23 @@ const password = new FormInput("#password-wrapper");
 
 const loginForm = new Form("#login-form", [email, password]);
 
-loginForm.submitBtn.addEventListener("click", login);
-loginForm.elem.addEventListener("keydown", (e: KeyboardEvent) => {
+document.addEventListener("click", (e) => {
+    let targetElem = <HTMLElement> e.target;
+
+    switch (targetElem.id) {
+        case loginForm.submitBtn.id:
+            login();
+        break;
+    }
+})
+document.addEventListener("keydown", (e) => {
+    let targetElem = <HTMLElement> e.target;
+
     if (e.key === "Enter") {
         e.preventDefault();
-        login();
+        if ([...targetElem.classList].filter(c => c === "text-input").length > 0) {
+            login();
+        }
     }
 });
 
