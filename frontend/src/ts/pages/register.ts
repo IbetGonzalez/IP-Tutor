@@ -3,6 +3,7 @@ import { checkEmail, EmailStatus, getCookie, makeCookie, postRequest, validatePa
 import { Computed, createEffect } from "@util/signal";
 import { AlertColors, createAlert, debounce, removeClasses } from "@util/util";
 import htmx from "htmx.org";
+import { log } from "tone/build/esm/core/util/Debug";
 
 if (getCookie("jwt_token")) {
     htmx.ajax("get", "/settings", {
@@ -231,18 +232,23 @@ async function register() {
         createAlert("Could not create account", 5000, AlertColors.WARNING);
     }
 }
-registerForm.submitBtn.addEventListener("click", register);
-registerForm.elem.addEventListener("keydown", (e: KeyboardEvent) => {
+
+document.addEventListener("click", (e) => {
+    let targetElem = <HTMLElement> e.target;
+
+    switch (targetElem.id) {
+        case registerForm.submitBtn.id:
+            register();
+        break;
+    }
+})
+document.addEventListener("keydown", (e) => {
+    let targetElem = <HTMLElement> e.target;
+
     if (e.key === "Enter") {
         e.preventDefault();
-        register();
+        if ([...targetElem.classList].filter(c => c === "text-input").length > 0) {
+            register();
+        }
     }
 });
-
-
-
-
-
-
-
-
