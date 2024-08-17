@@ -11,28 +11,7 @@ import { getCookie, postRequest } from "@util/client-util";
 import { createEffect, Effect } from "@util/signal";
 import { AlertColors, createAlert } from "@util/util";
 import htmx from "htmx.org";
-
-class LoginForm extends HTMLElement {
-    private objForm: Form;
-    private email: FormInput;
-    /* 
-    *   manageEmailInput is an effect that run anytime "email.value" is updated
-    *   based on length and validity of the email it updates the state of the email field
-    */
-    private manageEmailInput: Effect | null;
-    /* 
-    *   manageEmailState is run when the states is updated
-    *   defines the states how how they should be visually represented
-    *   
-    */
-    private manageEmailState: Effect | null;
-    private password: FormInput;
-    private managePasswordInput: Effect | null
-    private managePasswordState: Effect | null
-
-    constructor() {
-        super();
-        this.innerHTML = `
+const template = `
             <form id="login-form" class="form text-center center w-med">
                 <div id="email-wrapper" class="form-input">
                     <input id="email-field" class="text-input" name="email" type="text" placeholder="Username" />
@@ -88,6 +67,28 @@ class LoginForm extends HTMLElement {
                 <button id="submit-button" type="button" class="button">Login</button>
                 <br />
             </form> `;
+
+class LoginForm extends HTMLElement {
+    private objForm: Form;
+    private email: FormInput;
+    /* 
+    *   manageEmailInput is an effect that run anytime "email.value" is updated
+    *   based on length and validity of the email it updates the state of the email field
+    */
+    private manageEmailInput: Effect | null;
+    /* 
+    *   manageEmailState is run when the states is updated
+    *   defines the states how how they should be visually represented
+    *   
+    */
+    private manageEmailState: Effect | null;
+    private password: FormInput;
+    private managePasswordInput: Effect | null
+    private managePasswordState: Effect | null
+
+    constructor() {
+        super();
+        this.innerHTML = template;
         /*  
         *   Email field Initialization
         */
@@ -144,11 +145,11 @@ class LoginForm extends HTMLElement {
             }
         });
         this.objForm = new Form(`#login-form`, [this.email, this.password]);
-        this.objForm.elem.addEventListener('keydown', this.buttonDownHandler.bind(this));
+        this.objForm.elem.addEventListener('keydown', this.handleBtnDown.bind(this));
         this.objForm.submitBtn.addEventListener('click', this.login.bind(this));
     }
 
-    buttonDownHandler(e: KeyboardEvent) {
+    handleBtnDown(e: KeyboardEvent) {
         if (e.key === "Enter") {
             this.login();
         }
@@ -188,7 +189,7 @@ class LoginForm extends HTMLElement {
         this.managePasswordInput= null;
         this.managePasswordState = null;
         this.objForm.submitBtn.removeEventListener('click', this.login.bind(this));
-        this.objForm.elem.removeEventListener('keydown', this.buttonDownHandler.bind(this));
+        this.objForm.elem.removeEventListener('keydown', this.handleBtnDown.bind(this));
         this.objForm.cleanup();
     }
 }
