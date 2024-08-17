@@ -15,6 +15,7 @@ document.addEventListener("htmx:afterRequest", function (evt) {
 
     if (htmxEvt.detail.failed) {
         const statusCode = htmxEvt.detail.xhr.status;
+
         if (statusCode === 403 || statusCode === 401) {
             htmxEvt.preventDefault();
             htmx.ajax("get", "/login", ".content");

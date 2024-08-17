@@ -55,6 +55,9 @@ export class Form {
     get elem() {
         return this.m_elem;
     }
+    cleanup() {
+        this.m_fields.forEach((elem) => elem.cleanup());
+    }
 }
 
 export class FormInput {
@@ -66,17 +69,16 @@ export class FormInput {
     constructor(inputWrapper: string) {
         this.m_wrapperElem= queryElement(inputWrapper);
         this.m_inputElem = queryElement(`${inputWrapper} input`);
+        console.log(this.m_inputElem);
 
         this.m_input.value = this.m_inputElem.value;
 
-        document.addEventListener('input', (e) => {
-            let targetElem = <HTMLElement> e.target;
-            if (targetElem.id === this.m_inputElem.id) {
-                this.m_input.value = this.m_inputElem.value;
-            }
-        });
+        this.m_inputElem.addEventListener('input', this.inputHandler.bind(this));
     }
 
+    inputHandler() { 
+        this.m_input.value = this.m_inputElem.value;
+    }
     set state(state: State) {
         this.m_state.value = state;
     }
@@ -94,6 +96,10 @@ export class FormInput {
 
     get value() {
         return this.m_input.value;
+    }
+    cleanup() {
+        console.log(`cleaning ${this.m_inputElem.id}`);
+        this.m_inputElem.removeEventListener('input', this.inputHandler);
     }
 }
 
