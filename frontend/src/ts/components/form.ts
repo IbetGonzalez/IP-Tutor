@@ -69,7 +69,6 @@ export class FormInput {
     constructor(inputWrapper: string) {
         this.m_wrapperElem= queryElement(inputWrapper);
         this.m_inputElem = queryElement(`${inputWrapper} input`);
-        console.log(this.m_inputElem);
 
         this.m_input.value = this.m_inputElem.value;
 
@@ -98,7 +97,6 @@ export class FormInput {
         return this.m_input.value;
     }
     cleanup() {
-        console.log(`cleaning ${this.m_inputElem.id}`);
         this.m_inputElem.removeEventListener('input', this.inputHandler);
     }
 }

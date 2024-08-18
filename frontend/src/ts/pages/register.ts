@@ -1,5 +1,5 @@
 import { createState, ErrMsg, Form, FormInput, IndicatorStates, InputStates, MarkIndicator } from "@components/form";
-import { checkEmail, EmailStatus, getCookie, makeCookie, postRequest, validatePassword   } from "@util/client-util";
+import { checkEmail, EmailStatus, getCookie, postRequest, validatePassword   } from "@util/client-util";
 import { Effect, Computed, createEffect } from "@util/signal";
 import { AlertColors, createAlert, debounce, removeClasses } from "@util/util";
 import htmx from "htmx.org";

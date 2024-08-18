@@ -42,7 +42,6 @@ class ChangeSettings extends HTMLElement {
             return;
         }
         const action = btnElem.getAttribute("action");
-        console.log(action);
         switch (action) {
             case "delete-account":
                 this.modal_DeleteAccount.showModal();
@@ -54,7 +53,6 @@ class ChangeSettings extends HTMLElement {
                     headers: { Authorization: `Bearer ${jwt}` }
                 });
                 fetch(logoutRequest).then((res) => {
-                    console.log(res.status);
                     if (res.status === 200) {
                         createAlert("Successfuly logged out", 5000, AlertColors.SECONDARY);
                         this.sendHome();
