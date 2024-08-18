@@ -1,27 +1,32 @@
 <div class="w-lg lg-w-med card center mt-5 account-info"
     style="--gradient1: var(--secondary); --gradient2: #0b6e4f"
     >
-    <div class="top-gradient"
-        ></div>
-    <div class="items mt-10">
-        <h3 class="row-name">Username</h3>
-        <input id="username" class="form-input value" value="">
+    <div class="top-gradient"></div>
+    <settings-display>
+        <div class="items mt-10">
+            <h3 class="row-name">Username</h3>
+            <input id="username" class="form-input value" value="">
 
-        <h3 class="row-name">Email</h3>
-        <input id="email" class="form-input value" value="">
+            <h3 class="row-name">Email</h3>
+            <input id="email" class="form-input value" value="">
 
-        <h3 class="row-name">Password</h3>
-        <input id="password-field" name="password" type="password" class="form-input value" placeholder="New password">
+            <h3 class="row-name">Password</h3>
+            <input id="password-field" name="password" type="password" class="form-input value" placeholder="New password">
 
-        <br>
-        <div class="buttons">
-            <button id="save-changes" class="button bg-primary">Save</button>
-            <button id="cancel-changes" class="button bg-text">Cancel</button>
+            <br>
+            <div class="buttons">
+                <button id="save-changes" class="button bg-info">Save</button>
+                <button id="cancel-changes" class="button bg-text">Cancel</button>
+            </div>
         </div>
-    </div>
-    <div class="buttons center">
-        <button id="deleteAccount" class="button bg-danger">Delete Account</button>
-        <button id="logout" class="center button bg-primary">Logout</button>
-    </div>
+        <div class="buttons center">
+            <button id="deleteAccount" action="delete-account" class="button bg-danger">Delete Account</button>
+            <button 
+                id="logout" 
+                action="logout"
+                class="center button bg-info"
+                >Logout</button>
+        </div>
+    </settings-display>
 </div>
 <script defer type="module" src="/js/settings/scripts.bundle.js"></script>

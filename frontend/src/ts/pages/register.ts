@@ -388,7 +388,6 @@ class RegisterForm extends HTMLElement {
         }
     }
     disconnectedCallback() {
-        this.email = null;
         this.manageEmailInput = null;
         this.manageEmailState = null; 
         this.manageUsernameInput = null;
