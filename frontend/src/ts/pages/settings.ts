@@ -17,7 +17,11 @@ class ChangeSettings extends HTMLElement {
 
     constructor() {
         super();
-        this.accountInfo = new Signal<accountData>({} as accountData)
+        this.accountInfo = new Signal<accountData>({
+            username: "",
+            email: "",
+            accountCreated: "",
+        } as accountData)
 
         this.settingsButtons = Array.from(document.querySelectorAll(".button"));
         this.settingsButtons.forEach((btnElem) => {
@@ -54,11 +58,11 @@ class ChangeSettings extends HTMLElement {
                 });
                 fetch(logoutRequest).then((res) => {
                     if (res.status === 200) {
-                        createAlert("Successfuly logged out", 5000, AlertColors.SUCCESS);
+                        createAlert("Successfuly logged out", 2500, AlertColors.SUCCESS);
                         console.log(res.status);
                         this.sendHome();
                     } else {
-                        createAlert("Something went wrong", 5000, AlertColors.DANGER);
+                        createAlert("Something went wrong", 2500, AlertColors.DANGER);
                     }
                 });
             break;

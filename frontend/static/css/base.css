@@ -5,6 +5,7 @@
 body {
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
     position: relative;
     min-height: 100svh;
     font-family: "roboto", Arial;

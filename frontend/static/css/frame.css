@@ -191,11 +191,11 @@
 }
 .form-input:has(.indicator .deny) .text-input {
     border-width: 3px;
-    border-image: linear-gradient(to right, #aa0534, #ff0000);
+    border-image: linear-gradient(to right, var(--danger), #ff0000);
     border-image-slice: 1;
 }
 .form-input:has(.indicator .deny) .text-input-label {
-    color: #aa0534;
+    color: var(--danger);
 }
 
 @keyframes draw {
@@ -232,7 +232,7 @@
     top: -16px !important;
     display: block;
     transition: 0.2s;
-    color: var(--gradient2);
+    color: var(--success);
     font-size: 1rem;
     font-weight: 700;
 }
@@ -337,6 +337,19 @@
     .bar {
         background-color: var(--success);
     }
+}
+#password-field ~ .eye { 
+    display: none;
+    align-items: center;
+    position: absolute;
+    right: 3rem;
+
+    svg path {
+        fill: grey;
+    }
+}
+#password-field:focus ~ .eye {
+    display: flex;
 }
 @media screen and (min-width: 1100px) {
     .lg-mt-5 {
