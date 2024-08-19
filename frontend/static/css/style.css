@@ -8,12 +8,15 @@
 }
 :root {
     --background: #181f27;
+    --background-lite: #21282f;
     --text: #fbfbfe;
-    --primary: #0d3b59;
-    --secondary: #82ed9b;
-    --accent: #57cb99;
-    --danger: #fe333a;
-    --warning: #e4572e;
-    --caution: #e4cd44;
-    --success: #87c32a;
+    --primary: #57cb99;
+    --secondary: #0d3b59;
+    --accent: #82ed9b;
+
+    --danger: #c84139;
+    --warning: #fec02b;
+    --caution: #e39b3b;
+    --success: #1d9479;
+    --info: #408ca4;
 }

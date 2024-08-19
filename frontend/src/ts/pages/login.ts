@@ -64,7 +64,7 @@ const template = `
                 </div>
                 <br />
                 <br />
-                <button id="submit-button" type="button" class="button">Login</button>
+                <button id="submit-button" type="button" class="button bg-primary">Login</button>
                 <br />
             </form> `;
 
@@ -170,7 +170,7 @@ class LoginForm extends HTMLElement {
                 history.pushState(null, "", "/")
             break;
             default:
-                createAlert("Email or password is invalid", 5000, AlertColors.WARNING);
+                createAlert("Email or password is invalid", 5000, AlertColors.DANGER);
         }
     }
 

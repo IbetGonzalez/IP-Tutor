@@ -11,7 +11,7 @@
 }
 .games-item .icon {
     width: 30%;
-    background: linear-gradient(to top right, var(--gradient1), var(--gradient2));
+    background: linear-gradient(to left, var(--secondary), var(--accent));
     padding: 5%;
 }
 .games-item .icon img {

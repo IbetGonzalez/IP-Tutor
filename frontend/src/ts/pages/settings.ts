@@ -54,12 +54,16 @@ class ChangeSettings extends HTMLElement {
                 });
                 fetch(logoutRequest).then((res) => {
                     if (res.status === 200) {
-                        createAlert("Successfuly logged out", 5000, AlertColors.SECONDARY);
+                        createAlert("Successfuly logged out", 5000, AlertColors.SUCCESS);
+                        console.log(res.status);
                         this.sendHome();
                     } else {
-                        createAlert("Something went wrong", 5000, AlertColors.WARNING);
+                        createAlert("Something went wrong", 5000, AlertColors.DANGER);
                     }
                 });
+            break;
+            case "cancel":
+                this.accountInfo.notify();
             break;
             default: 
                 return;
