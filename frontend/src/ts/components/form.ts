@@ -122,6 +122,36 @@ export class MarkIndicator {
         this.indicator.classList.add(state);
     }
 }
+export class PasswordEye {
+    private m_elem;
+    private m_password_elem;
+
+    constructor(passwordInput: FormInput) {
+        this.m_elem = queryElement(`#${passwordInput.elem.id} ~ .eye`);
+        this.m_password_elem = passwordInput.elem;
+        this.m_elem.addEventListener("mousedown", this.togglePassword.bind(this));
+    }
+    togglePassword(e: Event) {
+        console.log(this.m_password_elem);
+        e.preventDefault();
+
+        const isOpen = this.m_elem.classList.contains("open");
+
+        if (isOpen) {
+            this.m_elem.classList.remove("open");
+            this.m_password_elem.setAttribute("type", "password");
+            this.m_elem.classList.add("closed");
+        } else {
+            this.m_elem.classList.remove("closed");
+            this.m_password_elem.setAttribute("type", "text");
+            this.m_elem.classList.add("open");
+        }
+    }
+    cleanup() {
+        this.m_elem.removeEventListener("mousedown", this.togglePassword.bind(this));
+    }
+
+}
 
 export class ErrMsg {
     elem: HTMLElement | null;

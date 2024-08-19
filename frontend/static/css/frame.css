@@ -338,7 +338,7 @@
         background-color: var(--success);
     }
 }
-#password-field ~ .eye { 
+.text-input ~ .eye { 
     display: none;
     align-items: center;
     position: absolute;
@@ -348,8 +348,24 @@
         fill: grey;
     }
 }
-#password-field:focus ~ .eye {
+.text-input:focus ~ .eye {
     display: flex;
+    &.open {
+        #closed-eye {
+            display: none;
+        }
+        #open-eye {
+            display: inline;
+        }
+    }
+    &.closed {
+        #closed-eye {
+            display: inline;
+        }
+        #open-eye {
+            display: none;
+        }
+    }
 }
 @media screen and (min-width: 1100px) {
     .lg-mt-5 {
