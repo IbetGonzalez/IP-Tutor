@@ -52,12 +52,17 @@ public class AccountService{
     private Account getAccount() {
         return (Account) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
+
+    private void logInfo(String info) {
+        log.info("\n----------------- " + info + " -----------------" );
+    }
     public SessionResponseDTO createAccount(AccountRequestDTO accountRequestDTO) {
 
         if(accountRepository.findByEmail(accountRequestDTO.email()).isPresent()
                 || checkEmailPattern(accountRequestDTO.email())
                 || checkPasswordPattern(accountRequestDTO.password())
                 || checkUsernamePattern(accountRequestDTO.username())){
+            logInfo("Account creation failed");
             return null;
         }
 
@@ -74,7 +79,7 @@ public class AccountService{
         String jwtToken = jwtService.generateToken(account);
         Cookie cookie = cookieService.setUpTokenCookie(jwtToken, jwtService.getExpirationTime());
 
-        log.info("Account successfully created");
+        logInfo("Account successfully created");
         return new SessionResponseDTO(cookie);
     }
 
@@ -90,24 +95,28 @@ public class AccountService{
         Account account = accountRepository.findByEmail(loginRequestDTO.email()).orElse(null);
 
         if(account == null || !passwordEncoder.matches(loginRequestDTO.password(), account.getPassword())) {
+            logInfo("Login failed");
             return null;
         }
 
         String jwtToken = jwtService.generateToken(account);
         Cookie cookie = cookieService.setUpTokenCookie(jwtToken, jwtService.getExpirationTime());
 
-        log.info("Successfully logged in");
+        logInfo("Successfully logged in");
         return new SessionResponseDTO(cookie);
     }
 
     public int checkEmail(AccountRequestDTO accountRequestDTO) {
         if(accountRepository.findByEmail(accountRequestDTO.email()).isPresent()) {
+            logInfo("Email already exists");
             return -1;
         }
         if(checkEmailPattern(accountRequestDTO.email())) {
+            logInfo("Email format is invalid");
             return -2;
         }
 
+        logInfo("Email is valid and unused");
         return 0;
     }
 
@@ -115,15 +124,19 @@ public class AccountService{
         Account account = getAccount();
 
         if(account == null) {
+            logInfo("Account not found. Cannot update email");
             return -1;
         } else if(!passwordEncoder.matches(updateEmailDTO.password(), account.getPassword())) {
+            logInfo("Incorrect password. Cannot update email");
             return -2;
         } else if(checkEmailPattern(updateEmailDTO.newEmail())) {
+            logInfo("Email format is invalid. Cannot update email");
             return -3;
         }
 
         account.setEmail(updateEmailDTO.newEmail());
         accountRepository.save(account);
+        logInfo("Email successfully updated");
         return 0;
     }
 
@@ -131,15 +144,19 @@ public class AccountService{
         Account account = getAccount();
 
         if(account == null) {
+            logInfo("Account not found. Cannot update password.");
             return -1;
         } else if(!passwordEncoder.matches(updatePasswordDTO.password(), account.getPassword())) {
+            logInfo("Account not found. Cannot update password.");
             return -2;
         } else if(checkPasswordPattern(updatePasswordDTO.newPassword())) {
+            logInfo("Password format is invalid. Cannot update password.");
             return -3;
         }
 
         account.setPassword(passwordEncoder.encode(updatePasswordDTO.newPassword()));
         accountRepository.save(account);
+        logInfo("Password successfully updated");
         return 0;
     }
 
@@ -147,13 +164,16 @@ public class AccountService{
         Account account = getAccount();
 
         if (account == null) {
+            logInfo("Account not found. Cannot update username.");
             return -1;
         } else if(checkUsernamePattern(updateUsernameDTO.username())) {
+            logInfo("Username format is invalid. Cannot update username.");
             return -2;
         }
 
         account.setUsername(updateUsernameDTO.username());
         accountRepository.save(account);
+        logInfo("Username successfully updated");
         return 0;
     }
 
@@ -161,9 +181,11 @@ public class AccountService{
         Account account = getAccount();
 
         if(account == null) {
+            logInfo("Account not found. Cannot get account data.");
             return null;
         }
 
+        logInfo("Account data found");
         return new AccountResponseDTO(account.getAccountUsername(),account.getEmail(),account.getAccountCreation());
     }
 
@@ -171,14 +193,15 @@ public class AccountService{
         Account toDelete = getAccount();
 
         if(toDelete == null) {
+            logInfo("Account not found. Cannot delete the Account.");
             return -1;
-        }
-        if(!passwordEncoder.matches(deleteRequestDTO.password(), toDelete.getPassword()))
-        {
+        } else if(!passwordEncoder.matches(deleteRequestDTO.password(), toDelete.getPassword())) {
+            logInfo("Password is incorrect. Cannot delete the Account.");
             return -2;
         }
 
         accountRepository.delete(toDelete);
+        logInfo("Account successfully deleted");
         return 0;
     }
 
