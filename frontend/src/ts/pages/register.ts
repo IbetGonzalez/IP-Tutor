@@ -116,7 +116,7 @@ const template = `
             </div>
             <br />
             <br />
-            <button id="submit-button" type="button" class="button">Submit</button>
+            <button id="submit-button" type="button" class="button bg-primary">Submit</button>
             <br />
         </form>
 `;

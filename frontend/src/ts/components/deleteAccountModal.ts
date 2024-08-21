@@ -8,7 +8,7 @@ export const deleteAccountModal = (callback = () => {}) => {
     modal.classList.add("modal");
     modal.innerHTML= `
         <form class="card" id="delete-account-form">
-            <div id="password-wrapper" class="form-input" style="place-self: center;grid-column: 1 / -1;">
+            <div id="delete-password-wrapper" class="form-input" style="place-self: center;grid-column: 1 / -1;">
                 <input class="text-input" id="password-field" name="password" type="password" placeholder="Password" />
                 <label class="text-input-label" for="#password-field">Password</label>
                 <div class="indicator">
@@ -52,7 +52,7 @@ export const deleteAccountModal = (callback = () => {}) => {
         
         document.addEventListener("keydown", escape);
         modal.querySelector("#cancel-button")?.addEventListener("click", cleanup);
-        const password = new FormInput("#password-wrapper");
+        const password = new FormInput("#delete-password-wrapper");
         const deleteForm = new Form("#delete-account-form", [password]);
 
         const managePasswordInput = createEffect(() => {
@@ -92,6 +92,7 @@ export const deleteAccountModal = (callback = () => {}) => {
             const request = new Request("accounts/deleteAccount", {
                 method: "DELETE",
                 headers: headers,
+                //@ts-ignore
                 body: JSON.stringify(Object.fromEntries(data.entries())),
             });
 

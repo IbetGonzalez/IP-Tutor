@@ -35,7 +35,6 @@ class ChangeSettings extends HTMLElement {
     private manageUsernameInput: Effect | null;
     private manageUsernameState: Effect | null;
 
-
     constructor() {
         super();
         this.accountInfo = new Signal<accountData>({
@@ -242,12 +241,19 @@ class ChangeSettings extends HTMLElement {
         this.manageStrength = null;
         this.managePasswordStates = null;
         this.passwordStrength = null;
+        this.password.cleanup();
 
         this.manageOldPasswordInput = null;
         this.manageOldPasswordState = null;
+        this.oldPassword.cleanup();
 
         this.manageUsernameInput = null;
         this.manageUsernameState = null;
+        this.username.cleanup();
+
+        this.manageEmailInput = null;
+        this.manageEmailState = null;
+        this.email.cleanup();
 
         this.settingsButtons.forEach(
             elem => elem.removeEventListener("click", this.handlerBtnClick.bind(this))
@@ -310,18 +316,18 @@ class ChangeSettings extends HTMLElement {
                 return;
         }
     }
-    saveSettings() {
+    async saveSettings() {
         const updated: string[] = [];
         // Check Username and Update if necessary
         if (this.username.value.length > 0 && this.username.value !== this.accountInfo.value.username) {
 
-            const fieldUpdated = updateField("username", this.username.value);
-            fieldUpdated.then((res) => {
+            await updateField("username", this.username.value).then((res) => {
                 if (!res) {
                     createAlert("Could not update username. Format may be invalid", 2500, AlertColors.DANGER);
                     return;
+                } else {
+                    updated.push("username");
                 }
-                updated.push("username");
             })
         }
 
@@ -334,13 +340,13 @@ class ChangeSettings extends HTMLElement {
             }
             if (!passwordValid) return;
 
-            const fieldUpdated = updateField("email", (<HTMLInputElement>queryElement("#email-field")).value);
-            fieldUpdated.then((res) => {
+            await updateField("email", (<HTMLInputElement>queryElement("#email-field")).value).then((res) => {
                 if (!res) {
                     createAlert("Could not update email. Format may be invalid.", 2500, AlertColors.DANGER);
                     return;
+                } else {
+                    updated.push("email");
                 }
-                updated.push("email");
             })
         }
 
@@ -358,18 +364,16 @@ class ChangeSettings extends HTMLElement {
             }
             if (!fieldsValid) return;
 
-            const fieldUpdated = updateField("password", this.password.value, this.oldPassword.value);
-            fieldUpdated.then((res) => {
-                if (!res) {
-                    createAlert("Could not update password. Old password may be invalid", 2500, AlertColors.DANGER);
-                    return;
+            await updateField("password", this.password.value, this.oldPassword.value).then((res) => {
+                if (!res) { createAlert("Could not update password. Old password may be invalid", 2500, AlertColors.DANGER); return;
+                } else {
+                    updated.push("password");
                 }
-                updated.push("password");
             })
         }
         if (updated.length > 0) {
-            createAlert(`Updated ${updated.join(",")}`, 2500, AlertColors.DANGER);
-
+            createAlert(`Updated ${updated.join(",")}`, 2500, AlertColors.SUCCESS);
+            this.fetchAccountInfo();
         }
     }
 

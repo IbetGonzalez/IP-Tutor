@@ -37,7 +37,6 @@ export async function checkEmail(email: string): Promise<emailStatus> {
     }
 }
 export async function updateField(field: string, newValue: string, password="") {
-    console.log("updating", field);
     const jwt = getCookie("jwt_token");
     const fields = ["username", "email", "password"];  
 
@@ -68,13 +67,12 @@ export async function updateField(field: string, newValue: string, password="") 
     );
     changeRequest.headers.set("Content-Type", "application/json");
 
-    fetch(changeRequest).then((res) => {
+    await fetch(changeRequest).then((res) => {
         if (res.status !== 200) {
             return false;
-        } else {
-            return false
         }
     })
+    return true;
 }
 export async function postRequest(url: string, headers: Header[], formData: FormData) {
     if (!headers) {
