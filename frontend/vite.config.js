@@ -16,7 +16,8 @@ export default {
             input: {
                 'scripts': './src/ts/scripts.ts',
                 'login/scripts': './src/ts/pages/login.ts',
-                'register/scripts': './src/ts/pages/register.ts'
+                'register/scripts': './src/ts/pages/register.ts',
+                'settings/scripts': './src/ts/pages/settings.ts'
             },
             output: {
                 dir: "static",

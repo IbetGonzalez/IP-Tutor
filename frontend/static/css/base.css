@@ -5,6 +5,7 @@
 body {
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
     position: relative;
     min-height: 100svh;
     font-family: "roboto", Arial;
@@ -14,15 +15,17 @@ body {
 
 header {
     padding: 0;
-    padding-inline: 20rem;
+    padding-inline: max(5rem, 10%);
     position: relative;
     display: flex;
+    background: var(--background-lite);
+    z-index: 15;
 }
 
-.logo{
-    height: 32px;
-    padding-top: 0.5rem;
+.logo {
+    height: 64px;
     display: flex;
+    align-items: center;
     margin: auto;
     flex-wrap: wrap;
 }
@@ -33,9 +36,8 @@ header {
 }
 
 .logo img {
-    border-radius: 4px;
-    height: 32px;
-    width: 32px; 
+    height: 64px;
+    width: 64px;
 }
 
 footer {
@@ -46,9 +48,9 @@ footer {
     max-width: 100svw;
     min-height: 5rem;
     margin-top: auto;
-    margin-bottom: 2rem
+    margin-bottom: 2rem;
 }
-footer .heading{ 
+footer .heading {
     font-size: 1.5rem;
     font-weight: 500;
 }
@@ -59,10 +61,9 @@ footer .link {
     text-decoration: none;
     color: var(--text);
 }
-footer .link svg{
+footer .link svg {
     height: 1rem;
     width: 1rem;
-
 }
 footer .link svg path {
     fill: var(--text);
@@ -75,10 +76,10 @@ footer .link svg path {
     z-index: 1000;
     display: flex;
     text-align: center;
-    box-shadow: 0 0 8px rgba(0,0,0,0.9);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
     box-sizing: border-box;
     border-radius: 20px;
-    background-color: var(--primary);
+    background-color: var(--secondary);
     color: var(--text);
     width: 100%;
     padding-inline: 1rem;
@@ -108,7 +109,7 @@ footer .link svg path {
 }
 
 .nav-buttons button .icon > :is(path, polygon) {
-    fill: var(--secondary);
+    fill: var(--primary);
 }
 
 .nav-buttons #hide-button {
@@ -117,28 +118,27 @@ footer .link svg path {
     transform: rotateY(180deg);
     transition: transform 200ms ease;
 }
-.nav-buttons #hide-button svg{
+.nav-buttons #hide-button svg {
     height: 1rem;
-
 }
 .nav-buttons .nav-selected {
     transform-style: preserve-3d;
-    background-color: var(--secondary) !important;
-    box-shadow: 0 0 4px rgba(0,0,0,0.9);
-    animation: bounce 0.4s cubic-bezier(.47,1.64,.41,.8) forwards;;
+    background-color: var(--primary) !important;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.9);
+    animation: bounce 0.4s cubic-bezier(0.47, 1.64, 0.41, 0.8) forwards;
 }
 .nav-buttons .nav-selected::before {
     content: "";
     position: absolute;
     top: -10%;
     background: transparent;
-    box-shadow: 0 -4px 8px rgba(0,0,0,0.8);
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.8);
     border-radius: 100%;
     z-index: -1;
     height: 100%;
     width: 100%;
     border: 5px solid var(--background) !important;
-    transform: translateZ(-5px)
+    transform: translateZ(-5px);
 }
 .nav-selected .icon path {
     fill: url("#sel-grad") !important;
@@ -161,14 +161,13 @@ footer .link svg path {
 .minimized #hide-button {
     transform: rotateY(0deg);
 }
-.minimized button:not(#hide-button){
+.minimized button:not(#hide-button) {
     display: none;
 }
 
 .hero {
     position: relative;
     width: 100svw;
-    overflow: hidden;
     z-index: 10;
 }
 .hero .heading {
@@ -185,7 +184,7 @@ footer .link svg path {
     padding-left: 2rem;
     font-size: 24px;
 }
-.hero img { 
+.hero img {
     z-index: -2;
     position: absolute;
     width: 100%;
@@ -209,13 +208,13 @@ footer .link svg path {
     background: linear-gradient(black 50%, transparent 100%);
     opacity: 0.5;
 }
-.hero #top-gradient{
+.hero #top-gradient {
     z-index: -6;
     display: block;
     position: absolute;
     top: 0;
     left: 0;
-    box-shadow: 0 0 10px rgba(0,0,0, 0.8);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
     width: 100%;
     height: 35svh;
     background: linear-gradient(to top right, #5a22c290 30%, #a40e4c80);
@@ -223,14 +222,14 @@ footer .link svg path {
     padding: 1rem;
 }
 
-.hero #bottom-gradient{
+.hero #bottom-gradient {
     position: relative;
     z-index: -5;
-    margin-left:-5%;
+    margin-left: -5%;
     width: 120%;
     height: 25svh;
     transform: rotateZ(6deg);
-    background-color: var(--accent);
+    background-color: var(--secondary);
     mask-image: linear-gradient(transparent 10%, black 100%);
     border-bottom-right-radius: 70%;
     border-bottom-left-radius: 30%;
@@ -245,19 +244,21 @@ footer .link svg path {
     overflow-x: scroll;
     scrollbar-width: none;
 }
-.games .card:first-child{
+.games .card:first-child {
     margin-left: auto;
 }
-.games .card:last-child{
+.games .card:last-child {
     margin-right: auto;
 }
 .card {
+    box-sizing: border-box;
     position: relative;
+    color: var(--background);
     border-radius: 10px;
     min-width: 272px;
     width: 272px;
-    background-color: #FAF9F6;
-    box-shadow: 5px 5px 10px rgba(0,0,0,0.8);
+    background-color: #faf9f6;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.8);
     overflow: hidden;
 }
 .card .card-content {
@@ -273,12 +274,12 @@ footer .link svg path {
     transform: translateX(-50%);
     height: 80px;
     width: 80px;
-    border-radius: 50%;;
-    box-shadow: 0 5px 10px rgba(0,0,0,0.8);
+    border-radius: 50%;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
     background-color: white;
     z-index: 5;
 }
-.card .icon #icon-svg{
+.card .icon #icon-svg {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -290,12 +291,11 @@ footer .link svg path {
 .card .top-gradient {
     position: absolute;
     left: -10%;
-    top: -7%;
+    top: -5%;
     width: 150%;
-    height: 128px;
-    transform: rotateZ(-5deg);
-    box-shadow: -4px -4px 20px inset rgba(0,0,0,0.4);
-    background: linear-gradient(to right, var(--gradient1), var(--gradient2));
+    height: 112px;
+    box-shadow: -4px -4px 20px inset rgba(0, 0, 0, 0.4);
+    background: linear-gradient(to right, var(--primary), var(--accent));
 }
 .card .header {
     color: var(--background);
@@ -307,16 +307,23 @@ footer .link svg path {
 .card .desc {
     height: 5rem;
 }
-.card .button{
+.card .buttons {
+    display: flex;
+    gap: 1rem;
+}
+.card .button {
+    display: flex;
     border: none;
     background-color: var(--background);
-    color: white;
+    color: var(--text);
     position: relative;
     margin: auto;
-    text-align: center;
+    justify-content: center;
+    align-items: center;
     width: 8rem;
+    height: 3.5rem;
     font-family: inherit;
-    font-size: 28px;
+    font-size: 1.125rem;
     font-weight: 600;
     &:hover {
         cursor: pointer;
@@ -324,6 +331,33 @@ footer .link svg path {
     &:disabled {
         cursor: not-allowed;
         background-color: #515151 !important;
+    }
+}
+.modal {
+    position: absolute;
+    display: grid;
+    width: 100svw;
+    height: 100svh;
+    top: 0;
+    left: 0;
+
+    background-color: rgba(0, 0, 0, 0.7);
+    .card {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 2rem 2rem;
+        align-items: center;
+        min-width: 35rem;
+        gap: 2rem;
+        padding: 4rem;
+        place-self: center;
+
+        .wrapper {
+            margin-top: 1rem;
+            grid-column: span 2;
+            position: relative;
+        }
     }
 }
 
@@ -337,7 +371,7 @@ footer .link svg path {
     right: 0;
     height: 100%;
 
-    .nav-items{
+    .nav-items {
         height: 100%;
         display: flex;
         gap: 8rem;
@@ -345,7 +379,10 @@ footer .link svg path {
         list-style-type: none;
     }
 }
+
 .nav-items li {
+    display: flex;
+    align-items: center;
     position: relative;
     user-select: none;
     box-sizing: border-box;
@@ -355,7 +392,7 @@ footer .link svg path {
     padding-inline: 1rem;
     cursor: pointer;
 
-    &.nav-selected::after{
+    &.nav-selected::after {
         content: "";
         position: absolute;
         margin: auto;
@@ -363,7 +400,45 @@ footer .link svg path {
         bottom: 0;
         height: 1px;
         background-color: var(--text);
-        animation: underline 0.2s ease-out forwards;;
+        animation: underline 0.2s ease-out forwards;
+    }
+}
+
+.account-info {
+    display: flex;
+    padding: 2rem;
+    padding-inline: max(3rem, 5%);
+
+    flex-direction: column;
+    .buttons {
+        justify-self: end;
+    }
+    .button {
+        justify-self: center;
+        margin-top: 5%;
+    }
+    .items {
+        margin-top: max(7rem, 15%);
+        display: grid;
+        gap: 1rem;
+        justify-content: center;
+        text-align: start;
+        grid-template-columns: 1fr 4fr;
+        align-items: center;
+        padding-top: 4px;
+        padding-bottom: 4px;
+        .row-name::after {
+            content: ":";
+        }
+        .value {
+            font-size: 1.125rem;
+        }
+
+        .button {
+            min-height: 3rem;
+            margin: 0;
+            font-size: 1rem;
+        }
     }
 }
 @keyframes underline {
@@ -380,21 +455,25 @@ footer .link svg path {
         width: 100%;
         max-width: none;
         top: 50%;
-        transform: translate(-50% ,-55%);
+        transform: translate(-50%, -55%);
+    }
+    .hero .heading {
+        margin-left: 28%;
     }
 }
-/* Small screen */
+/* Large screen */
 @media screen and (min-width: 1200px) {
     header .logo {
         margin: unset;
     }
-    #desktop-nav  {
+    #desktop-nav {
         display: inline !important;
     }
     #mobile-nav {
         display: none !important;
     }
     .card .top-gradient {
-        top: -15%;
+        height: max(128px, 15%);
+        top: -5%;
     }
 }

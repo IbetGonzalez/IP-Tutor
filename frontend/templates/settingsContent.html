@@ -1,8 +1,154 @@
-<button id="logout">logout</button>
+<div class="w-lg lg-w-med card center mt-5 account-info" style="--gradient1: var(--secondary); --gradient2: #0b6e4f">
+    <div class="top-gradient"></div>
+    <settings-display>
+        <div class="items mt-10">
+            <h3 class="row-name">Username</h3>
+            <div id="username-wrapper" class="form-input">
+                <input id="username-field" class="text-input" value="" />
+                <div class="indicator">
+                    <svg
+                        id="check"
+                        style="width: 30px; height: 30px"
+                        class="hidden"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 100 100"
+                        xml:space="preserve"
+                    >
+                        <circle id="circle" cx="50" cy="50" r="46" fill="transparent" />
+                        <polyline id="tick" points="25,55 45,70 75,33" fill="transparent" />
+                        <g id="cross" stroke="black" stroke-width="5" fill="none">
+                            <polyline class="cross" id="line-one" points="30,30 70,70" />
+                            <polyline class="cross" id="line-two" points="30,70 70,30" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="err-message"></div>
+            </div>
 
-<script>
-    document.getElementById("logout").addEventListener("click",() => {
-        document.cookie = "jwt_token=; Max-Age=-9999999;";
-        window.location.reload();
-    });
-</script>
+            <h3 class="row-name">Email</h3>
+            <div id="email-wrapper" class="form-input">
+                <input id="email-field" class="text-input value" value="" />
+                <div class="indicator">
+                    <svg
+                        id="check"
+                        style="width: 30px; height: 30px"
+                        class="hidden"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 100 100"
+                        xml:space="preserve"
+                    >
+                        <circle id="circle" cx="50" cy="50" r="46" fill="transparent" />
+                        <polyline id="tick" points="25,55 45,70 75,33" fill="transparent" />
+                        <g id="cross" stroke="black" stroke-width="5" fill="none">
+                            <polyline class="cross" id="line-one" points="30,30 70,70" />
+                            <polyline class="cross" id="line-two" points="30,70 70,30" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="err-message"></div>
+            </div>
+            <h3 class="row-name">New Password</h3>
+            <div id="password-wrapper" class="form-input">
+                <input
+                    id="password-field"
+                    name="password"
+                    type="password"
+                    class="text-input"
+                    placeholder="New password"
+                />
+                <div class="err-message"></div>
+                <div class="eye closed">
+                    <svg id="closed-eye" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                        <path
+                            d="M19.604 2.562l-3.346 3.137c-1.27-.428-2.686-.699-4.243-.699-7.569 0-12.015 6.551-12.015 6.551s1.928 2.951 5.146 5.138l-2.911 2.909 1.414 1.414 17.37-17.035-1.415-1.415zm-6.016 5.779c-3.288-1.453-6.681 1.908-5.265 5.206l-1.726 1.707c-1.814-1.16-3.225-2.65-4.06-3.66 1.493-1.648 4.817-4.594 9.478-4.594.927 0 1.796.119 2.61.315l-1.037 1.026zm-2.883 7.431l5.09-4.993c1.017 3.111-2.003 6.067-5.09 4.993zm13.295-4.221s-4.252 7.449-11.985 7.449c-1.379 0-2.662-.291-3.851-.737l1.614-1.583c.715.193 1.458.32 2.237.32 4.791 0 8.104-3.527 9.504-5.364-.729-.822-1.956-1.99-3.587-2.952l1.489-1.46c2.982 1.9 4.579 4.327 4.579 4.327z"
+                        />
+                    </svg>
+                    <svg id="open-eye" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24">
+                        <path
+                            d="M12.015 7c4.751 0 8.063 3.012 9.504 4.636-1.401 1.837-4.713 5.364-9.504 5.364-4.42 0-7.93-3.536-9.478-5.407 1.493-1.647 4.817-4.593 9.478-4.593zm0-2c-7.569 0-12.015 6.551-12.015 6.551s4.835 7.449 12.015 7.449c7.733 0 11.985-7.449 11.985-7.449s-4.291-6.551-11.985-6.551zm-.015 3c-2.209 0-4 1.792-4 4 0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.208-1.791-4-4-4z"
+                        />
+                    </svg>
+                </div>
+                <div class="indicator">
+                    <svg
+                        id="check"
+                        style="width: 30px; height: 30px"
+                        class="hidden"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 100 100"
+                        xml:space="preserve"
+                    >
+                        <circle id="circle" cx="50" cy="50" r="46" fill="transparent" />
+                        <polyline id="tick" points="25,55 45,70 75,33" fill="transparent" />
+                        <g id="cross" stroke="black" stroke-width="5" fill="none">
+                            <polyline class="cross" id="line-one" points="30,30 70,70" />
+                            <polyline class="cross" id="line-two" points="30,70 70,30" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="strength">
+                    <span class="bar" id="bar-1"></span>
+                    <span class="bar" id="bar-2"></span>
+                    <span class="bar" id="bar-3"></span>
+                    <span class="bar" id="bar-4"></span>
+                </div>
+                <ul class="checklist">
+                    <li>Must be at least 8 characters</li>
+                    <li>Must contain a capital letter</li>
+                    <li>Must contain a number</li>
+                    <li>Must contain a special character (!@#$%^&*;,.)</li>
+                </ul>
+            </div>
+            <h3 id="old-password-name" class="hidden row-name">Current Password</h3>
+            <div id="old-password-wrapper" class="hidden form-input" >
+                <input
+                    id="password-field"
+                    name="password"
+                    type="password"
+                    class="text-input"
+                    placeholder="New password"
+                />
+                <div class="err-message"></div>
+                <div class="indicator">
+                    <svg
+                        id="check"
+                        style="width: 30px; height: 30px"
+                        class="hidden"
+                        version="1.1"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                        viewBox="0 0 100 100"
+                        xml:space="preserve"
+                    >
+                        <circle id="circle" cx="50" cy="50" r="46" fill="transparent" />
+                        <polyline id="tick" points="25,55 45,70 75,33" fill="transparent" />
+                        <g id="cross" stroke="black" stroke-width="5" fill="none">
+                            <polyline class="cross" id="line-one" points="30,30 70,70" />
+                            <polyline class="cross" id="line-two" points="30,70 70,30" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="eye closed">
+                    <svg id="closed-eye" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"> <path d="M19.604 2.562l-3.346 3.137c-1.27-.428-2.686-.699-4.243-.699-7.569 0-12.015 6.551-12.015 6.551s1.928 2.951 5.146 5.138l-2.911 2.909 1.414 1.414 17.37-17.035-1.415-1.415zm-6.016 5.779c-3.288-1.453-6.681 1.908-5.265 5.206l-1.726 1.707c-1.814-1.16-3.225-2.65-4.06-3.66 1.493-1.648 4.817-4.594 9.478-4.594.927 0 1.796.119 2.61.315l-1.037 1.026zm-2.883 7.431l5.09-4.993c1.017 3.111-2.003 6.067-5.09 4.993zm13.295-4.221s-4.252 7.449-11.985 7.449c-1.379 0-2.662-.291-3.851-.737l1.614-1.583c.715.193 1.458.32 2.237.32 4.791 0 8.104-3.527 9.504-5.364-.729-.822-1.956-1.99-3.587-2.952l1.489-1.46c2.982 1.9 4.579 4.327 4.579 4.327z" /> </svg>
+                    <svg id="open-eye" xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"> <path d="M12.015 7c4.751 0 8.063 3.012 9.504 4.636-1.401 1.837-4.713 5.364-9.504 5.364-4.42 0-7.93-3.536-9.478-5.407 1.493-1.647 4.817-4.593 9.478-4.593zm0-2c-7.569 0-12.015 6.551-12.015 6.551s4.835 7.449 12.015 7.449c7.733 0 11.985-7.449 11.985-7.449s-4.291-6.551-11.985-6.551zm-.015 3c-2.209 0-4 1.792-4 4 0 2.209 1.791 4 4 4s4-1.791 4-4c0-2.208-1.791-4-4-4z" /> </svg>
+                </div>
+            </div>
+            <br />
+            <div class="buttons">
+                <button id="save-changes" action="save" class="button bg-info">Save</button>
+                <button id="cancel-changes" action="cancel" class="button bg-text">Cancel</button>
+            </div>
+        </div>
+        <div class="buttons w-sm center">
+            <button id="deleteAccount" action="delete-account" class="button bg-danger">Delete Account</button>
+            <button id="logout" action="logout" class="center button bg-info">Logout</button>
+        </div>
+    </settings-display>
+</div>
+<script defer type="module" src="/js/settings/scripts.bundle.js"></script>

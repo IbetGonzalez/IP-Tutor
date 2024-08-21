@@ -19,7 +19,7 @@ export const EmailStatus = {
 type emailStatus = (typeof EmailStatus)[keyof typeof EmailStatus]
 
 export async function checkEmail(email: string): Promise<emailStatus> {
-    const headers = [ { "Content-Type": "application/json" } ]
+    const headers = [{ "Content-Type": "application/json" }]
     const data = new FormData();
     data.append("email", email);
 
@@ -36,23 +36,61 @@ export async function checkEmail(email: string): Promise<emailStatus> {
             return EmailStatus.ERR;
     }
 }
+export async function updateField(field: string, newValue: string, password="") {
+    const jwt = getCookie("jwt_token");
+    const fields = ["username", "email", "password"];  
 
-export async function postRequest(url: string, headers: Header[],formData: FormData) {
+    const fieldIndex = fields.indexOf(field);
+    if (fieldIndex === -1 ) {
+        return false;
+    }
+    const fieldToChange = fields[fieldIndex];
+    const bodyData = new FormData();
+
+    if (password.length > 0) {
+        bodyData.append("newPassword", newValue);
+        bodyData.append("password", password);
+    } else {
+        bodyData.append(fieldToChange, newValue);
+    }
+
+    const changeRequest = new Request(
+        `/accounts/update/${fieldToChange}`,
+        {
+            method: "put",
+            headers: { 
+                Authorization: `Bearer ${jwt}` ,
+            },
+            //@ts-ignore
+            body: JSON.stringify(Object.fromEntries(bodyData))
+        }
+    );
+    changeRequest.headers.set("Content-Type", "application/json");
+
+    await fetch(changeRequest).then((res) => {
+        if (res.status !== 200) {
+            return false;
+        }
+    })
+    return true;
+}
+export async function postRequest(url: string, headers: Header[], formData: FormData) {
     if (!headers) {
         console.error("No headers provided");
     }
-    const requestHeaders = headers.reduce( (obj, item) => Object.assign(obj, { [item.name]: item.val }) );
+    const requestHeaders = headers.reduce((obj, item) => Object.assign(obj, { [item.name]: item.val }));
 
     const request = new Request(url, {
         method: "POST",
         headers: requestHeaders,
+        //@ts-ignore
         body: JSON.stringify(Object.fromEntries(formData.entries())),
     });
     const response = await fetch(request);
     const responseJson = response.json();
 
     return {
-        status: response.status, 
+        status: response.status,
         body: responseJson
     };
 }

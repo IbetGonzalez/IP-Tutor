@@ -1,5 +1,6 @@
 
 export enum AlertColors {
+    DANGER = "bg-danger",
     WARNING = "bg-warning",
     SUCCESS = "bg-success",
     INFO = "bg-info",
@@ -11,11 +12,11 @@ export function createAlert(msg: string, timeMs: number, color: AlertColors) {
     alertNode.classList.add(color);
     alertNode.innerText = msg;
     document.body.appendChild(alertNode);
-
     setTimeout(function () {
         alertNode.remove()
     }, timeMs);
 }
+
 
 export function queryElement<T extends HTMLElement>(selector: string): T {
     const element = document.querySelector<T>(selector);

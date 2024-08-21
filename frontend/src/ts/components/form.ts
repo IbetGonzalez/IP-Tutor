@@ -14,7 +14,7 @@ type State = {
     msg: string;
 };
 
-export function createState(state: (typeof InputStates)[keyof typeof InputStates], msg=""): State {
+export function createState(state: (typeof InputStates)[keyof typeof InputStates], msg = ""): State {
     return {
         value: state,
         msg: msg,
@@ -26,7 +26,7 @@ export class Form {
     private m_fields: FormInput[];
     private m_submitElem: HTMLButtonElement;
 
-    constructor(formQuery: string,fields: FormInput[]) {
+    constructor(formQuery: string, fields: FormInput[]) {
         this.m_elem = queryElement(formQuery);
         this.m_fields = fields;
         this.m_submitElem = queryElement(`${formQuery} #submit-button`);
@@ -40,13 +40,13 @@ export class Form {
             const currField = this.m_fields[i];
             if (currField.state.value !== InputStates.VALID) {
                 ready = false;
-                switch(currField.state.value) {
+                switch (currField.state.value) {
                     case InputStates.EMPTY:
                         currField.state = createState(InputStates.INVALID, "Field required");
-                    break;
+                        break;
                     default:
                         currField.state = createState(InputStates.INVALID, "Invalid field");
-                    break;
+                        break;
                 }
             }
         }
@@ -54,6 +54,9 @@ export class Form {
     }
     get elem() {
         return this.m_elem;
+    }
+    cleanup() {
+        this.m_fields.forEach((elem) => elem.cleanup());
     }
 }
 
@@ -64,16 +67,16 @@ export class FormInput {
     private m_inputElem: HTMLInputElement;
 
     constructor(inputWrapper: string) {
-        this.m_wrapperElem= queryElement(inputWrapper);
+        this.m_wrapperElem = queryElement(inputWrapper);
         this.m_inputElem = queryElement(`${inputWrapper} input`);
 
         this.m_input.value = this.m_inputElem.value;
-
-        this.m_inputElem.addEventListener('input', () => {
-            this.m_input.value = this.m_inputElem.value;
-        })
+        this.m_inputElem.addEventListener('input', this.inputHandler.bind(this));
     }
 
+    inputHandler() {
+        this.m_input.value = this.m_inputElem.value;
+    }
     set state(state: State) {
         this.m_state.value = state;
     }
@@ -91,6 +94,9 @@ export class FormInput {
 
     get value() {
         return this.m_input.value;
+    }
+    cleanup() {
+        this.m_inputElem.removeEventListener('input', this.inputHandler);
     }
 }
 
@@ -115,14 +121,45 @@ export class MarkIndicator {
         this.indicator.classList.add(state);
     }
 }
+export class PasswordEye {
+    private m_elem;
+    private m_password_elem;
+
+    constructor(passwordInput: FormInput) {
+        this.m_elem = queryElement(`#${passwordInput.wrapper.id} .eye`);
+        this.m_password_elem = passwordInput.elem;
+        this.m_elem.addEventListener("mousedown", this.togglePassword.bind(this));
+    }
+    togglePassword(e: Event) {
+        e.preventDefault();
+        console.log("clicked");
+
+        const isOpen = this.m_elem.classList.contains("open");
+
+        if (isOpen) {
+            this.m_elem.classList.remove("open");
+            this.m_password_elem.setAttribute("type", "password");
+            this.m_elem.classList.add("closed");
+        } else {
+            this.m_elem.classList.remove("closed");
+            this.m_password_elem.setAttribute("type", "text");
+            this.m_elem.classList.add("open");
+        }
+    }
+    cleanup() {
+        this.m_elem.removeEventListener("mousedown", this.togglePassword.bind(this));
+    }
+
+}
 
 export class ErrMsg {
     elem: HTMLElement | null;
 
-    constructor(elem: HTMLElement) {
-        this.elem = elem.querySelector(".err-message");
+    constructor(parentWrapper: HTMLElement) {
+        this.elem = parentWrapper.querySelector(".err-message");
+
         if (!this.elem) {
-            console.error("No error message indicator in input-field");
+            console.error(`No error message indicator in input-field ${parentWrapper.id}`);
         }
     }
     setMsg(msg: string) {
