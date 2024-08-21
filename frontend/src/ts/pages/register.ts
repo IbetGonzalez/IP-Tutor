@@ -1,5 +1,5 @@
 import { createState, ErrMsg, Form, FormInput, IndicatorStates, InputStates, MarkIndicator, PasswordEye } from "@components/form";
-import { checkEmail, EmailStatus, getCookie, postRequest, validatePassword   } from "@util/client-util";
+import { checkEmail, EmailStatus, getCookie, postRequest, validatePassword } from "@util/client-util";
 import { Effect, Computed, createEffect } from "@util/signal";
 import { AlertColors, createAlert, debounce, removeClasses } from "@util/util";
 import htmx from "htmx.org";
@@ -8,23 +8,7 @@ const template = `
             <div id="email-wrapper" class="form-input">
                 <input class="text-input" id="email-field" name="email" type="text" placeholder="email" />
                 <label class="text-input-label" for="#email-field">Email</label>
-                <div class="indicator">
-                    <svg
-                        id="check"
-                        style="width: 30px; height: 30px"
-                        class="hidden"
-                        version="1.1"
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        viewBox="0 0 100 100"
-                        xml:space="preserve"
-                    >
-                        <circle id="circle" cx="50" cy="50" r="46" fill="transparent" />
-                        <polyline id="tick" points="25,55 45,70 75,33" fill="transparent" />
-                        <g id="cross" stroke="black" stroke-width="5" fill="none">
-                            <polyline class="cross" id="line-one" points="30,30 70,70" />
-                            <polyline class="cross" id="line-two" points="30,70 70,30" />
-                        </g>
+                <div class="indicator"> <svg id="check" style="width: 30px; height: 30px" class="hidden" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" xml:space="preserve" > <circle id="circle" cx="50" cy="50" r="46" fill="transparent" /> <polyline id="tick" points="25,55 45,70 75,33" fill="transparent" /> <g id="cross" stroke="black" stroke-width="5" fill="none"> <polyline class="cross" id="line-one" points="30,30 70,70" /> <polyline class="cross" id="line-two" points="30,70 70,30" /> </g>
                     </svg>
                 </div>
                 <div class="err-message"></div>
@@ -148,7 +132,7 @@ class RegisterForm extends HTMLElement {
     private objForm: Form;
 
     private manageEmailInput: Effect | null;
-    private manageEmailState: Effect | null; 
+    private manageEmailState: Effect | null;
     private manageUsernameInput: Effect | null;
     private manageUsernameState: Effect | null;
     private passwordStrength: Computed | null;
@@ -217,19 +201,19 @@ class RegisterForm extends HTMLElement {
             const msg = new ErrMsg(this.username.wrapper);
 
             msg.setMsg(state.msg);
-            switch(state.value) {
+            switch (state.value) {
                 case InputStates.VALID:
                     indicator.setState(IndicatorStates.ALLOW);
-                break;
+                    break;
                 case InputStates.INVALID:
                     indicator.setState(IndicatorStates.DENY);
-                break;
+                    break;
                 default:
                     indicator.setState(IndicatorStates.HIDDEN);
             }
         })
 
-    
+
         this.password = new FormInput("#password-wrapper");
         this.passwordEye = new PasswordEye(this.password);
         this.passwordStrength = new Computed(() => {
@@ -286,13 +270,13 @@ class RegisterForm extends HTMLElement {
             const msg = new ErrMsg(this.password.wrapper);
 
             msg.setMsg(state.msg);
-            switch(state.value) {
+            switch (state.value) {
                 case InputStates.VALID:
                     indicator.setState(IndicatorStates.ALLOW);
-                break;
+                    break;
                 case InputStates.INVALID:
                     indicator.setState(IndicatorStates.DENY);
-                break;
+                    break;
                 default:
                     indicator.setState(IndicatorStates.HIDDEN);
             }
@@ -314,13 +298,13 @@ class RegisterForm extends HTMLElement {
             const msg = new ErrMsg(this.confirmPassword.wrapper);
 
             msg.setMsg(state.msg);
-            switch(state.value) {
+            switch (state.value) {
                 case InputStates.VALID:
                     indicator.setState(IndicatorStates.ALLOW);
-                break;
+                    break;
                 case InputStates.INVALID:
                     indicator.setState(IndicatorStates.DENY);
-                break;
+                    break;
                 default:
                     indicator.setState(IndicatorStates.HIDDEN);
             }
@@ -364,7 +348,7 @@ class RegisterForm extends HTMLElement {
             this.confirmPassword.state = createState(InputStates.EMPTY);
             return;
         }
-        if (p1.length === 0 || p2.length === 0 ) {
+        if (p1.length === 0 || p2.length === 0) {
             this.confirmPassword.state = createState(InputStates.EMPTY);
             return;
         }
@@ -374,34 +358,36 @@ class RegisterForm extends HTMLElement {
         }
         this.confirmPassword.state = createState(InputStates.VALID);
     }, 500);
-    validateInput = debounce(
-            async (userInput: string) => {
-                const emailStatus = await checkEmail(userInput);
 
-                switch (emailStatus) {
-                    case EmailStatus.EXISTS:
-                        this.email.state = createState(InputStates.INVALID, "Account already associated with that email");
-                    break;
-                    case EmailStatus.AVAILABLE:
-                        this.email.state = createState(InputStates.VALID);
-                    break;
-                    default:
-                        this.email.state = createState(InputStates.INVALID, "Invalid format");
-                }
+    validateInput = debounce(
+        async (userInput: string) => {
+            const emailStatus = await checkEmail(userInput);
+
+            switch (emailStatus) {
+                case EmailStatus.EXISTS:
+                    this.email.state = createState(InputStates.INVALID, "Account already associated with that email");
+                break;
+                case EmailStatus.AVAILABLE:
+                    this.email.state = createState(InputStates.VALID);
+                break;
+                default:
+                    this.email.state = createState(InputStates.INVALID, "Invalid format");
             }
-        , 1000);
+        }
+    , 1000);
+
     connectedCallback() {
         if (getCookie("jwt_token")) {
             htmx.ajax("get", "/settings", {
                 target: ".content",
-                headers: { "Authorization": `Bearer ${getCookie("jwt_token")}`}
+                headers: { "Authorization": `Bearer ${getCookie("jwt_token")}` }
             });
             history.pushState(null, "", "/settings")
         }
     }
     disconnectedCallback() {
         this.manageEmailInput = null;
-        this.manageEmailState = null; 
+        this.manageEmailState = null;
         this.manageUsernameInput = null;
         this.manageUsernameState = null;
         this.passwordStrength = null;

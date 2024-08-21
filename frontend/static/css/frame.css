@@ -142,7 +142,7 @@
     transform-origin: 50px 50px 0;
 }
 
-.indicator .hidden {
+.hidden {
     display: none;
 }
 .indicator .progress #circle {
@@ -342,7 +342,7 @@
     display: none;
     align-items: center;
     position: absolute;
-    right: 3rem;
+    right: 2rem;
 
     svg path {
         fill: grey;

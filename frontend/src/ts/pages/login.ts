@@ -1,9 +1,9 @@
-import { 
-    FormInput, 
+import {
+    FormInput,
     InputStates,
     ErrMsg,
     IndicatorStates,
-    MarkIndicator, 
+    MarkIndicator,
     createState,
     Form,
     PasswordEye
@@ -118,7 +118,7 @@ class LoginForm extends HTMLElement {
             switch (state.value) {
                 case InputStates.INVALID:
                     indicator.setState(IndicatorStates.DENY);
-                break;
+                    break;
                 default:
                     indicator.setState(IndicatorStates.HIDDEN);
             }
@@ -145,10 +145,10 @@ class LoginForm extends HTMLElement {
             const msg = new ErrMsg(this.password.wrapper);
 
             msg.setMsg(state.msg);
-            switch(state.value) {
+            switch (state.value) {
                 case InputStates.INVALID:
                     indicator.setState(IndicatorStates.DENY);
-                break;
+                    break;
                 default:
                     indicator.setState(IndicatorStates.HIDDEN);
             }
@@ -164,7 +164,7 @@ class LoginForm extends HTMLElement {
         }
     }
 
-    async login () {
+    async login() {
         if (!this.objForm.checkReady) {
             return;
         }
@@ -175,9 +175,9 @@ class LoginForm extends HTMLElement {
 
         switch (loginData.status) {
             case 200:
-                htmx.ajax("get","/", ".content");
+                htmx.ajax("get", "/", ".content");
                 history.pushState(null, "", "/")
-            break;
+                break;
             default:
                 createAlert("Email or password is invalid", 5000, AlertColors.DANGER);
         }
@@ -187,7 +187,7 @@ class LoginForm extends HTMLElement {
         if (getCookie("jwt_token")) {
             htmx.ajax("get", "/settings", {
                 target: ".content",
-                headers: { "Authorization": `Bearer ${getCookie("jwt_token")}`}
+                headers: { "Authorization": `Bearer ${getCookie("jwt_token")}` }
             });
             history.pushState(null, "", "/settings")
         }
@@ -195,7 +195,7 @@ class LoginForm extends HTMLElement {
     disconnectedCallback() {
         this.manageEmailInput = null;
         this.manageEmailState = null;
-        this.managePasswordInput= null;
+        this.managePasswordInput = null;
         this.managePasswordState = null;
         this.objForm.submitBtn.removeEventListener('click', this.login.bind(this));
         this.objForm.elem.removeEventListener('keydown', this.handleBtnDown.bind(this));
