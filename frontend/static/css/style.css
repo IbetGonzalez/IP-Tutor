@@ -1,6 +1,5 @@
-@import url("base.css");
-@import url("games.css");
 @import url("frame.css");
+@import url("base.css");
 
 @font-face {
     font-family: "roboto";
