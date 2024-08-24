@@ -220,7 +220,7 @@ footer .link svg path {
     }
 }
 /* Large screen */
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1000px) {
     header .logo {
         margin: unset;
     }
