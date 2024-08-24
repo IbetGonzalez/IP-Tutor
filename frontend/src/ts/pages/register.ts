@@ -114,10 +114,11 @@ const template = `
                 </div>
                 <div class="err-message"></div>
             </div>
-            <br />
-            <br />
-            <button id="submit-button" type="button" class="button bg-primary">Submit</button>
-            <br />
+            <div class="buttons"> 
+                <br>
+                <button id="submit-button" type="button" class="button button-primary">Submit</button>
+            </div>
+            <br>
         </form>
 `;
 
