@@ -132,7 +132,6 @@ export class PasswordEye {
     }
     togglePassword(e: Event) {
         e.preventDefault();
-        console.log("clicked");
 
         const isOpen = this.m_elem.classList.contains("open");
 

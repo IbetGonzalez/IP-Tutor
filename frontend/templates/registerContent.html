@@ -1,8 +1,5 @@
-<div
-    class="lg-mt-5 mt-25 card lg-w-sm w-lg center text-center text-primary"
-    style="--gradient1: var(--secondary); --gradient2: #0b6e4f"
->
-    <div class="top-gradient" style="top: -10%"></div>
+<div class="card" >
+    <div class="top-gradient"></div>
     <div class="header">Create Account</div>
     <div class="card-content">
         <register-form></register-form>
@@ -10,13 +7,13 @@
 </div>
 <div
     id="login-link"
-    class="mt-5 center text-center"
+    class="text-center"
     hx-swap="innerHTML show:window:top"
     hx-push-url="true"
     hx-boost="true"
     hx-target=".content"
     hx-trigger="click"
 >
-    <a class="link-text" href="/login">Sign in</a>
+<a class="link-text" href="/login">Sign in</a>
 </div>
 <script type="module" src="/js/register/scripts.bundle.js"></script>

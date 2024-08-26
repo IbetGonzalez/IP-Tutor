@@ -67,10 +67,10 @@ const template = `
                     </div>
                     <div class="err-message"></div>
                 </div>
-                <br />
-                <br />
-                <button id="submit-button" type="button" class="button bg-primary">Login</button>
-                <br />
+                <div class="buttons"> 
+                    <br>
+                    <button id="submit-button" type="button" class="button button-primary">Login</button>
+                </div>
             </form> `;
 
 class LoginForm extends HTMLElement {
