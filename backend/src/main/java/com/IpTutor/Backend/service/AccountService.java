@@ -67,7 +67,7 @@ public class AccountService{
         }
 
         Account account = Account.builder()
-                .email(accountRequestDTO.email())
+                .email(accountRequestDTO.email().toLowerCase())
                 .username(accountRequestDTO.username())
                 .password(passwordEncoder.encode(accountRequestDTO.password()))
                 .build();
@@ -87,17 +87,12 @@ public class AccountService{
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequestDTO.email(),
+                        loginRequestDTO.email().toLowerCase(),
                         loginRequestDTO.password()
                 )
         );
 
-        Account account = accountRepository.findByEmail(loginRequestDTO.email()).orElse(null);
-
-        if(account == null || !passwordEncoder.matches(loginRequestDTO.password(), account.getPassword())) {
-            logInfo("Login failed");
-            return null;
-        }
+        Account account = accountRepository.findByEmail(loginRequestDTO.email().toLowerCase()).orElse(null);
 
         String jwtToken = jwtService.generateToken(account);
         Cookie cookie = cookieService.setUpTokenCookie(jwtToken, jwtService.getExpirationTime());

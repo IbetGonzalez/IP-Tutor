@@ -211,6 +211,14 @@ class AccountControllerIntegrationTests {
 	}
 
 	@Test
+	public void login_success_email_noCaseSensitivity() throws Exception {
+		setUpAccount();
+		String json = gson.toJson(setUpLogin(accountEmail.toUpperCase(), accountPassword));
+		mockMvc.perform(post("/accounts/login").contentType(MediaType.APPLICATION_JSON).content(json))
+				.andExpect(status().isOk());
+	}
+
+	@Test
 	public void login_fail_email() throws Exception {
         //Makes sure that the account does not exist
         setUpAccount();
