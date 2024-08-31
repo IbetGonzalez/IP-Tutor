@@ -2,8 +2,8 @@ type Header = {
     [key: string]: string,
 }
 
-export function queryElement<T extends HTMLElement>(selector: string): T {
-    const element = document.querySelector<T>(selector);
+export function queryElement<T extends HTMLElement>(selector: string, parent: ParentNode=document): T {
+    const element = parent.querySelector<T>(selector);
     if (!element) {
         throw new Error(`Could not find element: ${selector}`);
     }

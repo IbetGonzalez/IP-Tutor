@@ -40,7 +40,6 @@ export const changeUsernameModal = (callback = () => {}) => {
 
     const showModal= () => {
         if (isOpen) {
-            console.warn("Modal is already open");
             return;
         }
         document.body.appendChild(modal);

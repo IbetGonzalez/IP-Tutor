@@ -1,4 +1,4 @@
-import { deleteAccountModal } from "@components/deleteAccountModal";
+import { deleteAccountModal, modalDeleteAccount } from "@components/deleteAccountModal";
 import { createState, ErrMsg, Form, FormInput, IndicatorStates, InputStates, MarkIndicator, PasswordEye } from "@components/form";
 import { checkEmail, EmailStatus, getCookie, queryElement, updateField, validatePassword } from "@util/client-util";
 import { Signal, Effect, Computed, createEffect } from "@util/signal";
@@ -230,8 +230,6 @@ class ChangeSettings extends HTMLElement {
             (<HTMLInputElement>queryElement("#username-field")).value = data.username;
             (<HTMLInputElement>queryElement("#email-field")).value = data.email;
         });
-
-        this.modal_DeleteAccount = deleteAccountModal(this.sendHome);
     }
     connectedCallback() {
         this.fetchAccountInfo();
@@ -289,7 +287,10 @@ class ChangeSettings extends HTMLElement {
         const action = btnElem.getAttribute("action");
         switch (action) {
             case "delete-account":
-                this.modal_DeleteAccount.showModal();
+                import('@components/deleteAccountModal').then(() => {
+                    const modal = document.createElement("modal-delete-account");
+                    document.body.appendChild(modal);
+                });
                 break;
             case "logout":
                 const jwt = getCookie("jwt_token");
