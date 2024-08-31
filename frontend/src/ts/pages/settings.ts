@@ -313,8 +313,11 @@ class ChangeSettings extends HTMLElement {
                 this.accountInfo.notify();
                 this.email.notify();
                 this.username.notify();
+                this.password.elem.value = "";
                 this.password.notify();
 
+                this.oldPassword.elem.value = "";
+                this.oldPassword.notify();
                 break;
             case "save":
                 this.saveSettings();
