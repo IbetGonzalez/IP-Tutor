@@ -95,6 +95,9 @@ export class FormInput {
     get value() {
         return this.m_input.value;
     }
+    notify() {
+        this.m_input.value = this.m_inputElem.value;
+    }
     cleanup() {
         this.m_inputElem.removeEventListener('input', this.inputHandler);
     }
