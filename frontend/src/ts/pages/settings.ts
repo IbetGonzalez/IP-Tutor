@@ -1,4 +1,4 @@
-import { deleteAccountModal } from "@components/deleteAccountModal";
+import { deleteAccountModal, modalDeleteAccount } from "@components/deleteAccountModal";
 import { createState, ErrMsg, Form, FormInput, IndicatorStates, InputStates, MarkIndicator, PasswordEye } from "@components/form";
 import { checkEmail, EmailStatus, getCookie, queryElement, updateField, validatePassword } from "@util/client-util";
 import { Signal, Effect, Computed, createEffect } from "@util/signal";
@@ -14,7 +14,6 @@ class ChangeSettings extends HTMLElement {
     private accountInfo: Signal<accountData>;
     private updateSettings: Effect;
     private settingsButtons: HTMLButtonElement[];
-    private modal_DeleteAccount;
 
     private password: FormInput;
     private eye: PasswordEye;
@@ -47,7 +46,7 @@ class ChangeSettings extends HTMLElement {
         this.manageUsernameInput = createEffect(() => {
             const input = this.username.value;
 
-            if (input.length < 1) {
+            if (!input || input === this.accountInfo.value.username) {
                 this.username.state = createState(InputStates.EMPTY);
                 return;
             }
@@ -89,6 +88,7 @@ class ChangeSettings extends HTMLElement {
                 this.oldPassword.state = createState(InputStates.EMPTY);
             }
         });
+
         this.manageOldPasswordState = new Effect(() => {
             const state = this.oldPassword.state;
             const indicator = new MarkIndicator(this.oldPassword.wrapper);
@@ -183,15 +183,17 @@ class ChangeSettings extends HTMLElement {
         this.manageEmailInput = createEffect(() => {
             const input = this.email.value;
 
-            this.email.state = createState(InputStates.CHECKING, "");
-            if (input.length < 1) {
+            this.email.state = createState(InputStates.CHECKING);
+            if (!input || input === this.accountInfo.value.email) {
                 this.email.state = createState(InputStates.EMPTY);
+
                 this.oldPassword.wrapper.classList.add("hidden");
                 queryElement("#old-password-name").classList.add("hidden");
                 return;
             } 
             this.oldPassword.wrapper.classList.remove("hidden");
             queryElement("#old-password-name").classList.remove("hidden");
+
             this.validateInput(input);
         });
 
@@ -230,8 +232,6 @@ class ChangeSettings extends HTMLElement {
             (<HTMLInputElement>queryElement("#username-field")).value = data.username;
             (<HTMLInputElement>queryElement("#email-field")).value = data.email;
         });
-
-        this.modal_DeleteAccount = deleteAccountModal(this.sendHome);
     }
     connectedCallback() {
         this.fetchAccountInfo();
@@ -289,7 +289,10 @@ class ChangeSettings extends HTMLElement {
         const action = btnElem.getAttribute("action");
         switch (action) {
             case "delete-account":
-                this.modal_DeleteAccount.showModal();
+                import('@components/deleteAccountModal').then(() => {
+                    const modal = document.createElement("modal-delete-account");
+                    document.body.appendChild(modal);
+                });
                 break;
             case "logout":
                 const jwt = getCookie("jwt_token");
@@ -308,6 +311,13 @@ class ChangeSettings extends HTMLElement {
                 break;
             case "cancel":
                 this.accountInfo.notify();
+                this.email.notify();
+                this.username.notify();
+                this.password.elem.value = "";
+                this.password.notify();
+
+                this.oldPassword.elem.value = "";
+                this.oldPassword.notify();
                 break;
             case "save":
                 this.saveSettings();
@@ -368,6 +378,11 @@ class ChangeSettings extends HTMLElement {
                 if (!res) { createAlert("Could not update password. Old password may be invalid", 2500, AlertColors.DANGER); return;
                 } else {
                     updated.push("password");
+                    this.password.elem.value = "";
+
+                    this.oldPassword.elem.value = "";
+                    this.oldPassword.wrapper.classList.add("hidden");
+                    queryElement("#old-password-name").classList.add("hidden");
                 }
             })
         }

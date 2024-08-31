@@ -26,10 +26,10 @@ export class Form {
     private m_fields: FormInput[];
     private m_submitElem: HTMLButtonElement;
 
-    constructor(formQuery: string, fields: FormInput[]) {
-        this.m_elem = queryElement(formQuery);
+    constructor(formQuery: string, fields: FormInput[], parent: ParentNode=document) {
+        this.m_elem = queryElement(formQuery, parent);
         this.m_fields = fields;
-        this.m_submitElem = queryElement(`${formQuery} #submit-button`);
+        this.m_submitElem = queryElement(`${formQuery} #submit-button`, parent);
     }
     get submitBtn() {
         return this.m_submitElem;
@@ -66,9 +66,9 @@ export class FormInput {
     private m_wrapperElem: HTMLDivElement;
     private m_inputElem: HTMLInputElement;
 
-    constructor(inputWrapper: string) {
-        this.m_wrapperElem = queryElement(inputWrapper);
-        this.m_inputElem = queryElement(`${inputWrapper} input`);
+    constructor(inputWrapper: string, parent: ParentNode=document) {
+        this.m_wrapperElem = queryElement(inputWrapper, parent);
+        this.m_inputElem = queryElement(`${inputWrapper} input`, parent);
 
         this.m_input.value = this.m_inputElem.value;
         this.m_inputElem.addEventListener('input', this.inputHandler.bind(this));
@@ -94,6 +94,9 @@ export class FormInput {
 
     get value() {
         return this.m_input.value;
+    }
+    notify() {
+        this.m_input.value = this.m_inputElem.value;
     }
     cleanup() {
         this.m_inputElem.removeEventListener('input', this.inputHandler);
@@ -125,8 +128,8 @@ export class PasswordEye {
     private m_elem;
     private m_password_elem;
 
-    constructor(passwordInput: FormInput) {
-        this.m_elem = queryElement(`#${passwordInput.wrapper.id} .eye`);
+    constructor(passwordInput: FormInput, parent: ParentNode=document) {
+        this.m_elem = queryElement(`#${passwordInput.wrapper.id} .eye`, parent);
         this.m_password_elem = passwordInput.elem;
         this.m_elem.addEventListener("mousedown", this.togglePassword.bind(this));
     }
