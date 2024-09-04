@@ -184,6 +184,22 @@
     top: 0;
     z-index: 100;
 }
+.bg-danger {
+    background-color: var(--danger);
+}
+.bg-success {
+    background-color: var(--success);
+}
+.bg-info {
+    background-color: var(--info);
+    color: var(--background);
+}
+.bg-warning {
+    background-color: var(--warning);
+}
+.bg-secondary {
+    background-color: var(--secondary);
+}
 .form-input {
     display: flex;
     position: relative;
@@ -467,6 +483,9 @@
             display: none;
         }
     }
+}
+.text-input:autofill ~ .eye svg path{
+    fill: var(--background);
 }
 .list {
     display: grid;

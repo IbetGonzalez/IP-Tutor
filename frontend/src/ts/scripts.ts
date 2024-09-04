@@ -1,4 +1,4 @@
-import { getCookie } from "@util/client-util";
+import { getCookie, queryElement } from "@util/client-util";
 import { debounce } from "@util/util";
 import htmx, { HtmxResponseInfo } from "htmx.org";
 
@@ -8,6 +8,7 @@ type htmxEvent = {
 
 document.addEventListener("DOMContentLoaded", function () {
     updateNav();
+    updateHome();
 });
 
 document.addEventListener("htmx:afterRequest", function (evt) {
@@ -23,6 +24,7 @@ document.addEventListener("htmx:afterRequest", function (evt) {
         }
     }
     updateNav();
+    updateHome();
 });
 
 document.addEventListener("htmx:beforeRequest", function (evt) {
@@ -48,7 +50,21 @@ function MinimizeNav() {
     Toggle();
 }
 
+function updateHome() {
+    if (getCookie("jwt_token")) {
+        const homeLoginBtn: HTMLButtonElement | null = document.querySelector("#login-btn");
+        if (homeLoginBtn) {
+            homeLoginBtn.innerText = "Settings";
+            homeLoginBtn.setAttribute("hx-get", "/settings");
+        }
+    }
+}
 function updateNav() {
+    if (!getCookie("jwt_token")) {
+        queryElement(".settings-nav").innerText = "Login";
+    } else { 
+        queryElement(".settings-nav").innerText = "Settings";
+    }
     const path = document.location.pathname.split("/")[1];
     const elemId = path ? path : "home";
     const selQuery = `.${elemId}-nav`;

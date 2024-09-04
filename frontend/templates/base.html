@@ -9,9 +9,15 @@
     </head>
     <body>
         <header>
-            <div class="logo">
-                <img src="/images/icons/SVG/logo.svg" alt="Converging sound waves" />
-                <h1>IP Tutor</h1>
+            <div class="logo"
+                 hx-get="/"
+                 hx-target=".content"
+                 hx-history="false"
+                 hx-push-url="true"
+                 style="cursor: pointer;"
+                 >
+                    <img src="/images/icons/SVG/logo.svg" alt="Converging sound waves" />
+                    <h1>IP Tutor</h1>
             </div>
             <nav id="desktop-nav">
                 <ul class="nav-items">
