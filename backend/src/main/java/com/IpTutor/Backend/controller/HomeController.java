@@ -5,6 +5,7 @@ import com.IpTutor.Backend.model.Account;
 import com.IpTutor.Backend.service.CookieService;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxRequest;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,6 +28,11 @@ public class HomeController {
         if(!SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
             response.addCookie(cookieService.deleteJwtToken().jwt_token());
         }
+    }
+
+    private boolean checkWebpage(String name) {
+        File file = new File("../frontend/templates/" + name + ".html");
+        return (file.exists() && !file.isDirectory());
     }
 
     @RequestMapping("")
@@ -45,6 +50,10 @@ public class HomeController {
 
     @RequestMapping("/{name}")
     public String slug(@PathVariable String name, Model model, HtmxRequest hxRequest, HttpServletResponse response) {
+
+        if(!SecurityContextHolder.getContext().getAuthentication().isAuthenticated()) {
+            return "redirect:/404";
+        }
 
         checkAuthentication(response);
 

@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -34,6 +35,8 @@ public class SecurityConfig {
                       .requestMatchers("/accounts/test").permitAll()
                       .requestMatchers("/games").permitAll()
                       .requestMatchers("/games/*").permitAll()
+                      .requestMatchers("/404").permitAll()
+                      .requestMatchers("/error").permitAll()
                       .requestMatchers("/js/**").permitAll()
                       .requestMatchers("/css/**").permitAll()
                       .requestMatchers("/images/**").permitAll()
@@ -47,6 +50,7 @@ public class SecurityConfig {
               .csrf(AbstractHttpConfigurer::disable)
               .formLogin(form -> form.defaultSuccessUrl("/", true).loginPage("/login"))
               .logout(config -> config.logoutSuccessUrl("/").logoutUrl("/logout"))
+              .exceptionHandling(exception -> exception.authenticationEntryPoint(new Http403ForbiddenEntryPoint()))
               .build();
     }
 
