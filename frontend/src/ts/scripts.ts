@@ -25,9 +25,6 @@ document.addEventListener("htmx:afterRequest", function (evt) {
     updateNav();
 });
 
-document.addEventListener("htmx:beforeRequest", function (evt) {
-    const htmxEvt = evt as htmxEvent;
-})
 
 let hideBtn: HTMLButtonElement | null = document.querySelector("#hide-button");
 if (hideBtn) {

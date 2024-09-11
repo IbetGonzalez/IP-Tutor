@@ -34,6 +34,7 @@ public class SecurityConfig {
                       .requestMatchers("/accounts/checkEmail").permitAll()
                       .requestMatchers("/accounts/test").permitAll()
                       .requestMatchers("/games").permitAll()
+                      .requestMatchers("/404").permitAll()
                       .requestMatchers("/games/*").permitAll()
                       .requestMatchers("/404").permitAll()
                       .requestMatchers("/error").permitAll()
