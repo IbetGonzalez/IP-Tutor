@@ -17,7 +17,8 @@ export default {
                 'scripts': './src/ts/scripts.ts',
                 'login/scripts': './src/ts/pages/login.ts',
                 'register/scripts': './src/ts/pages/register.ts',
-                'settings/scripts': './src/ts/pages/settings.ts'
+                'settings/scripts': './src/ts/pages/settings.ts',
+                'auth/authenticate': './src/ts/auth/authenticate.ts'
             },
             output: {
                 dir: "static",
